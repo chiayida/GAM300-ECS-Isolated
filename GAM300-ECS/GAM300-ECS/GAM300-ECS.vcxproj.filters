@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Memory">
+      <UniqueIdentifier>{81aa4106-ef17-4279-9fed-fcddd5929711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Memory">
+      <UniqueIdentifier>{4ee6c107-2bc1-4b2c-acb2-ef3e7c2d306c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS">
+      <UniqueIdentifier>{75b45426-89b4-484e-9fd1-c1568a95bb4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS">
+      <UniqueIdentifier>{466fcdd0-6a74-44f2-bae6-7d8b5a44d91e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Architecture">
+      <UniqueIdentifier>{4448933a-a85a-4207-94a5-4e0513e05b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Component">
+      <UniqueIdentifier>{bc5d44b9-ccda-4494-95c4-4392b2d33ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\System">
+      <UniqueIdentifier>{b846539c-903b-4829-9f7d-2447523cfdc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Architecture">
+      <UniqueIdentifier>{cb081054-41ce-454c-98f7-f345d0f40da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Component">
+      <UniqueIdentifier>{03575216-b4ab-44e1-8646-78b30c6090e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\System">
+      <UniqueIdentifier>{c9600888-332f-4d8c-b7f2-52e86bf4537a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Serialization">
+      <UniqueIdentifier>{5f5655e0-eed1-4abb-99f3-a8815732199f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Serialization">
+      <UniqueIdentifier>{faba2148-96fc-4626-8be1-7ee0704afc04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\System\TransformSystem.cpp">
+      <Filter>Source Files\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\Component\Transform.cpp">
+      <Filter>Source Files\ECS\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\Architecture\ComponentManager.cpp">
+      <Filter>Source Files\ECS\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\Architecture\Coordinator.cpp">
+      <Filter>Source Files\ECS\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\Architecture\EntityManager.cpp">
+      <Filter>Source Files\ECS\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\Architecture\SystemManager.cpp">
+      <Filter>Source Files\ECS\Architecture</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Memory\Allocator.cpp">
+      <Filter>Source Files\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Memory\FreeListAllocator.cpp">
+      <Filter>Source Files\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Memory\MemoryUnitTest.cpp">
+      <Filter>Source Files\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Memory\PoolAllocator.cpp">
+      <Filter>Source Files\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Serialization\Serializer.cpp">
+      <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\ECS\Architecture\ComponentArray.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\ComponentManager.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\Coordinator.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\ECS.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\EntityManager.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\IComponent.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\System.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Architecture\SystemManager.hpp">
+      <Filter>Header Files\ECS\Architecture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\Allocator.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\CustomAllocator.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\FreeListAllocator.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\MemoryUnitTest.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\PoolAllocator.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\SinglyLinkedList.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\StackLinkedList.hpp">
+      <Filter>Header Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Component\Transform.hpp">
+      <Filter>Header Files\ECS\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\System\TransformSystem.hpp">
+      <Filter>Header Files\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Serialization\Serializer.hpp">
+      <Filter>Header Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Logging.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
