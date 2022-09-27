@@ -58,8 +58,8 @@ namespace Engine
 	public:
 		EntityManager();
 
-		Entity CreateEntity(std::string __name__ = DEFAULT_ENTITY_NAME, EntityID _parent = MAX_ENTITIES + 1);
-		Entity CreateChild(EntityID _parent, const std::string& __name__ = DEFAULT_ENTITY_NAME);
+		Entity CreateEntity(std::string __name__ = "", EntityID _parent = MAX_ENTITIES + 1);
+		Entity CreateChild(EntityID _parent, const std::string& __name__ = "");
 
 		void DestroyEntity(Entity& e);
 		void DestroyEntity(EntityID& e);

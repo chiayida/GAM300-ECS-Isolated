@@ -76,12 +76,15 @@ namespace Engine
 
 		++EntityCount;
 
-		if(_parent < MAX_ENTITIES)
+		if (_parent < MAX_ENTITIES)
 		{
 			return Entity(id, _parent, __name__);
 		}
 
-		__name__ += std::to_string(id);
+		if (__name__ == "")
+		{
+			__name__ = DEFAULT_ENTITY_NAME + std::to_string(id);
+		}
 
 		return Entity(id, __name__);
 	}

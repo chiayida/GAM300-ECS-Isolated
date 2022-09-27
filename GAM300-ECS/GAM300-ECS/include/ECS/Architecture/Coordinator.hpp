@@ -64,10 +64,10 @@ namespace Engine
 		void RegisterSystems();	   // Function is to register all systems
 
 		// Creates an entity and returns the ID
-		EntityID CreateEntity(std::string __name__ = DEFAULT_ENTITY_NAME);
+		EntityID CreateEntity(std::string __name__ = "");
 
 		// Creates a child entity and returns the ID
-		Entity CreateChild(EntityID parent, const std::string&__name__ = DEFAULT_ENTITY_NAME);
+		Entity CreateChild(EntityID parent, const std::string&__name__ = "");
 
 		// Get a vector of the child objects based on the entity ID
 		std::vector<EntityID> GetChildObjects(unsigned int id);		 // TODO
