@@ -28,16 +28,8 @@ namespace Engine
 	public:
 		Transform(glm::vec3 const& pos = { 0.f, 0.f, 0.f }) : position{ pos } {}
 
-		// Getters
-		glm::vec3 GetPos() const noexcept;
-
-		// Setters
-		void SetPos(glm::vec3  newPos);
-
-		std::vector<glm::mat4> vMatrix{};
-
-	private:
-		glm::vec3 position;
+		std::map<unsigned int, std::vector<unsigned int>> map{};
+		glm::vec3 position = {1.f, 2.f, 3.f };
 	};
 
 	RTTR_REGISTRATION
@@ -51,8 +43,8 @@ namespace Engine
 
 		registration::class_<Transform>("Transform")
 			.constructor<>()
-			.property("Position", &Transform::GetPos, &Transform::SetPos)
-			.property("vMatrix", &Transform::vMatrix)
+			.property("position", &Transform::position)
+			.property("map", &Transform::map)
 			;
 	}
 }

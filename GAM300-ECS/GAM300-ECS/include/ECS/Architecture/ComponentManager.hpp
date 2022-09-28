@@ -168,7 +168,12 @@ namespace Engine
 	bool ComponentManager::HasComponent(Entity& e)
 	{
 		// Get a reference to the component
-		return GetComponentArray<T, N>()->HasData(e);
+		if (GetComponentArray<T, N>())
+		{
+			return GetComponentArray<T, N>()->HasData(e);
+		}
+
+		return false;
 	}
 
 

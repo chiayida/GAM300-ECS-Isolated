@@ -21,109 +21,69 @@ int main()
 	Coordinator gCoordinator;
 	gCoordinator.Init();
 
-	EntityID _1 = gCoordinator.CreateEntity(); // Entity 0
-	EntityID _2 = gCoordinator.CreateEntity(); // Entity 1
-	EntityID _3 = gCoordinator.CreateEntity(); // Entity 2
+	/*
+	gCoordinator.CreateEntity(); // 0
+	gCoordinator.CreateEntity(); // 1
+	gCoordinator.CreateEntity(); // 2
 
 	for (auto& e : gCoordinator.GetEntities())
 	{
+		gCoordinator.AddComponent<Transform>(e);
+
+		Transform* transform = gCoordinator.GetComponent<Transform>(e);
+		std::map<unsigned int, std::vector<unsigned int>> map{};
+
 		if (e.GetEntityID() == 0)
 		{
-			e.SetEntityName("bobby");
+			map = { { 0, {1, 2, 3, 4, 5} } };
+			transform->map = map;
+			transform->position = {};
 		}
 		else if (e.GetEntityID() == 1)
 		{
-			e.SetEntityName("jolly");
+			transform->map = map;
+			transform->position = { 1.f, 1.f, 2.f };
 		}
 		else if (e.GetEntityID() == 2)
 		{
-			e.SetEntityName("barny");
+			map = { { 6, {5, 9, 6, 5, 4, 9, 9, 1, 2} }, { 2, {0, 0, 0, 9, 6, 4} }, { 9, {8, 2, 5, 9, 6, 8} }, { 4, {2, 0, 3, 6, 9} } };
+			transform->map = map;
+			transform->position = { 4.f, 1.f, 5.f };
 		}
-
-		gCoordinator.AddComponent<Transform>(e);
-		Transform* transform = gCoordinator.GetComponent<Transform>(e);
-		
-		if (e.GetEntityID() == 0)
-		{
-			glm::mat4 m2{};
-
-			transform->vMatrix.push_back(m2);
-		}
-		else if (e.GetEntityID() == 1)
-		{
-			glm::mat4 m2{};
-
-			m2[0][0] = 1; m2[0][1] = 2.f; m2[0][2] = 3.f; m2[0][3] = 4.f;
-			m2[1][0] = 1; m2[1][1] = 2.f; m2[1][2] = 3.f; m2[1][3] = 4.f;
-			m2[2][0] = 1; m2[2][1] = 2.f; m2[2][2] = 3.f; m2[2][3] = 4.f;
-			m2[3][0] = 1; m2[3][1] = 2.f; m2[3][2] = 3.f; m2[3][3] = 4.f;
-
-			transform->vMatrix.push_back(m2);
-		}
-		else
-		{
-			glm::mat4 m2{};
-
-			m2[0][0] = 4.; m2[0][1] = 3.f; m2[0][2] = 2.f; m2[0][3] = 1.f;
-			m2[1][0] = 4.; m2[1][1] = 3.f; m2[1][2] = 2.f; m2[1][3] = 1.f;
-			m2[2][0] = 4.; m2[2][1] = 3.f; m2[2][2] = 2.f; m2[2][3] = 1.f;
-			m2[3][0] = 4.; m2[3][1] = 3.f; m2[3][2] = 2.f; m2[3][3] = 1.f;
-
-			transform->vMatrix.push_back(m2);
-
-			m2 = {};
-
-			m2[0][0] = 12; m2[0][1] = 34; m2[0][2] = 56; m2[0][3] = 78;
-			m2[1][0] = 21; m2[1][1] = 43; m2[1][2] = 65; m2[1][3] = 87;
-			m2[2][0] = 32; m2[2][1] = 54; m2[2][2] = 76; m2[2][3] = 98;
-			m2[3][0] = 23; m2[3][1] = 45; m2[3][2] = 67; m2[3][3] = 89;
-
-			transform->vMatrix.push_back(m2);
-		}
-
-		/*
-		for (int i = 0; i < transform->vMatrix.size(); i++)
-		{
-			std::cout << ": \n";
-			std::cout << transform->vMatrix[i][0][0] << " " << transform->vMatrix[i][0][1] << " " << transform->vMatrix[i][0][2] << " " << transform->vMatrix[i][0][3] << "\n"
-					  << transform->vMatrix[i][1][0] << " " << transform->vMatrix[i][1][1] << " " << transform->vMatrix[i][1][2] << " " << transform->vMatrix[i][1][3] << "\n"
-					  << transform->vMatrix[i][2][0] << " " << transform->vMatrix[i][2][1] << " " << transform->vMatrix[i][2][2] << " " << transform->vMatrix[i][2][3] << "\n"
-					  << transform->vMatrix[i][3][0] << " " << transform->vMatrix[i][3][1] << " " << transform->vMatrix[i][3][2] << " " << transform->vMatrix[i][3][3] << "\n"
-					  << "\n\n";
-		}
-		*/
 	}
-
+	
 	Serializer::SerializeEntities(&gCoordinator, "test.json");
-
-	gCoordinator.DestroyEntity(_1);
-	gCoordinator.DestroyEntity(_2);
-	gCoordinator.DestroyEntity(_3);
+	*/
 
 	Serializer::DeserializeJson(&gCoordinator, "test.json");
 
-	std::cout << "\n\n\n\n";
-
+	std::cout << "\n\n\n";
 	for (auto& e : gCoordinator.GetEntities())
 	{
-		std::cout << "id: " << e.GetEntityID() << "\n";
-
-
+		std::cout << "\n\n";
 		Transform* transform = gCoordinator.GetComponent<Transform>(e);
-		for (int i = 0; i < transform->vMatrix.size(); i++)
+
+		std::cout << "Entity ID: " << e.GetEntityID() << "\nEntity Name: " << e.GetEntityName() << "\n";
+		std::cout << "position: " << transform->position.x << ", " << transform->position.y << ", " << transform->position.z << "\n";
+
+		std::cout << "--------------------------\n";
+		for (auto k : transform->map)
 		{
-			std::cout << "asdasd: \n";
-			std::cout << transform->vMatrix[i][0][0] << " " << transform->vMatrix[i][0][1] << " " << transform->vMatrix[i][0][2] << " " << transform->vMatrix[i][0][3] << "\n"
-				<< transform->vMatrix[i][1][0] << " " << transform->vMatrix[i][1][1] << " " << transform->vMatrix[i][1][2] << " " << transform->vMatrix[i][1][3] << "\n"
-				<< transform->vMatrix[i][2][0] << " " << transform->vMatrix[i][2][1] << " " << transform->vMatrix[i][2][2] << " " << transform->vMatrix[i][2][3] << "\n"
-				<< transform->vMatrix[i][3][0] << " " << transform->vMatrix[i][3][1] << " " << transform->vMatrix[i][3][2] << " " << transform->vMatrix[i][3][3] << "\n"
-				<< "\n\n";
+			std::cout << "key: " << k.first << "\n";
+
+			std::cout << "value:";
+			for (auto v : k.second)
+			{
+				std::cout << " " << v;
+			}
+			std::cout << "\n";
 		}
+
+		std::cout << "\n\n\n";
 	}
+	std::cout << "\n\n\n";
 
-
-
-    return 0;
+	return 0;
 }
 
 

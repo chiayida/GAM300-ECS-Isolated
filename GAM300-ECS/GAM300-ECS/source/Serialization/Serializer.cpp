@@ -23,23 +23,49 @@ Associative Container - set, map, multiset, multimap
 #include "include/Serialization/Serializer.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
-#define SERIALIZING(type)	if (coordinator->HasComponent<type>(entity))\
-							{\
-								type* ptr = coordinator->GetComponent<type>(entity);\
-								instance t = ptr;\
-								writer = Serializer::InstanceToJson(writer, ptr, t.get_type().get_raw_type().get_name().to_string());\
-							}\
+#define SERIALIZING(type, oName) if (coordinator->HasComponent<type>(entity))\
+								 {\
+									type* ptr = coordinator->GetComponent<type>(entity);\
+									instance t = ptr;\
+									writer = Serializer::InstanceToJson(writer, ptr, oName);\
+								 }
 
-#define DESERIALIZING(type, name)	else if (component.first == name)\
+#define SERIALIZING_V(vType, vName)	if (coordinator->HasComponent<vType>(entity))\
 									{\
-									type t{};\
-									coordinator->AddComponent<type>(*entity);\
-									JsonToInstance(t, component_json_value);\
-									type* ptr = coordinator->GetComponent<type>(*entity);\
-									*ptr = t;\
-									}\
+										vType* ptr = coordinator->GetComponent<vType>(entity);\
+										int i = 0;\
+										for (auto& t : *ptr)\
+										{\
+											VariantToWriter(t, writer[vName][i]);\
+											i++;\
+										}\
+									}
 
+#define DESERIALIZING_O(type, oName) (component.first == oName)\
+									 {\
+										type t{};\
+										json component_json_value = component.second.get<json::object_t>();\
+										coordinator->AddComponent<type>(*entity);\
+										JsonToInstance(t, component_json_value);\
+										type* ptr = coordinator->GetComponent<type>(*entity);\
+										*ptr = t;\
+									 }
 
+#define DESERIALIZING_V(vType, type, vName) (component.first == vName)\
+											{\
+												vType v{};\
+												type t{};\
+												coordinator->AddComponent<vType>(*entity);\
+												json component_json_value = component.second.get<json::array_t>();\
+												for (auto& value : component_json_value)\
+												{\
+													JsonToInstance(t, value);\
+													v.emplace_back(t);\
+												}\
+												vType* ptr = coordinator->GetComponent<vType>(*entity);\
+												*ptr = v;\
+											}
+				
 namespace Engine 
 {
 	void Serializer::SerializeEntities(Coordinator* coordinator, std::string scenefile)
@@ -50,7 +76,8 @@ namespace Engine
 			json writer;
 			writer = Serializer::InstanceToJson(writer, entity, "Entity");
 
-			SERIALIZING(Transform)
+			SERIALIZING(Transform, "Transform")
+			SERIALIZING_V(std::vector<Transform>, "vTransform")
 
 			vJsonStrings.emplace_back(writer.dump(4));
 		}
@@ -104,23 +131,13 @@ namespace Engine
 			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
 			componentList.erase(componentList.begin());
-
+			
 			// Go through each component of an object
 			for (auto& component : componentList)
 			{
 				// Get variant, type and add component to coordinator through component name string
-				type t = type::get_by_name(component.first);
-
-				json component_json_value = component.second.get<json::object_t>();
-				if (component.first == "Transform")
-				{
-					Transform transform{};
-					coordinator->AddComponent<Transform>(*entity);
-					JsonToInstance(transform, component_json_value);
-
-					Transform* ptr = coordinator->GetComponent<Transform>(*entity);
-					*ptr = transform;
-				}
+				if DESERIALIZING_O(Transform, "Transform")
+				else if DESERIALIZING_V(std::vector<Transform>, Transform, "vTransform")
 			}
 		}
 	}
@@ -203,6 +220,7 @@ namespace Engine
 			varType = varType.get_wrapped_type();
 			localVar = localVar.extract_wrapped_value();
 		}
+
 
 		if (FundementalType(varType, localVar, writer))
 		{
@@ -428,7 +446,7 @@ namespace Engine
 				{
 					var = prop.get_value(rawObj);
 					auto associative_view = var.create_associative_view();
-
+					
 					SetAssociativeContainerRecursive(associative_view, value);
 				}
 				// Special cases that uses glm containers, fastest way but ugly
@@ -496,7 +514,7 @@ namespace Engine
 	{
 		auto& jsonValue = iter.value();
 		variant value = GetBasicTypes(jsonValue);
-
+		
 		const bool could_convert = value.convert(t);
 		if (!could_convert)
 		{
@@ -562,9 +580,58 @@ namespace Engine
 			}
 			break;
 		}
-		case json::value_t::object:
 		case json::value_t::array:
 		{
+			// Find element type and get its value.
+			switch (jsonValue.front().type())
+			{
+				case json::value_t::string:
+				{
+					return jsonValue.get<std::vector<std::string>>();
+					break;
+				}
+				case json::value_t::null:
+				{
+					break;
+				}
+				case json::value_t::boolean:
+				{
+					return jsonValue.get<std::vector<bool>>();
+					break;
+				}
+				case json::value_t::number_integer:
+				{
+					if (jsonValue.front().is_number_integer())
+					{
+						return jsonValue.get<std::vector<int>>();
+					}
+					break;
+				}
+				case json::value_t::number_unsigned:
+				{
+					if (jsonValue.front().is_number_unsigned())
+					{
+						return jsonValue.get<std::vector<unsigned int>>();
+					}
+					break;
+				}
+				case json::value_t::number_float:
+				{
+					if (jsonValue.front().is_number_float())
+					{
+						return jsonValue.get<std::vector<double>>();
+					}
+					break;
+				}
+			}
+
+			// Cant find specific map's value type (Array most probably)
+			return variant();
+
+		}
+		case json::value_t::object:
+		{
+			// not handling map value objects currently
 			return variant();
 		}
 		}
@@ -662,6 +729,7 @@ namespace Engine
 				{
 					auto keyVar = GetKeyValue(keyIter, view.get_key_type());
 					auto valueVar = GetKeyValue(valueIter, view.get_value_type());
+
 					if (keyVar && valueVar)
 					{
 						view.insert(keyVar, valueVar);

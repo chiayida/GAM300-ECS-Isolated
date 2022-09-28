@@ -16,13 +16,5 @@ Technology is prohibited.
 
 namespace Engine
 {
-	glm::vec3 Transform::GetPos() const noexcept // Returns position of the object
-	{
-		return position;
-	}
 
-	void Transform::SetPos(glm::vec3  newPos)
-	{
-		position = newPos;
-	}
 }
