@@ -93,7 +93,6 @@ namespace Engine
 			return nullptr;
 		}
 
-
 		return std::static_pointer_cast<ComponentArray<T, N>>(mComponentArrays[name]);
 	}
 
@@ -181,7 +180,12 @@ namespace Engine
 	bool ComponentManager::HasComponent(EntityID& e)
 	{
 		// Get a reference to the component
-		return GetComponentArray<T, N>()->HasData(e);
+		if (GetComponentArray<T, N>())
+		{
+			return GetComponentArray<T, N>()->HasData(e);
+		}
+
+		return false;
 	}
 
 

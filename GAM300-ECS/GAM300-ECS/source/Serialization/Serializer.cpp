@@ -23,12 +23,12 @@ Associative Container - set, map, multiset, multimap
 #include "include/Serialization/Serializer.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
-#define SERIALIZING(type, oName) if (coordinator->HasComponent<type>(entity))\
-								 {\
-									type* ptr = coordinator->GetComponent<type>(entity);\
-									instance t = ptr;\
-									writer = Serializer::InstanceToJson(writer, ptr, oName);\
-								 }
+#define SERIALIZING_O(type, oName) if (coordinator->HasComponent<type>(entity))\
+								   {\
+										type* ptr = coordinator->GetComponent<type>(entity);\
+										instance t = ptr;\
+										writer = Serializer::InstanceToJson(writer, ptr, oName);\
+								   }
 
 #define SERIALIZING_V(vType, vName)	if (coordinator->HasComponent<vType>(entity))\
 									{\
@@ -76,7 +76,7 @@ namespace Engine
 			json writer;
 			writer = Serializer::InstanceToJson(writer, entity, "Entity");
 
-			SERIALIZING(Transform, "Transform")
+			SERIALIZING_O(Transform, "Transform")
 			SERIALIZING_V(std::vector<Transform>, "vTransform")
 
 			vJsonStrings.emplace_back(writer.dump(4));
