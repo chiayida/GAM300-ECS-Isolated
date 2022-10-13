@@ -13,11 +13,17 @@
 /******************************************************************************/
 #pragma once
 
+#include <lib/rttr/type>
+#include <lib/rttr/registration.h>
+
 namespace Engine 
 {
 	class IComponent 
 	{
 	public:
 		bool isActive = true;
+		unsigned int padding{};
+
+		RTTR_ENABLE();
 	};
 }

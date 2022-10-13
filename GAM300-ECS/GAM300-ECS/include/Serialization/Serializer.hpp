@@ -86,9 +86,10 @@ namespace Engine
 	public:
 		static void SerializeEntities(Coordinator* coordinator, std::string scenefile);
 		static void DeserializeJson(Coordinator* coordinator, std::string filename);
+		static void DeserializeJsonModel(Coordinator* coordinator, std::string filename);
 		
 	private:
-		// For Serialization
+		static void DeserializeJsonInternal(Coordinator* coordinator, std::string filename);
 		static json InstanceToJson(json writer, instance obj, std::string name);
 
 		static std::string CombineTwoJsonWriters(json j1, json j2);

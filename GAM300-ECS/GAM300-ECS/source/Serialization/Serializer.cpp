@@ -74,7 +74,7 @@ namespace Engine
 		for (auto& entity : coordinator->GetEntities())
 		{
 			json writer;
-			writer = Serializer::InstanceToJson(writer, entity, "Entity");
+			writer = Serializer::InstanceToJson(writer, entity, "AAEntity");
 
 			SERIALIZING_O(Transform, "Transform")
 			SERIALIZING_V(std::vector<Transform>, "vTransform")
@@ -101,8 +101,20 @@ namespace Engine
 
 	void Serializer::DeserializeJson(Coordinator* coordinator, std::string filename)
 	{
+		DeserializeJsonInternal(coordinator, filename);
+	}
+
+
+	void Serializer::DeserializeJsonModel(Coordinator* coordinator, std::string filename)
+	{
+		DeserializeJsonInternal(coordinator, filename);
+	}
+
+
+	void Serializer::DeserializeJsonInternal(Coordinator* coordinator, std::string filename)
+	{
 		// Parse string to writer, check error
-		std::ifstream ifs{ "Assets/" + filename};
+		std::ifstream ifs{ "Assets/" + filename };
 		json writer;
 
 		// Check for parse error
@@ -120,18 +132,18 @@ namespace Engine
 		for (auto& object : writer)
 		{
 			// Check if object has "Entity", false = invalid
-			if (!(object.contains("Entity")))
+			if (!(object.contains("AAEntity")))
 			{
 				LOG_ERROR("Object does not have an Entity! Json file will NOT be deserialized!");
 				return;
 			}
-			EntityID id = coordinator->CreateEntity(object["Entity"]["name"]);
+			EntityID id = coordinator->CreateEntity(object["AAEntity"]["name"]);
 			Entity* entity = coordinator->GetEntity(id);
 
 			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
 			componentList.erase(componentList.begin());
-			
+
 			// Go through each component of an object
 			for (auto& component : componentList)
 			{
@@ -221,7 +233,6 @@ namespace Engine
 			localVar = localVar.extract_wrapped_value();
 		}
 
-
 		if (FundementalType(varType, localVar, writer))
 		{
 			return true;
@@ -235,11 +246,18 @@ namespace Engine
 			AssociativeContainer(var.create_associative_view(), writer);
 		}
 		// For specific glm types that should be stored as an array
-		else if (varType == type::get<glm::vec3>() || varType == type::get<glm::vec4>() ||
-			varType == type::get<glm::mat3>() || varType == type::get<glm::mat4>())
+		else if (varType == type::get<glm::vec2>() || varType == type::get<glm::vec3>() || varType == type::get<glm::vec4>() || varType == type::get<glm::uvec4>()
+			|| varType == type::get<glm::mat3>() || varType == type::get<glm::mat4>() || varType == type::get<glm::quat>())
 		{
 			writer = json::array();
-			if (varType == type::get<glm::vec3>())
+			if (varType == type::get<glm::vec2>())
+			{
+				for (int i = 0; i < 2; ++i)
+				{
+					VariantToWriter(localVar.get_value<glm::vec2>()[i], writer[i]);
+				}
+			}
+			else if (varType == type::get<glm::vec3>())
 			{
 				for (int i = 0; i < 3; ++i)
 				{
@@ -251,6 +269,13 @@ namespace Engine
 				for (int i = 0; i < 4; ++i)
 				{
 					VariantToWriter(localVar.get_value<glm::vec4>()[i], writer[i]);
+				}
+			}
+			else if (varType == type::get<glm::uvec4>())
+			{
+				for (int i = 0; i < 4; ++i)
+				{
+					VariantToWriter(localVar.get_value<glm::uvec4>()[i], writer[i]);
 				}
 			}
 			else if (varType == type::get<glm::mat3>())
@@ -273,6 +298,13 @@ namespace Engine
 					{
 						VariantToWriter(localVar.get_value<glm::mat4>()[i][j], writer[size++]);
 					}
+				}
+			}
+			else if (varType == type::get<glm::quat>())
+			{
+				for (int i = 0; i < 4; ++i)
+				{
+					VariantToWriter(localVar.get_value<glm::quat>()[i], writer[i]);
 				}
 			}
 		}
@@ -450,10 +482,15 @@ namespace Engine
 					SetAssociativeContainerRecursive(associative_view, value);
 				}
 				// Special cases that uses glm containers, fastest way but ugly
-				else if (value_type == type::get<glm::vec3>() || value_type == type::get<glm::vec4>()
-					|| value_type == type::get<glm::mat3>() || value_type == type::get<glm::mat4>())
+				else if (value_type == type::get<glm::vec2>() || value_type == type::get<glm::vec3>() || value_type == type::get<glm::vec4>() || value_type == type::get<glm::uvec4>()
+					|| value_type == type::get<glm::mat3>() || value_type == type::get<glm::mat4>() || value_type == type::get<glm::quat>())
 				{
-					if (value_type == type::get<glm::vec3>())
+					if (value_type == type::get<glm::vec2>())
+					{
+						glm::vec2 v = { value[0].get<float>(), value[1].get<float>() };
+						prop.set_value(rawObj, v);
+					}
+					else if (value_type == type::get<glm::vec3>())
 					{
 						glm::vec3 v = { value[0].get<float>(), value[1].get<float>(), value[2].get<float>() };
 						prop.set_value(rawObj, v);
@@ -461,6 +498,11 @@ namespace Engine
 					else if (value_type == type::get<glm::vec4>())
 					{
 						glm::vec4 v = { value[0].get<float>(), value[1].get<float>(), value[2].get<float>(), value[3].get<float>() };
+						prop.set_value(rawObj, v);
+					}
+					else if (value_type == type::get<glm::uvec4>())
+					{
+						glm::uvec4 v = { value[0].get<unsigned int>(), value[1].get<unsigned int>(), value[2].get<unsigned int>(), value[3].get<unsigned int>() };
 						prop.set_value(rawObj, v);
 					}
 					else if (value_type == type::get<glm::mat3>())
@@ -480,6 +522,11 @@ namespace Engine
 										value[12].get<float>(), value[13].get<float>(), value[14].get<float>(), value[15].get<float>(),
 						};
 						prop.set_value(rawObj, m);
+					}
+					else if (value_type == type::get<glm::quat>())
+					{
+						glm::quat v = { value[0].get<float>(), value[1].get<float>(), value[2].get<float>(), value[3].get<float>() };
+						prop.set_value(rawObj, v);
 					}
 
 					break;
@@ -582,9 +629,12 @@ namespace Engine
 		}
 		case json::value_t::array:
 		{
-			// Find element type and get its value.
-			switch (jsonValue.front().type())
+			// If vector has elements
+			if (jsonValue.size() != 0)
 			{
+				// Find element type and get its value.
+				switch (jsonValue.front().type())
+				{
 				case json::value_t::string:
 				{
 					return jsonValue.get<std::vector<std::string>>();
@@ -623,11 +673,10 @@ namespace Engine
 					}
 					break;
 				}
+				}
 			}
-
 			// Cant find specific map's value type (Array most probably)
 			return variant();
-
 		}
 		case json::value_t::object:
 		{

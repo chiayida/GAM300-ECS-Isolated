@@ -171,7 +171,7 @@ RTTR_REGISTRATION
 {
 	using namespace rttr;
 	using namespace Engine;
-	registration::class_<Entity>("Entity")
+	registration::class_<Entity>("AAEntity")
 		.constructor<>()
 		//.property_readonly("EntityID", &Entity::GetEntityID)
 		//.property_readonly("EntityParent", &Entity::GetParent)

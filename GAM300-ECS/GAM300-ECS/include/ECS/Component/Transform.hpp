@@ -14,6 +14,7 @@ Technology is prohibited.
 *******************************************************************************/
 #pragma once
 #include <lib/glm/glm.hpp>
+#include <lib/glm/gtc/quaternion.hpp>
 #include "include/ECS/Architecture/IComponent.hpp"
 #include "include/ECS/Architecture/EntityManager.hpp"
 
