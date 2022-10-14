@@ -38,18 +38,26 @@ namespace Engine
 
 		// Getter, Setter
 		EntityID GetEntityID() const;
-		std::string GetEntityName() const;
-		EntityID GetParent() const;
+
 		void SetEntityName(std::string __name__);
+		std::string GetEntityName() const;
+
 		bool IsChild() const;
+		EntityID GetParent() const;
+
+		void SetPrefab(std::string __prefab__);
+		std::string GetPrefab() const;
+
 		RTTR_ENABLE()
 
 	private:
 		EntityID id;
+
 		EntityID parent; // parent id given that is_child is true
 		bool is_child;
 
 		std::string name;
+		std::string prefab{};
 	};
 
 

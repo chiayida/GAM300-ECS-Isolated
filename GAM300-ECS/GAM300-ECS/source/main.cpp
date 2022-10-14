@@ -20,81 +20,87 @@ int main()
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
-
+	
 	/*
-	gCoordinator.CreateEntity(); // 0
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 2
-
-	for (auto& e : gCoordinator.GetEntities())
 	{
-		gCoordinator.AddComponent<Transform>(e);
+		Transform transform = {
+			{ 5.f, 5.f, 5.f },		// position
+			{ 5.f, 5.f, 5.f },		// scale
+			{ 5.f, 5.f, 5.f, 5.f }  // rot_q
+		};
+		Script script1 = { "newScript2.c" };
 
-		Transform* transform = gCoordinator.GetComponent<Transform>(e);
-		std::map<unsigned int, std::vector<unsigned int>> map{};
+		EntityID id_0 = gCoordinator.CreateEntity(); // 0
 
-		if (e.GetEntityID() == 0)
-		{
-			map = { { 0, {1, 2, 3, 4, 5} } };
-			transform->map = map;
-			transform->position = {};
-		}
-		else if (e.GetEntityID() == 1)
-		{
-			transform->map = map;
-			transform->position = { 1.f, 1.f, 2.f };
-		}
-		else if (e.GetEntityID() == 2)
-		{
-			map = { { 6, {5, 9, 6, 5, 4, 9, 9, 1, 2} }, { 2, {0, 0, 0, 9, 6, 4} }, { 9, {8, 2, 5, 9, 6, 8} }, { 4, {2, 0, 3, 6, 9} } };
-			transform->map = map;
-			transform->position = { 4.f, 1.f, 5.f };
-		}
+		Entity& entity = *gCoordinator.GetEntity(id_0);
+		entity.SetEntityName("yesfab");
+		entity.SetPrefab("transform.prefab");
+
+		gCoordinator.AddComponent<Transform>(id_0, transform);
+		gCoordinator.AddComponent<Script>(id_0, script1);
+
+		Serializer::SerializePrefab(&gCoordinator, id_0, "transform.prefab");
 	}
 	
-	Serializer::SerializeEntities(&gCoordinator, "test.json");
+	{
+		Transform transform = {
+			{ 1.f, 2.f, 3.f },		// position
+			{ 8.f, 9.f, 10.f },		// scale
+			{ 4.f, 5.f, 6.f, 7.f }  // rot_q
+		};
+		Script script2 = { "newScript3.c" };
+
+		EntityID id_1 = gCoordinator.CreateEntity(); // 1
+
+		Entity& entity = *gCoordinator.GetEntity(id_1);
+		entity.SetEntityName("nofab");
+		entity.SetPrefab("transform.prefab");
+
+		gCoordinator.AddComponent<Transform>(id_1, transform);
+		gCoordinator.AddComponent<Script>(id_1, script2);
+	}
+
+	Serializer::SerializeEntities(&gCoordinator, "test.scene");
 	*/
 
-	Serializer::DeserializeJson(&gCoordinator, "test.json");
+	///*
+	
+	//Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
-	std::cout << "\n\n\n";
-	for (auto& e : gCoordinator.GetEntities())
+	Serializer::CreateEntityPrefab(&gCoordinator, "transforms.prefab");
+
+	for (auto& entity : gCoordinator.GetEntities())
 	{
-		std::cout << "\n\n";
-		Transform* transform = gCoordinator.GetComponent<Transform>(e);
+		std::cout << "-------------------------\nEntity\n-------------------------\n";
+		std::cout << "name: " << entity.GetEntityName() << 
+			"\n" << "prefab: " << entity.GetPrefab() << 
+			"\n";
 
-		std::cout << "Entity ID: " << e.GetEntityID() << "\nEntity Name: " << e.GetEntityName() << "\n";
-		std::cout << "position: " << transform->position.x << ", " << transform->position.y << ", " << transform->position.z << "\n";
-
-		std::cout << "--------------------------\n";
-		for (auto k : transform->map)
+		if (gCoordinator.HasComponent<Transform>(entity))
 		{
-			std::cout << "key: " << k.first << "\n";
-
-			std::cout << "value:";
-			for (auto v : k.second)
-			{
-				std::cout << " " << v;
-			}
-			std::cout << "\n";
+			Transform* transform = gCoordinator.GetComponent<Transform>(entity);
+			std::cout << "\nTransform\n";
+			std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
+				"\n" << "rot_q: " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z << " " << transform->rot_q.w <<
+				"\n" << "scale: " << transform->scale.x << " " << transform->scale.y << " " << transform->scale.z <<
+				"\n";
 		}
-
-		std::cout << "\n\n\n";
+		
+		if (gCoordinator.HasComponent<Script>(entity))
+		{
+			Script* script = gCoordinator.GetComponent<Script>(entity);
+			std::cout << "\nScript\n";
+			std::cout << "mono_string: " << script->mono_string <<
+				"\n\n\n";
+		}
 	}
-	std::cout << "\n\n\n";
 
+	//*/
 	return 0;
 }
 
-
-
-
-
 //FreeListAllocator_Test();
 //CustomAllocator_Test();
-
-
-
 
 /*
 enum class color

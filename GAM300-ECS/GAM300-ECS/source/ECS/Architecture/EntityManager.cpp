@@ -31,9 +31,9 @@ namespace Engine
 	}
 
 
-	EntityID Entity::GetParent() const
+	void Entity::SetEntityName(std::string __name__)
 	{
-		return parent;
+		name = __name__;
 	}
 
 
@@ -43,15 +43,27 @@ namespace Engine
 	}
 
 
-	void Entity::SetEntityName(std::string __name__)
-	{
-		name = __name__;
-	}
-
-
 	bool Entity::IsChild() const
 	{
 		return is_child;
+	}
+
+
+	EntityID Entity::GetParent() const
+	{
+		return parent;
+	}
+
+
+	void Entity::SetPrefab(std::string __prefab__)
+	{
+		prefab = __prefab__;
+	}
+
+
+	std::string Entity::GetPrefab() const
+	{
+		return prefab;
 	}
 
 
@@ -177,5 +189,6 @@ RTTR_REGISTRATION
 		//.property_readonly("EntityParent", &Entity::GetParent)
 		//.property_readonly("IsChild", &Entity::IsChild)
 		.property("name", &Entity::GetEntityName, &Entity::SetEntityName)
+		.property("prefab", &Entity::GetPrefab, &Entity::SetPrefab)
 		;
 }

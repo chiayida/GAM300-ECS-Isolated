@@ -23,48 +23,89 @@ Associative Container - set, map, multiset, multimap
 #include "include/Serialization/Serializer.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
-#define SERIALIZING_O(type, oName) if (coordinator->HasComponent<type>(entity))\
-								   {\
-										type* ptr = coordinator->GetComponent<type>(entity);\
-										instance t = ptr;\
-										writer = Serializer::InstanceToJson(writer, ptr, oName);\
-								   }
+#define SERIALIZE_COMPONENTS SERIALIZE_OBJECT(Transform, "Transform")\
+							 SERIALIZE_OBJECT(Script, "Script")\
+							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
 
-#define SERIALIZING_V(vType, vName)	if (coordinator->HasComponent<vType>(entity))\
-									{\
-										vType* ptr = coordinator->GetComponent<vType>(entity);\
-										int i = 0;\
-										for (auto& t : *ptr)\
+
+#define DESERIALIZE_COMPONENTS if DESERIALIZE_OBJECT_COMBINE(Transform, "Transform")\
+							   else if DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+							   else if DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+
+
+#define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
 										{\
-											VariantToWriter(t, writer[vName][i]);\
-											i++;\
-										}\
-									}
+											type* ptr = coordinator->GetComponent<type>(entity);\
+											instance t = ptr;\
+											writer = Serializer::InstanceToJson(writer, ptr, oName);\
+										}
 
-#define DESERIALIZING_O(type, oName) (component.first == oName)\
-									 {\
-										type t{};\
-										json component_json_value = component.second.get<json::object_t>();\
-										coordinator->AddComponent<type>(*entity);\
-										JsonToInstance(t, component_json_value);\
-										type* ptr = coordinator->GetComponent<type>(*entity);\
-										*ptr = t;\
-									 }
 
-#define DESERIALIZING_V(vType, type, vName) (component.first == vName)\
-											{\
-												vType v{};\
-												type t{};\
-												coordinator->AddComponent<vType>(*entity);\
-												json component_json_value = component.second.get<json::array_t>();\
-												for (auto& value : component_json_value)\
+#define SERIALIZE_OBJECT_VECTOR(vType, vName)	if (coordinator->HasComponent<vType>(entity))\
 												{\
-													JsonToInstance(t, value);\
-													v.emplace_back(t);\
-												}\
-												vType* ptr = coordinator->GetComponent<vType>(*entity);\
-												*ptr = v;\
-											}
+													vType* ptr = coordinator->GetComponent<vType>(entity);\
+													int i = 0;\
+													for (auto& t : *ptr)\
+													{\
+														VariantToWriter(t, writer[vName][i]);\
+														i++;\
+													}\
+												}
+
+
+#define DESERIALIZE_OBJECT_COMBINE(type, oName)	(component.first == oName)\
+												{\
+													type t{};\
+													json component_json_value = component.second.get<json::object_t>();\
+													JsonToInstance(t, component_json_value);\
+													if (coordinator->HasComponent<type>(*entity))\
+													{\
+														type* ptr = coordinator->GetComponent<type>(*entity);\
+														*ptr += t;\
+													}\
+													else\
+													{\
+														coordinator->AddComponent<type>(*entity);\
+														type* ptr = coordinator->GetComponent<type>(*entity);\
+														*ptr = t;\
+													}\
+												}
+
+
+#define DESERIALIZE_OBJECT_BASIC(type, oName)	(component.first == oName)\
+												{\
+													type t{};\
+													json component_json_value = component.second.get<json::object_t>();\
+													JsonToInstance(t, component_json_value);\
+													if (coordinator->HasComponent<type>(*entity))\
+													{\
+														type* ptr = coordinator->GetComponent<type>(*entity);\
+														*ptr = t;\
+													}\
+													else\
+													{\
+														coordinator->AddComponent<type>(*entity);\
+														type* ptr = coordinator->GetComponent<type>(*entity);\
+														*ptr = t;\
+													}\
+												}
+
+
+#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	(component.first == vName)\
+														{\
+															vType v{};\
+															type t{};\
+															coordinator->AddComponent<vType>(*entity);\
+															json component_json_value = component.second.get<json::array_t>();\
+															for (auto& value : component_json_value)\
+															{\
+																JsonToInstance(t, value);\
+																v.emplace_back(t);\
+															}\
+															vType* ptr = coordinator->GetComponent<vType>(*entity);\
+															*ptr = v;\
+														}
+
 				
 namespace Engine 
 {
@@ -75,9 +116,7 @@ namespace Engine
 		{
 			json writer;
 			writer = Serializer::InstanceToJson(writer, entity, "AAEntity");
-
-			SERIALIZING_O(Transform, "Transform")
-			SERIALIZING_V(std::vector<Transform>, "vTransform")
+			SERIALIZE_COMPONENTS
 
 			vJsonStrings.emplace_back(writer.dump(4));
 		}
@@ -99,15 +138,44 @@ namespace Engine
 	}
 
 
+	void Serializer::SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename)
+	{
+		Entity& entity = *(coordinator->GetEntity(id));
+
+		json writer;
+		SERIALIZE_COMPONENTS
+
+		Serializer::StringToJson(filename, writer.dump(4));
+	}
+
+
 	void Serializer::DeserializeJson(Coordinator* coordinator, std::string filename)
 	{
 		DeserializeJsonInternal(coordinator, filename);
 	}
 
 
-	void Serializer::DeserializeJsonModel(Coordinator* coordinator, std::string filename)
+	void Serializer::CreateEntityPrefab(Coordinator* coordinator, std::string filename)
 	{
-		DeserializeJsonInternal(coordinator, filename);
+		EntityID entity_id = coordinator->CreateEntity();
+		Entity* entity = coordinator->GetEntity(entity_id);
+
+		DeserializePrefab(coordinator, entity, filename);
+	}
+
+
+	json Serializer::InstanceToJson(json writer, instance obj, std::string cName)
+	{
+		// Check instance for errors
+		if (!obj.is_valid())
+		{
+			LOG_WARNING("Instance Error.");
+			return std::string{};
+		}
+
+		InstanceToWriter(obj, writer[cName.c_str()]);
+
+		return writer;
 	}
 
 
@@ -124,7 +192,7 @@ namespace Engine
 		}
 		catch (json::parse_error& e)
 		{
-			LOG_WARNING("Parse Error: Json file either does not exist or has formatting issues", e.what());
+			LOG_WARNING("Parse Error: SCENE file either does not exist or has formatting issues", e.what());
 			return;
 		}
 
@@ -137,8 +205,16 @@ namespace Engine
 				LOG_ERROR("Object does not have an Entity! Json file will NOT be deserialized!");
 				return;
 			}
-			EntityID id = coordinator->CreateEntity(object["AAEntity"]["name"]);
-			Entity* entity = coordinator->GetEntity(id);
+
+			// Always deserialize entity first, set its properties, then proceed
+			EntityID entity_id = coordinator->CreateEntity(object["AAEntity"]["name"]);
+			Entity* entity = coordinator->GetEntity(entity_id);
+
+			entity->SetPrefab(object["AAEntity"]["prefab"]);
+			if (std::string prefabFile = entity->GetPrefab(); prefabFile != "")
+			{
+				DeserializePrefab(coordinator, entity, prefabFile);
+			}
 
 			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
@@ -148,25 +224,44 @@ namespace Engine
 			for (auto& component : componentList)
 			{
 				// Get variant, type and add component to coordinator through component name string
-				if DESERIALIZING_O(Transform, "Transform")
-				else if DESERIALIZING_V(std::vector<Transform>, Transform, "vTransform")
+				DESERIALIZE_COMPONENTS
 			}
 		}
 	}
 
 
-	json Serializer::InstanceToJson(json writer, instance obj, std::string cName)
+	void Serializer::DeserializePrefab(Coordinator* coordinator, Entity* entity, std::string filename)
 	{
-		// Check instance for errors
-		if (!obj.is_valid())
+		// Parse string to writer, check error
+		std::ifstream ifs{ "Assets/" + filename };
+		json writer;
+
+		// Check for parse error
+		try
 		{
-			LOG_WARNING("Instance Error.");
-			return std::string{};
+			writer = json::parse(ifs);
+		}
+		catch (json::parse_error& e)
+		{
+			LOG_WARNING("Parse Error: PREFAB file either does not exist or has formatting issues", e.what());
+			return;
 		}
 
-		InstanceToWriter(obj, writer[cName.c_str()]);
+		entity->SetPrefab(filename);
 
-		return writer;
+		// Loop through each object in writer
+		for (auto& object : writer)
+		{
+			// Get all component names
+			auto componentList = object.get<json::object_t>();
+
+			// Go through each component of an object
+			for (auto& component : componentList)
+			{
+				// Get variant, type and add component to coordinator through component name string
+				DESERIALIZE_COMPONENTS
+			}
+		}
 	}
 
 

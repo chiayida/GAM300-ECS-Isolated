@@ -64,6 +64,7 @@ namespace Engine
 	{
 		// Register ALL components here
 		RegisterComponent<Transform, MAX_ENTITIES>();
+		RegisterComponent<Script, MAX_ENTITIES>();
 		RegisterComponent<std::vector<Transform>, MAX_ENTITIES>();
 	}
 

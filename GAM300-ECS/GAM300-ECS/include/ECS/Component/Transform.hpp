@@ -27,10 +27,27 @@ namespace Engine
 	class Transform : public IComponent
 	{
 	public:
-		Transform(glm::vec3 const& pos = { 0.f, 0.f, 0.f }) : position{ pos } {}
+		Transform(glm::vec3 const& pos = { 0.f, 0.f, 0.f }, glm::vec3 const& scale = { 1.f, 1.f, 1.f }, 
+			glm::quat const& rot = { 1.f, 0.f, 0.f, 0.f }) : position{ pos }, scale{ scale }, rot_q{ rot } {}
 
-		std::map<unsigned int, std::vector<unsigned int>> map{};
-		glm::vec3 position = {1.f, 2.f, 3.f };
+		void operator+=(Transform const& rhs) 
+		{ 
+			position += rhs.position; 
+			scale *= rhs.scale;
+			rot_q *= rhs.rot_q;
+		}
+
+		glm::vec3 position;
+		glm::vec3 scale{ 1.f, 1.f, 1.f };
+		glm::quat rot_q{};
+	};
+
+	class Script : public IComponent
+	{
+	public:
+		Script(std::string s = "blahblah.c") : mono_string{s} {}
+
+		std::string mono_string;
 	};
 
 	RTTR_REGISTRATION
@@ -45,7 +62,13 @@ namespace Engine
 		registration::class_<Transform>("Transform")
 			.constructor<>()
 			.property("position", &Transform::position)
-			.property("map", &Transform::map)
+			.property("scale", &Transform::scale)
+			.property("rot_q", &Transform::rot_q)
+			;
+
+		registration::class_<Script>("Script")
+			.constructor<>()
+			.property("mono_string", &Script::mono_string)
 			;
 	}
 }

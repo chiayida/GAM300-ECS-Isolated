@@ -1,0 +1,25 @@
+[
+{
+    "Script": {
+        "mono_string": "newScript1.c"
+    },
+    "Transform": {
+        "position": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "rot_q": [
+            3.0,
+            3.0,
+            3.0,
+            3.0
+        ],
+        "scale": [
+            3.0,
+            3.0,
+            3.0
+        ]
+    }
+}
+]
