@@ -10,6 +10,11 @@
 
   The Entity Manager is in charge of distributing entity IDs and keeping record
   of which IDs are in use and which are not.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #include "include/ECS/Architecture/EntityManager.hpp"
@@ -101,6 +106,7 @@ namespace Engine
 		return Entity(id, __name__);
 	}
 
+
 	// Helper function to create a child object
 	Entity EntityManager::CreateChild(EntityID parent, const std::string& __name__)
 	{
@@ -179,15 +185,13 @@ namespace Engine
 	}
 
 } // end of namespace
+
 RTTR_REGISTRATION
 {
 	using namespace rttr;
 	using namespace Engine;
 	registration::class_<Entity>("AAEntity")
 		.constructor<>()
-		//.property_readonly("EntityID", &Entity::GetEntityID)
-		//.property_readonly("EntityParent", &Entity::GetParent)
-		//.property_readonly("IsChild", &Entity::IsChild)
 		.property("name", &Entity::GetEntityName, &Entity::SetEntityName)
 		.property("prefab", &Entity::GetPrefab, &Entity::SetPrefab)
 		;

@@ -7,55 +7,60 @@
 \date       01 September 2022
 \brief
 
-Serializer class declaration for both Serializing and Deserializing using 
-RTTR and nlohmann json libraries.
+  Serializer class declaration for both Serializing and Deserializing using 
+  RTTR and nlohmann json libraries.
+  
+  Functions use a reflection system to determine the type for both
+  serialization and deserialization.
+  
+  Whenever new components are added: 
+  - UPDATE SerializeEntities function
+  - UPDATE DeserializeJson function
+  - UPDATE RTTR_REGISTRATION macro
+  
+  SerializeEntities, DeserializeJson functions: 
+  - I can't think of a way to 'automate' getting of types putting it into AddComponent and GetComponent for coordinator.
+  
+  Serialization:
+  - Use reflection system (rttr library) to generate JSON object.
+  - Use JSON object and JSON library (rapidjason) to write to file.
+  
+  Deserialization:
+  - Read JSON object from file.
+  - Use JSON object for components/prefabs.
+  
+  
+  HOW TO REGISTER TO RTTR REFLECTION SYSTEM: 
+  
+  RTTR_ENABLE(...)
+  - Only use for componenets that are to be serialised
+  - Base and derived classes (components).
+  - Enums are not required to have
+  
+  RTTR_REGISTRATION 
+  {
+  // FOR COMPONENT CLASSES
+  
+  rttr::registration::class_<ComponentName>("ComponentName")
+  .constructor<float, std::string, int, ...>()	// If class has a constructor
+  .property("variableName", &ComponentName::variableName) // public variable
+  .property("variableName", &ComponentName::GetterFunction, &ComponentName::SetterFunction) // private variable
+  ;
+  
+  // FOR ENUMS
+  rttr::registration::enumeration<EnumName>("EnumName")
+  (
+  rttr::value("First", EnumName::First),
+  rttr::value("Second", EnumName::Second),
+  rttr::value("Third", EnumName::Third)
+  )
+  ;
+  }
 
-Functions use a reflection system to determine the type for both
-serialization and deserialization.
-
-Whenever new components are added: 
-- UPDATE SerializeEntities function
-- UPDATE DeserializeJson function
-- UPDATE RTTR_REGISTRATION macro
-
-SerializeEntities, DeserializeJson functions: 
-- I can't think of a way to 'automate' getting of types putting it into AddComponent and GetComponent for coordinator.
-
-Serialization:
-- Use reflection system (rttr library) to generate JSON object.
-- Use JSON object and JSON library (rapidjason) to write to file.
-
-Deserialization:
-- Read JSON object from file.
-- Use JSON object for components/prefabs.
-
-
-HOW TO REGISTER TO RTTR REFLECTION SYSTEM: 
-
-RTTR_ENABLE(...)
-- Only use for componenets that are to be serialised
-- Base and derived classes (components).
-- Enums are not required to have
-
-RTTR_REGISTRATION 
-{
-// FOR COMPONENT CLASSES
-
-rttr::registration::class_<ComponentName>("ComponentName")
-.constructor<float, std::string, int, ...>()	// If class has a constructor
-.property("variableName", &ComponentName::variableName) // public variable
-.property("variableName", &ComponentName::GetterFunction, &ComponentName::SetterFunction) // private variable
-;
-
-// FOR ENUMS
-rttr::registration::enumeration<EnumName>("EnumName")
-(
-rttr::value("First", EnumName::First),
-rttr::value("Second", EnumName::Second),
-rttr::value("Third", EnumName::Third)
-)
-;
-}
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once

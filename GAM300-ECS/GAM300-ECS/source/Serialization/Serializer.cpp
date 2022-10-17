@@ -7,17 +7,22 @@
 \date       01 September 2022
 \brief
 
-Serializer class function implementations for both Serializing and Deserializing 
-using RTTR and nlohmann json libraries.
+  Serializer class function implementations for both Serializing and Deserializing 
+  using RTTR and nlohmann json libraries.
+  
+  Functions use a reflection system to determine the type for both 
+  serialization and deserialization.
+  
+  Terms:
+  Fundamental Types - Plain old data (POD), Enums, Strings
+  variant - stores the value of property
+  Sequential Container - array, vector, deque, forward_list, list
+  Associative Container - set, map, multiset, multimap
 
-Functions use a reflection system to determine the type for both 
-serialization and deserialization.
-
-Terms:
-Fundamental Types - Plain old data (POD), Enums, Strings
-variant - stores the value of property
-Sequential Container - array, vector, deque, forward_list, list
-Associative Container - set, map, multiset, multimap
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #include "include/Serialization/Serializer.hpp"
@@ -325,7 +330,6 @@ namespace Engine
 	{
 		// Create JSON file and input string to file
 		std::ofstream jsonFile{ "Assets/" + filename};
-
 		jsonFile << "[\n" << jsonString << "\n]";
 
 		// Check if successful

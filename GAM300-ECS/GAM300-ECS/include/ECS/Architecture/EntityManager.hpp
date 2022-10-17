@@ -17,12 +17,10 @@
 */
 /******************************************************************************/
 #pragma once
-
+	
 #include "ECS.hpp"
-
 #include <queue>
 #include <array>
-
 #include <lib/rttr/type>
 #include <lib/rttr/registration.h>
 
@@ -53,11 +51,11 @@ namespace Engine
 	private:
 		EntityID id;
 
+		std::string name;	
+		std::string prefab{};
+
 		EntityID parent; // parent id given that is_child is true
 		bool is_child;
-
-		std::string name;
-		std::string prefab{};
 	};
 
 
