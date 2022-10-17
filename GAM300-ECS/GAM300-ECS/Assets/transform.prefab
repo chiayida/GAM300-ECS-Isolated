@@ -1,25 +1,72 @@
 [
 {
     "Script": {
-        "mono_string": "newScript1.c"
+        "mono_string": "newScript2.c"
     },
     "Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": true,
+        "isOverrideScale": false,
         "position": [
-            3.0,
-            3.0,
-            3.0
+            5.0,
+            5.0,
+            5.0
         ],
         "rot_q": [
-            3.0,
-            3.0,
-            3.0,
-            3.0
+            5.0,
+            5.0,
+            5.0,
+            5.0
         ],
         "scale": [
-            3.0,
-            3.0,
-            3.0
+            5.0,
+            5.0,
+            5.0
         ]
-    }
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": true,
+            "isOverrideScale": false,
+            "position": [
+                5.0,
+                5.0,
+                5.0
+            ],
+            "rot_q": [
+                5.0,
+                5.0,
+                5.0,
+                5.0
+            ],
+            "scale": [
+                5.0,
+                5.0,
+                5.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                10.0,
+                10.0,
+                10.0
+            ],
+            "rot_q": [
+                10.0,
+                10.0,
+                10.0,
+                10.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ]
+        }
+    ]
 }
 ]

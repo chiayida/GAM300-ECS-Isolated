@@ -28,9 +28,9 @@ Associative Container - set, map, multiset, multimap
 							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS if DESERIALIZE_OBJECT_COMBINE(Transform, "Transform")\
-							   else if DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-							   else if DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+#define DESERIALIZE_COMPONENTS	DESERIALIZE_TRANSFORM\
+								DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
 #define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
@@ -53,7 +53,37 @@ Associative Container - set, map, multiset, multimap
 												}
 
 
-#define DESERIALIZE_OBJECT_COMBINE(type, oName)	(component.first == oName)\
+#define DESERIALIZE_TRANSFORM	if (component.first == "Transform")\
+								{\
+									Transform transform{};\
+									json component_json_value = component.second.get<json::object_t>();\
+									JsonToInstance(transform, component_json_value);\
+									if (coordinator->HasComponent<Transform>(*entity))\
+									{\
+										Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
+										if (transform.isOverridePosition)\
+										{\
+											ptr->position = transform.position;\
+										}\
+										if (transform.isOverrideRotation)\
+										{\
+											ptr->rot_q = transform.rot_q;\
+										}\
+										if (transform.isOverrideScale)\
+										{\
+											ptr->scale = transform.scale;\
+										}\
+									}\
+									else\
+									{\
+										coordinator->AddComponent<Transform>(*entity);\
+										Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
+										*ptr = transform;\
+									}\
+								}
+
+
+#define DESERIALIZE_OBJECT_COMBINE(type, oName)	else if (component.first == oName)\
 												{\
 													type t{};\
 													json component_json_value = component.second.get<json::object_t>();\
@@ -72,7 +102,7 @@ Associative Container - set, map, multiset, multimap
 												}
 
 
-#define DESERIALIZE_OBJECT_BASIC(type, oName)	(component.first == oName)\
+#define DESERIALIZE_OBJECT_BASIC(type, oName)	else if (component.first == oName)\
 												{\
 													type t{};\
 													json component_json_value = component.second.get<json::object_t>();\
@@ -91,23 +121,37 @@ Associative Container - set, map, multiset, multimap
 												}
 
 
-#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	(component.first == vName)\
+#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	else if (component.first == vName)\
 														{\
 															vType v{};\
 															type t{};\
-															coordinator->AddComponent<vType>(*entity);\
-															json component_json_value = component.second.get<json::array_t>();\
-															for (auto& value : component_json_value)\
+															if (coordinator->HasComponent<vType>(*entity))\
 															{\
-																JsonToInstance(t, value);\
-																v.emplace_back(t);\
+																json component_json_value = component.second.get<json::array_t>();\
+																for (auto& value : component_json_value)\
+																{\
+																	JsonToInstance(t, value);\
+																	v.emplace_back(t);\
+																}\
+																vType* ptr = coordinator->GetComponent<vType>(*entity);\
+																*ptr = v;\
 															}\
-															vType* ptr = coordinator->GetComponent<vType>(*entity);\
-															*ptr = v;\
+															else\
+															{\
+																coordinator->AddComponent<vType>(*entity);\
+																json component_json_value = component.second.get<json::array_t>();\
+																for (auto& value : component_json_value)\
+																{\
+																	JsonToInstance(t, value);\
+																	v.emplace_back(t);\
+																}\
+																vType* ptr = coordinator->GetComponent<vType>(*entity);\
+																*ptr = v;\
+															}\
 														}
 
-				
-namespace Engine 
+
+namespace Engine
 {
 	void Serializer::SerializeEntities(Coordinator* coordinator, std::string scenefile)
 	{

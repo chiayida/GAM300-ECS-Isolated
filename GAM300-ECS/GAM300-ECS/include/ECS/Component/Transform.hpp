@@ -28,7 +28,8 @@ namespace Engine
 	{
 	public:
 		Transform(glm::vec3 const& pos = { 0.f, 0.f, 0.f }, glm::vec3 const& scale = { 1.f, 1.f, 1.f }, 
-			glm::quat const& rot = { 1.f, 0.f, 0.f, 0.f }) : position{ pos }, scale{ scale }, rot_q{ rot } {}
+			glm::quat const& rot = { 1.f, 0.f, 0.f, 0.f }) : position{ pos }, scale{ scale }, rot_q{ rot },
+			isOverridePosition{ false }, isOverrideScale{ false }, isOverrideRotation { false } {}
 
 		void operator+=(Transform const& rhs) 
 		{ 
@@ -40,6 +41,10 @@ namespace Engine
 		glm::vec3 position;
 		glm::vec3 scale{ 1.f, 1.f, 1.f };
 		glm::quat rot_q{};
+
+		bool isOverridePosition = false;
+		bool isOverrideScale = false;
+		bool isOverrideRotation = false;
 	};
 
 	class Script : public IComponent
@@ -64,6 +69,9 @@ namespace Engine
 			.property("position", &Transform::position)
 			.property("scale", &Transform::scale)
 			.property("rot_q", &Transform::rot_q)
+			.property("isOverridePosition", &Transform::isOverridePosition)
+			.property("isOverrideScale", &Transform::isOverrideScale)
+			.property("isOverrideRotation", &Transform::isOverrideRotation)
 			;
 
 		registration::class_<Script>("Script")

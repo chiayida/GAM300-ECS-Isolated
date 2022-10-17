@@ -8,23 +8,70 @@
         "mono_string": "newScript2.c"
     },
     "Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": true,
+        "isOverrideScale": false,
         "position": [
-            5.0,
-            5.0,
-            5.0
+            1.0,
+            1.0,
+            1.0
         ],
         "rot_q": [
-            5.0,
-            5.0,
-            5.0,
-            5.0
+            2.0,
+            2.0,
+            2.0,
+            2.0
         ],
         "scale": [
-            5.0,
-            5.0,
-            5.0
+            3.0,
+            3.0,
+            3.0
         ]
-    }
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": true,
+            "isOverrideScale": false,
+            "position": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "rot_q": [
+                2.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            "scale": [
+                3.0,
+                3.0,
+                3.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                10.0,
+                10.0,
+                10.0
+            ],
+            "rot_q": [
+                10.0,
+                10.0,
+                10.0,
+                10.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ]
+        }
+    ]
 },
 {
     "AAEntity": {
@@ -35,6 +82,9 @@
         "mono_string": "newScript3.c"
     },
     "Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
         "position": [
             1.0,
             2.0,
