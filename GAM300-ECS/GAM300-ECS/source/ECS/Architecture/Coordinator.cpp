@@ -86,6 +86,20 @@ namespace Engine
 	}
 
 
+	void Coordinator::DuplicateEntity(EntityID __id__)
+	{
+		Entity* original = GetEntity(__id__);
+
+		EntityID id = CreateEntity(original->GetEntityName() + "(D)");
+		Entity* duplicated = GetEntity(id);
+
+		duplicated->operator=(*original);
+
+		//mComponentManager->;
+
+	}
+
+
 	Entity Coordinator::CreateChild(EntityID parent, const std::string& __name__)
 	{
 		Entity e = mEntityManager->CreateChild(parent, __name__);

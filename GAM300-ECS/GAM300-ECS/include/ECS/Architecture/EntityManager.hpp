@@ -34,6 +34,8 @@ namespace Engine
 		Entity(EntityID __id__ = MAX_ENTITIES + 1, std::string __name__ = DEFAULT_ENTITY_NAME);
 		Entity(EntityID __id__, EntityID __parent__, std::string __name__ = DEFAULT_ENTITY_NAME);
 
+		void operator=(const Entity& rhs);
+
 		// Getter, Setter
 		EntityID GetEntityID() const;
 
