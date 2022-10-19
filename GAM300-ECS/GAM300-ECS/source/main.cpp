@@ -51,8 +51,9 @@ int main()
 		gCoordinator.AddComponent<Script>(id_0, script1);
 		gCoordinator.AddComponent<std::vector<Transform>>(id_0, vTransform);
 
-		Serializer::SerializePrefab(&gCoordinator, id_0, "transform.prefab");
+		//Serializer::SerializePrefab(&gCoordinator, id_0, "transform.prefab");
 	}
+
 	
 	{
 		Transform transform = {
@@ -75,42 +76,15 @@ int main()
 		gCoordinator.AddComponent<Script>(id_1, script2);
 	}
 
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		if (entity.GetEntityID() == 1) continue;
-
-		Transform* transform = gCoordinator.GetComponent<Transform>(entity);
-		Transform t1 = *transform;
-
-
-		std::cout << "\aaaaaaa\n";
-		std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
-			"\n" << "rot_q: " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z << " " << transform->rot_q.w <<
-			"\n" << "scale: " << transform->scale.x << " " << transform->scale.y << " " << transform->scale.z <<
-			"\n";
-
-		std::cout << "\bbbbbbb\n";
-		std::cout << "position: " << t1.position.x << " " << t1.position.y << " " << t1.position.z <<
-			"\n" << "rot_q: " << t1.rot_q.x << " " << t1.rot_q.y << " " << t1.rot_q.z << " " << t1.rot_q.w <<
-			"\n" << "scale: " << t1.scale.x << " " << t1.scale.y << " " << t1.scale.z <<
-			"\n";
-	}
-
-
-
-
-
-
-
-
-
+	gCoordinator.DuplicateEntity(0);
 
 	//Serializer::SerializeEntities(&gCoordinator, "test.scene");
 	//Serializer::CreateEntityPrefab(&gCoordinator, "transform.prefab");
 	//Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
-	/*
+
 	// Printing to check
+	std::cout << "\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
 		std::cout << "-------------------------\nEntity\n-------------------------\n";
@@ -121,6 +95,7 @@ int main()
 		if (gCoordinator.HasComponent<Transform>(entity))
 		{
 			Transform* transform = gCoordinator.GetComponent<Transform>(entity);
+
 			std::cout << "\nTransform\n";
 			std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
 				"\n" << "rot_q: " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z << " " << transform->rot_q.w <<
@@ -139,7 +114,7 @@ int main()
 		if (gCoordinator.HasComponent<std::vector<Transform>>(entity))
 		{
 			std::vector<Transform>* vtransform = gCoordinator.GetComponent<std::vector<Transform>>(entity);
-
+			
 			int i = 0;
 			for (auto& transform : *vtransform)
 			{
@@ -151,7 +126,6 @@ int main()
 			}
 		}
 	}
-	*/
 
 	return 0;
 }

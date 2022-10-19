@@ -30,13 +30,6 @@ namespace Engine
 		id{ __id__ }, parent{ __parent__ }, is_child{ true }, name{ __name__ } {};
 
 
-	void Entity::operator=(const Entity& rhs)
-	{
-		SetEntityName(rhs.GetEntityName());
-		SetPrefab(rhs.GetPrefab());
-	}
-
-
 	EntityID Entity::GetEntityID() const
 	{
 		return id;

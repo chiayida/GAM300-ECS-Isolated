@@ -22,6 +22,19 @@
 
 #include <memory>
 
+#define DUPLICATE_COMPONENTS	DUPLICATE_COMPONENT(Transform)\
+								DUPLICATE_COMPONENT(Script)\
+								DUPLICATE_COMPONENT(std::vector<Transform>)
+
+
+#define DUPLICATE_COMPONENT(type)	if(HasComponent<type>(original))\
+									{\
+										type* oPtr = GetComponent<type>(original);\
+										type c = *oPtr;\
+										AddComponent<type>(duplicated, c);\
+									}
+
+
 namespace Engine
 {
 	Coordinator::~Coordinator() 
@@ -88,15 +101,13 @@ namespace Engine
 
 	void Coordinator::DuplicateEntity(EntityID __id__)
 	{
-		Entity* original = GetEntity(__id__);
+		Entity original = *GetEntity(__id__);
+		EntityID id = CreateEntity(original.GetEntityName() + "(D)");
+		Entity& duplicated = *GetEntity(id);
+		
+		duplicated.SetPrefab(original.GetPrefab());
 
-		EntityID id = CreateEntity(original->GetEntityName() + "(D)");
-		Entity* duplicated = GetEntity(id);
-
-		duplicated->operator=(*original);
-
-		//mComponentManager->;
-
+		DUPLICATE_COMPONENTS
 	}
 
 
