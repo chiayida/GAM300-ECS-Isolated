@@ -102,9 +102,9 @@ namespace Engine
 	void Coordinator::DuplicateEntity(EntityID __id__)
 	{
 		Entity original = *GetEntity(__id__);
+
 		EntityID id = CreateEntity(original.GetEntityName() + "(D)");
 		Entity& duplicated = *GetEntity(id);
-		
 		duplicated.SetPrefab(original.GetPrefab());
 
 		DUPLICATE_COMPONENTS
