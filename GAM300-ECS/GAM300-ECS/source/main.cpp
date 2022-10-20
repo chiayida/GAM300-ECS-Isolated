@@ -23,74 +23,54 @@ int main()
 	
 	{
 		Transform transform = {
-			{ 5.f, 5.f, 5.f },		// position
-			{ 5.f, 5.f, 5.f },		// scale
-			{ 5.f, 5.f, 5.f, 5.f }  // rot_q
+			{ 0.f, 0.f, 0.f },		// position
+			{ 0.f, 0.f, 0.f },		// scale
+			{ 0.f, 0.f, 0.f, 0.f }  // rot_q
 		};
-		Transform transform_ = {
-			{ 10.f, 10.f, 10.f },		// position
-			{ 10.f, 10.f, 10.f },		// scale
-			{ 10.f, 10.f, 10.f, 10.f }  // rot_q
-		};
-		transform.isOverridePosition = false;
+		transform.isOverridePosition = true;
 		transform.isOverrideRotation = true;
-		transform.isOverrideScale = false;
+		transform.isOverrideScale = true;
 
-		Script script1 = { "newScript2.c" };
+		Script script = { "0.c" };
 
-		std::vector<Transform> vTransform{};
-		vTransform.push_back(transform);
-		vTransform.push_back(transform_);
-
-		EntityID id_0 = gCoordinator.CreateEntity(); // 0
-		Entity& entity = *gCoordinator.GetEntity(id_0);
-		entity.SetEntityName("yesfab");
+		EntityID id = gCoordinator.CreateEntity(); // 0
+		Entity& entity = *gCoordinator.GetEntity(id);
+		entity.SetEntityName("0");
 		entity.SetPrefab("transform.prefab");
 
-		gCoordinator.AddComponent<Transform>(id_0, transform);
-		gCoordinator.AddComponent<Script>(id_0, script1);
-		gCoordinator.AddComponent<std::vector<Transform>>(id_0, vTransform);
-
-		//Serializer::SerializePrefab(&gCoordinator, id_0, "transform.prefab");
+		gCoordinator.AddComponent<Transform>(id, transform);
+		gCoordinator.AddComponent<Script>(id, script);
 	}
-
 	
 	{
 		Transform transform = {
-			{ 1.f, 2.f, 3.f },		// position
-			{ 8.f, 9.f, 10.f },		// scale
-			{ 4.f, 5.f, 6.f, 7.f }  // rot_q
+			{ 1.f, 1.f, 1.f },		// position
+			{ 1.f, 1.f, 1.f },		// scale
+			{ 1.f, 1.f, 1.f, 1.f }  // rot_q
 		};
-		transform.isOverridePosition = false;
-		transform.isOverrideRotation = false;
-		transform.isOverrideScale = false;
+		transform.isOverridePosition = true;
+		transform.isOverrideRotation = true;
+		transform.isOverrideScale = true;
 
-		Script script2 = { "newScript3.c" };
+		Script script = { "1.c" };
 
-		EntityID id_1 = gCoordinator.CreateEntity(); // 1
-		Entity& entity = *gCoordinator.GetEntity(id_1);
-		entity.SetEntityName("nofab");
+		EntityID id = gCoordinator.CreateEntity(); // 1
+		Entity& entity = *gCoordinator.GetEntity(id);
+		entity.SetEntityName("1");
 		entity.SetPrefab("transform.prefab");
 
-		gCoordinator.AddComponent<Transform>(id_1, transform);
-		gCoordinator.AddComponent<Script>(id_1, script2);
+		gCoordinator.AddComponent<Transform>(id, transform);
+		gCoordinator.AddComponent<Script>(id, script);
 	}
 
-	gCoordinator.DuplicateEntity(0);
-
-	//Serializer::SerializeEntities(&gCoordinator, "test.scene");
-	//Serializer::CreateEntityPrefab(&gCoordinator, "transform.prefab");
-	//Serializer::DeserializeJson(&gCoordinator, "test.scene");
-
-
 	// Printing to check
-	std::cout << "\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n";
+	std::cout << "\nPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
-		std::cout << "-------------------------\nEntity\n-------------------------\n";
-		std::cout << "name: " << entity.GetEntityName() << 
-			"\n" << "prefab: " << entity.GetPrefab() << 
-			"\n";
+		std::cout << "-------------------------\n" 
+				  << "Entity name: " << entity.GetEntityName() << " ID: " << entity.GetEntityID() 
+				  << "\n-------------------------\n";
+		std::cout << "prefab: " << entity.GetPrefab() << "\n";
 
 		if (gCoordinator.HasComponent<Transform>(entity))
 		{
@@ -126,12 +106,17 @@ int main()
 			}
 		}
 	}
+	std::cout << "\nPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP\n";
 
 	return 0;
 }
 
 //FreeListAllocator_Test();
 //CustomAllocator_Test();
+
+//Serializer::SerializeEntities(&gCoordinator, "test.scene");
+//Serializer::CreateEntityPrefab(&gCoordinator, "transform.prefab");
+//Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
 /*
 enum class color

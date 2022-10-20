@@ -115,7 +115,7 @@ namespace Engine
 	{
 		Entity e = mEntityManager->CreateChild(parent, __name__);
 		mEntities.emplace_back(e);
-
+		
 		return e;
 	}
 
@@ -126,16 +126,18 @@ namespace Engine
 		mComponentManager->DestroyEntity(e);
 		mSystemManager->DestroyEntity(e);
 
-		for (int i = 0; i < mEntities.size(); ++i)
+
+		int index = 0;
+		for (; index < mEntities.size(); ++index)
 		{
 			// Swaps last element with current and remove it
-			if (e.GetEntityID() == mEntities[i].GetEntityID())
+			if (e.GetEntityID() == mEntities[index].GetEntityID())
 			{
-				std::swap(mEntities[i], mEntities.back());
-				mEntities.pop_back();
 				break;
 			}
 		}
+
+		mEntities.erase(mEntities.begin() + index);
 	}
 
 
@@ -145,16 +147,17 @@ namespace Engine
 		mComponentManager->DestroyEntity(e);
 		mSystemManager->DestroyEntity(e);
 
-		for (int i = 0; i < mEntities.size(); ++i)
+		int index = 0;
+		for (; index < mEntities.size(); ++index)
 		{
 			// Swaps last element with current and remove it
-			if (e == mEntities[i].GetEntityID())
+			if (e == mEntities[index].GetEntityID())
 			{
-				std::swap(mEntities[i], mEntities.back());
-				mEntities.pop_back();
 				break;
 			}
 		}
+
+		mEntities.erase(mEntities.begin() + index);
 	}
 
 
