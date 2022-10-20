@@ -82,6 +82,7 @@
 
 namespace Engine 
 {
+	// Static functions as it should be a singleton instead (hacky way)
 	// For reflection and serialization of json files
 	using namespace rttr;
 	using namespace nlohmann;

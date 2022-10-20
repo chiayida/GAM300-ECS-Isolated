@@ -24,6 +24,11 @@
   index. 
   - When an entity is destroyed, it takes the last valid element in the
   array and move into deleted entity's spot and updates the map.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once

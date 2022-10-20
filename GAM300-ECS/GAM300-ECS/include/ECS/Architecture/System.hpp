@@ -10,6 +10,11 @@
 
   The System class has only a std::set of entities. 
   Calls insert() and erase() to add and remove entities.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once

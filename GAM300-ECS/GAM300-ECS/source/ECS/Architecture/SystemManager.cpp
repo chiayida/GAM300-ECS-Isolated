@@ -14,7 +14,12 @@
   Each system needs to have a signature set so that the manager can add the
   appropriate entities to each system's std::set of entities.
 
-  std::set of entities should be updated whenever the entity's signature is updated
+  std::set of entities should be updated whenever the entity's signature is updated.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once

@@ -9,6 +9,11 @@
   This file contains the declaration and implementation of IComponent class.
   
   This class is to be inherited by other components.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once
@@ -18,11 +23,10 @@
 
 namespace Engine 
 {
-	class IComponent 
+	class alignas(8) IComponent 
 	{
 	public:
 		bool isActive = true;
-		unsigned int padding{};
 
 		RTTR_ENABLE();
 	};

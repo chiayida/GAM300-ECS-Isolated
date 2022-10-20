@@ -14,6 +14,11 @@
   A queue is used where it will contain every valid entity ID up to MAX_ENTITIES.
   When an entity is created, it takes the ID at the front of the queue. 
   When an entity is destroyed, it puts the ID at the back of the queue.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once
@@ -31,8 +36,8 @@ namespace Engine
 	class Entity
 	{
 	public:
-		Entity(EntityID __id__ = MAX_ENTITIES + 1, std::string __name__ = DEFAULT_ENTITY_NAME);
-		Entity(EntityID __id__, EntityID __parent__, std::string __name__ = DEFAULT_ENTITY_NAME);
+		Entity(EntityID __id__ = MAX_ENTITIES + 1, std::string __name__ = "");
+		Entity(EntityID __id__, EntityID __parent__, std::string __name__ = "");
 
 		// Getter, Setter
 		EntityID GetEntityID() const;

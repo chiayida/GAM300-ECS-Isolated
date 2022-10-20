@@ -10,6 +10,11 @@
 
   The coordinator class acts as a mediator for Entity Manager, Component Manager
   and System Manager, which manages them.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once
@@ -53,6 +58,19 @@ namespace Engine
 
 		RegisterComponents();
 		RegisterSystems();
+	}
+
+
+	void Coordinator::InitForLoading()
+	{
+		mFreeListAllocator = new FreeListAllocator((size_t)1e8);
+
+		mEntityManager = std::make_unique<EntityManager>();
+		mComponentManager = std::make_unique<ComponentManager>();
+		mSystemManager = std::make_unique<SystemManager>();
+
+		//using namespace Graphics::Addition;
+		//RegisterComponent<FullMesh, 1>();
 	}
 
 
@@ -115,6 +133,7 @@ namespace Engine
 	{
 		Entity e = mEntityManager->CreateChild(parent, __name__);
 		mEntities.emplace_back(e);
+		mParentChild[parent].emplace_back(e.GetEntityID());
 		
 		return e;
 	}
@@ -122,27 +141,24 @@ namespace Engine
 
 	void Coordinator::DestroyEntity(Entity& e)
 	{
-		mEntityManager->DestroyEntity(e);
-		mComponentManager->DestroyEntity(e);
-		mSystemManager->DestroyEntity(e);
-
-
-		int index = 0;
-		for (; index < mEntities.size(); ++index)
-		{
-			// Swaps last element with current and remove it
-			if (e.GetEntityID() == mEntities[index].GetEntityID())
-			{
-				break;
-			}
-		}
-
-		mEntities.erase(mEntities.begin() + index);
+		DestroyEntity(e.GetEntityID());
 	}
 
 
 	void Coordinator::DestroyEntity(EntityID e)
 	{
+		Entity* ent = GetEntity(e);
+
+		// Delete child id from parent's vector
+		if (ent && ent->IsChild())
+		{
+			std::vector<EntityID>& children = mParentChild[ent->GetParent()];
+			auto child = std::find(children.begin(), children.end(), ent->GetEntityID());
+			if (child != children.end())
+			{
+				mParentChild[ent->GetParent()].erase(child);
+			}
+		}
 		mEntityManager->DestroyEntity(e);
 		mComponentManager->DestroyEntity(e);
 		mSystemManager->DestroyEntity(e);
@@ -156,8 +172,18 @@ namespace Engine
 				break;
 			}
 		}
-
 		mEntities.erase(mEntities.begin() + index);
+
+		// Recursively delete all child entities
+		std::map<EntityID, std::vector<EntityID>>::iterator it = mParentChild.find(e);
+		if (it != mParentChild.end())
+		{
+			for (EntityID child : it->second)
+			{
+				DestroyEntity(child);
+			}
+			mParentChild.erase(e);
+		}
 	}
 
 
@@ -181,6 +207,20 @@ namespace Engine
 	}
 
 
+	Entity* Coordinator::GetEntityByName(std::string name)
+	{
+		for (int i = 0; i < mEntities.size(); ++i)
+		{
+			if (mEntities[i].GetEntityName() == name)
+			{
+				return &mEntities[i];
+			}
+		}
+
+		return nullptr;
+	}
+
+
 	bool Coordinator::IsNameRepeated(std::string name)
 	{
 		for (int i = 0; i < mEntities.size(); ++i)
@@ -191,6 +231,19 @@ namespace Engine
 			}
 		}
 
+		return false;
+	}
+
+
+	bool Coordinator::EntityExists(Entity const& ent) const
+	{
+		for (Entity const& e : mEntities)
+		{
+			if (e.GetEntityID() == ent.GetEntityID())
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 

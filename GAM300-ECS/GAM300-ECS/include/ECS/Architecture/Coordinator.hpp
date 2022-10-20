@@ -39,6 +39,11 @@
 
   6) gCoordinator.Destroy();
   - Free Coordinator's allocated memory.
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once
@@ -58,6 +63,7 @@ namespace Engine
 	public:
 		~Coordinator();
 		void Init();
+		void InitForLoading();
 		void Destroy();
 
 		void RegisterComponents(); // Function is to register all components
@@ -108,10 +114,12 @@ namespace Engine
 		std::shared_ptr<System> GetSystem();
 
 		Entity* GetEntity(EntityID id);
+		Entity* GetEntityByName(std::string name);
 		std::vector<Entity>& GetEntities();
 
 		bool IsNameRepeated(std::string name);
 
+		bool EntityExists(Entity const& ent) const;
 	private:
 		/* Member Functions */
 
@@ -152,6 +160,7 @@ namespace Engine
 		std::unique_ptr<SystemManager> mSystemManager;
 
 		std::vector<Entity> mEntities{};
+		std::map<EntityID, std::vector<EntityID>> mParentChild;
 	};
 
 	// Templated class functions implementations
@@ -171,6 +180,7 @@ namespace Engine
 		mSystemManager->EntitySignatureChanged(e, signature);
 	}
 
+
 	template <typename T, unsigned N, typename... argv>
 	void Coordinator::AddComponent(EntityID e, argv... args)
 	{
@@ -184,6 +194,7 @@ namespace Engine
 		// Update System's entity container
 		mSystemManager->EntitySignatureChanged(e, signature);
 	}
+
 
 	template <typename T, unsigned N>
 	void Coordinator::RemoveComponent(Entity &e)
@@ -199,6 +210,7 @@ namespace Engine
 		mSystemManager->EntitySignatureChanged(e, signature);
 	}
 
+
 	template <typename T, unsigned N>
 	void Coordinator::RemoveComponent(EntityID e)
 	{
@@ -213,11 +225,13 @@ namespace Engine
 		mSystemManager->EntitySignatureChanged(e, signature);
 	}
 
+
 	template <typename T>
 	bool Coordinator::HasComponent(Entity &e)
 	{
 		return mComponentManager->HasComponent<T>(e);
 	}
+
 
 	template <typename T>
 	bool Coordinator::HasComponent(EntityID e)
@@ -241,6 +255,7 @@ namespace Engine
 		return mComponentManager->GetComponent<T>(e);
 	}
 
+
 	template <typename T>
 	std::shared_ptr<System> Coordinator::GetSystem()
 	{
@@ -254,11 +269,13 @@ namespace Engine
 		mComponentManager->RegisterComponent<T, N>(mFreeListAllocator);
 	}
 
+
 	template <typename T>
 	ComponentType Coordinator::GetComponentType()
 	{
 		return mComponentManager->GetComponentType<T>();
 	}
+
 
 	// std::shared_ptr<T> Coordinator::RegisterSystem()
 	template <typename T>
@@ -266,6 +283,7 @@ namespace Engine
 	{
 		mSystemManager->RegisterSystem<T>();
 	}
+
 
 	template <typename T, typename... argv>
 	void Coordinator::AssignSystemSignature(argv... args)
@@ -276,6 +294,7 @@ namespace Engine
 		SetSystemSignature<T>(signature);
 	}
 
+
 	template <typename T, typename... argv>
 	void Coordinator::AssignSystemSig(Signature &s, T var1, argv... args)
 	{
@@ -285,6 +304,7 @@ namespace Engine
 		AssignSystemSig(s, args...);
 	}
 
+
 	template <typename T>
 	void Coordinator::AssignSystemSig(Signature &s, T var1)
 	{
@@ -292,6 +312,7 @@ namespace Engine
 
 		s.set(GetComponentType<T>());
 	}
+
 
 	template <typename T>
 	void Coordinator::SetSystemSignature(Signature signature)

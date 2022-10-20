@@ -24,7 +24,7 @@
 
 namespace Engine
 {
-	Entity::Entity(EntityID __id__, std::string __name__) : id{ __id__ }, is_child{ false }, name{ __name__ } {}
+	Entity::Entity(EntityID __id__, std::string __name__) : id{ __id__ }, parent{ MAX_ENTITIES + 1 }, is_child{ false }, name{ __name__ } {}
 
 	Entity::Entity(EntityID __id__, EntityID __parent__, std::string __name__) :
 		id{ __id__ }, parent{ __parent__ }, is_child{ true }, name{ __name__ } {};
@@ -93,14 +93,14 @@ namespace Engine
 
 		++EntityCount;
 
-		if (_parent < MAX_ENTITIES)
-		{
-			return Entity(id, _parent, __name__);
-		}
-
 		if (__name__ == "")
 		{
 			__name__ = DEFAULT_ENTITY_NAME + std::to_string(id);
+		}
+
+		if (_parent < MAX_ENTITIES)
+		{
+			return Entity(id, _parent, __name__);
 		}
 
 		return Entity(id, __name__);

@@ -15,6 +15,11 @@
   is registered.
 
   It also have a unique key which is a map to ComponentArray to the ComponentType
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once

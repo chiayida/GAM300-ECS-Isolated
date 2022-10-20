@@ -12,6 +12,11 @@
   - ComponentType
   - MAX_COMPONENTS (Maximum amount of component types)
   - Signature (Use for tracking in systems. Bitset.)
+
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once
