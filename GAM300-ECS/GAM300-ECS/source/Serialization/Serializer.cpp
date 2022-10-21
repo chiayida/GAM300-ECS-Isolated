@@ -38,6 +38,11 @@
 								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
+#define DESERIALIZE_COMPONENTS_PREFAB	DESERIALIZE_TRANSFORM_PREFAB\
+										DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+										DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+
+
 #define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
 										{\
 											type* ptr = coordinator->GetComponent<type>(entity);\
@@ -86,6 +91,27 @@
 										*ptr = transform;\
 									}\
 								}
+
+
+#define DESERIALIZE_TRANSFORM_PREFAB	if (component.first == "Transform")\
+										{\
+											Transform transform{};\
+											json component_json_value = component.second.get<json::object_t>();\
+											JsonToInstance(transform, component_json_value);\
+											if (coordinator->HasComponent<Transform>(*entity))\
+											{\
+												Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
+												ptr->position = transform.position;\
+												ptr->rot_q = transform.rot_q;\
+												ptr->scale = transform.scale;\
+											}\
+											else\
+											{\
+												coordinator->AddComponent<Transform>(*entity);\
+												Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
+												*ptr = transform;\
+											}\
+										}
 
 
 #define DESERIALIZE_OBJECT_COMBINE(type, oName)	else if (component.first == oName)\
@@ -213,6 +239,50 @@ namespace Engine
 	}
 
 
+	void Serializer::ApplyUpdatedPrefab(Coordinator* coordinator, std::string filename)
+	{
+		for (auto& entity : coordinator->GetEntities())
+		{
+			if (entity.GetPrefab() == filename)
+			{
+				Transform transform{};
+				bool flag = false;
+
+				// Get a copy of the original transform
+				if (coordinator->HasComponent<Transform>(entity))
+				{
+					Transform* ptr = coordinator->GetComponent<Transform>(entity);
+					transform = *ptr;
+					flag = true;
+				}
+
+				// Replace with prefab components
+				DeserializePrefab(coordinator, &entity, filename);
+
+				// Check whether needs to override (Transform only)
+				if (flag)
+				{
+					// If no original has no override, replace back with original
+					Transform* ptr = coordinator->GetComponent<Transform>(entity);
+					
+					if (transform.isOverridePosition)
+					{
+						ptr->position = transform.position;
+					}
+					if (transform.isOverrideRotation)
+					{
+						ptr->rot_q = transform.rot_q;
+					}
+					if (transform.isOverrideScale)
+					{
+						ptr->scale = transform.scale;
+					}
+				}
+			}
+		}
+	}
+
+
 	json Serializer::InstanceToJson(json writer, instance obj, std::string cName)
 	{
 		// Check instance for errors
@@ -308,7 +378,7 @@ namespace Engine
 			for (auto& component : componentList)
 			{
 				// Get variant, type and add component to coordinator through component name string
-				DESERIALIZE_COMPONENTS
+				DESERIALIZE_COMPONENTS_PREFAB
 			}
 		}
 	}

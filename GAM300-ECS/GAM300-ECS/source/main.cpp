@@ -21,6 +21,7 @@ int main()
 	Coordinator gCoordinator;
 	gCoordinator.Init();
 	
+	/*
 	{
 		Transform transform = {
 			{ 0.f, 0.f, 0.f },		// position
@@ -62,9 +63,63 @@ int main()
 		gCoordinator.AddComponent<Transform>(id, transform);
 		gCoordinator.AddComponent<Script>(id, script);
 	}
+	*/
+
+	// Created two entities from prefab.
+	Serializer::CreateEntityPrefab(&gCoordinator, "transform.prefab");
+	Serializer::CreateEntityPrefab(&gCoordinator, "transform.prefab");
+
+	// Create a third one... this one more specific
+	{
+		Transform transform = {
+			{ 4.f, 9.f, 7.f },		// position
+			{ 6.f, 1.f, 9.f },		// scale
+			{ 2.f, 3.f, 5.f, 9.f }  // rot_q
+		};
+		transform.isOverridePosition = false;
+		transform.isOverrideRotation = false;
+		transform.isOverrideScale = true;
+
+		Script script = { "0.c" };
+
+		EntityID id = gCoordinator.CreateEntity(); // 2
+		Entity& entity = *gCoordinator.GetEntity(id);
+		entity.SetPrefab("transform.prefab");
+
+		gCoordinator.AddComponent<Transform>(id, transform);
+		gCoordinator.AddComponent<Script>(id, script);
+		gCoordinator.AddComponent<std::vector<Transform>>(id, std::vector<Transform>{});
+	}
+
+
+	// Change entity 1 transform to all 2s
+	// Update prefab to entity 1's properties
+	{
+		Entity& entity = *gCoordinator.GetEntity(1);
+
+		if (gCoordinator.HasComponent<Transform>(entity))
+		{
+			Transform* ptr = gCoordinator.GetComponent<Transform>(entity);
+
+			Transform transform = {
+				{ 123.f, 456.f, 789.f },	// position
+				{ 11.f, 22.f, 33.f },		// scale
+				{ 44.f, 55.f, 66.f, 77.f }  // rot_q
+			};
+			transform.isOverridePosition = true;
+			transform.isOverrideRotation = false;
+			transform.isOverrideScale = true;
+
+			*ptr = transform;
+		}
+
+		Serializer::SerializePrefab(&gCoordinator, 1, "transform.prefab");
+	}
+
+	Serializer::ApplyUpdatedPrefab(&gCoordinator, "transform.prefab");
 
 	// Printing to check
-	std::cout << "\nPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP\n";
+	std::cout << "\nSTART: Printing to check\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
 		std::cout << "-------------------------\n" 
@@ -80,6 +135,7 @@ int main()
 			std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
 				"\n" << "rot_q: " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z << " " << transform->rot_q.w <<
 				"\n" << "scale: " << transform->scale.x << " " << transform->scale.y << " " << transform->scale.z <<
+				"\n" << "override: " << transform->isOverridePosition << " " << transform->isOverrideRotation << " " << transform->isOverrideScale <<
 				"\n";
 		}
 		
@@ -88,7 +144,7 @@ int main()
 			Script* script = gCoordinator.GetComponent<Script>(entity);
 			std::cout << "\nScript\n";
 			std::cout << "mono_string: " << script->mono_string <<
-				"\n\n\n";
+				"\n";
 		}
 
 		if (gCoordinator.HasComponent<std::vector<Transform>>(entity))
@@ -98,7 +154,7 @@ int main()
 			int i = 0;
 			for (auto& transform : *vtransform)
 			{
-				std::cout << "\nTransform: " << i++ << "\n";
+				std::cout << "\nTransform index: " << i++ << "\n";
 				std::cout << "position: " << transform.position.x << " " << transform.position.y << " " << transform.position.z <<
 					"\n" << "rot_q: " << transform.rot_q.x << " " << transform.rot_q.y << " " << transform.rot_q.z << " " << transform.rot_q.w <<
 					"\n" << "scale: " << transform.scale.x << " " << transform.scale.y << " " << transform.scale.z <<
@@ -106,7 +162,7 @@ int main()
 			}
 		}
 	}
-	std::cout << "\nPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP\n";
+	std::cout << "\nEND: Printing to check\n";
 
 	return 0;
 }

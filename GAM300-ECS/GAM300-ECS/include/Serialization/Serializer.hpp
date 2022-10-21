@@ -94,6 +94,7 @@ namespace Engine
 		static void SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename);
 		static void DeserializeJson(Coordinator* coordinator, std::string filename);
 		static void CreateEntityPrefab(Coordinator* coordinator, std::string filename);
+		static void ApplyUpdatedPrefab(Coordinator* coordinator, std::string filename);
 		
 	private:
 		static json InstanceToJson(json writer, instance obj, std::string name);
