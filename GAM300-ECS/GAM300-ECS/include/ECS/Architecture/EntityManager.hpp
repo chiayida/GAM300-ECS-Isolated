@@ -45,14 +45,18 @@ namespace Engine
 		void SetEntityName(std::string __name__);
 		std::string GetEntityName() const;
 
+		bool isParent() const;
 		bool IsChild() const;
+		void SetIs_Child(bool);
+		void SetIs_Parent(bool);
+		void SetParentID(EntityID);
+
 		EntityID GetParent() const;
 
 		void SetPrefab(std::string __prefab__);
 		std::string GetPrefab() const;
 
 		RTTR_ENABLE()
-
 	private:
 		EntityID id;
 
@@ -61,6 +65,7 @@ namespace Engine
 
 		EntityID parent; // parent id given that is_child is true
 		bool is_child;
+		bool is_parent;
 	};
 
 

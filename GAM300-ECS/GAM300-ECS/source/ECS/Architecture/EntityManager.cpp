@@ -24,10 +24,10 @@
 
 namespace Engine
 {
-	Entity::Entity(EntityID __id__, std::string __name__) : id{ __id__ }, parent{ MAX_ENTITIES + 1 }, is_child{ false }, name{ __name__ } {}
+	Entity::Entity(EntityID __id__, std::string __name__) : id{ __id__ }, parent{ MAX_ENTITIES + 1 }, is_parent{ false }, is_child{ false }, name{ __name__ } {}
 
 	Entity::Entity(EntityID __id__, EntityID __parent__, std::string __name__) :
-		id{ __id__ }, parent{ __parent__ }, is_child{ true }, name{ __name__ } {};
+		id{ __id__ }, parent{ __parent__ }, name{ __name__ }, is_parent{ false }, is_child{ true } {};
 
 
 	EntityID Entity::GetEntityID() const
@@ -51,6 +51,30 @@ namespace Engine
 	bool Entity::IsChild() const
 	{
 		return is_child;
+	}
+
+
+	bool Entity::isParent() const
+	{
+		return is_parent;
+	}
+
+
+	void Entity::SetIs_Child(bool val)
+	{
+		is_child = val;
+	}
+
+
+	void Entity::SetParentID(EntityID ids)
+	{
+		parent = ids;
+	}
+
+
+	void Entity::SetIs_Parent(bool val)
+	{
+		is_parent = val;
 	}
 
 

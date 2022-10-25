@@ -76,9 +76,14 @@ namespace Engine
 		// Creates a child entity and returns the ID
 		Entity CreateChild(EntityID parent, const std::string&__name__ = "");
 
+		// Convert the entity (child) into a child passing in the parent-to-be (parent)
+		void ToChild(EntityID parent, EntityID child);
+
 		// Get a vector of the child objects based on the entity ID
-		std::vector<EntityID> GetChildObjects(unsigned int id);		 // TODO
-		Entity &GetChildObject(EntityID parent, uint32_t index = 0); // TODO
+		std::vector<EntityID> GetChildObjects(EntityID id);
+		Entity *GetChildObject(EntityID parent, uint32_t index = 0);
+
+		std::map<EntityID, std::vector<EntityID>>& GetMap();
 
 		// Resets entity's signature, remove it from component arrays and systems
 		void DestroyEntity(Entity &e);
@@ -160,6 +165,7 @@ namespace Engine
 		std::unique_ptr<SystemManager> mSystemManager;
 
 		std::vector<Entity> mEntities{};
+		// 1 level of child
 		std::map<EntityID, std::vector<EntityID>> mParentChild;
 	};
 

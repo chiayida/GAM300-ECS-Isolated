@@ -132,10 +132,57 @@ namespace Engine
 	Entity Coordinator::CreateChild(EntityID parent, const std::string& __name__)
 	{
 		Entity e = mEntityManager->CreateChild(parent, __name__);
-		mEntities.emplace_back(e);
+		mEntities.emplace_back(e); //insert this
 		mParentChild[parent].emplace_back(e.GetEntityID());
-		
+
 		return e;
+	}
+
+
+	void Coordinator::ToChild(EntityID parent, EntityID child)
+	{
+		Entity& e = *GetEntity(child);
+		if (e.IsChild())
+		{
+			// Remove child from the vector in mParentChild
+			std::vector<EntityID>& childs = mParentChild[e.GetParent()];
+			childs.erase(std::find(childs.begin(), childs.end(), child));
+		}
+		else
+		{
+			e.SetIs_Child(true);
+		}
+		e.SetParentID(parent);
+
+		// Add child to mParentChild
+		mParentChild[parent].emplace_back(child);
+	}
+
+
+	std::vector<EntityID> Coordinator::GetChildObjects(EntityID id)
+	{
+		auto it = mParentChild.find(id);
+		if (it != mParentChild.end())
+		{
+			return mParentChild[id];
+		}
+		// Else return empty vector
+		return std::vector<EntityID>();
+	}
+
+
+	Entity* Coordinator::GetChildObject(EntityID parent, uint32_t index)
+	{
+		auto children = GetChildObjects(parent);
+		LOG_ASSERT(!children.empty() && "Calling GetChildObject on entity without a child!");
+
+		return GetEntity(children[index]);
+	}
+
+
+	std::map<EntityID, std::vector<EntityID>>& Coordinator::GetMap()
+	{
+		return mParentChild;
 	}
 
 
