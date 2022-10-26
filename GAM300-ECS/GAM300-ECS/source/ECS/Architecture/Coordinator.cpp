@@ -27,17 +27,29 @@
 
 #include <memory>
 
-#define DUPLICATE_COMPONENTS	DUPLICATE_COMPONENT(Transform)\
-								DUPLICATE_COMPONENT(Script)\
-								DUPLICATE_COMPONENT(std::vector<Transform>)
+
+#define DUPLICATE_COMPONENTS(d, o)	DUPLICATE_COMPONENT(Transform, d, o)\
+									DUPLICATE_COMPONENT(Script, d, o)\
+									DUPLICATE_COMPONENT(std::vector<Transform>, d, o)
 
 
-#define DUPLICATE_COMPONENT(type)	if(HasComponent<type>(original))\
-									{\
-										type* oPtr = GetComponent<type>(original);\
-										type c = *oPtr;\
-										AddComponent<type>(duplicated, c);\
-									}
+#define DUPLICATE_COMPONENT(type, d, o)	if(HasComponent<type>(o))\
+										{\
+											type* oPtr = GetComponent<type>(o);\
+											type c = *oPtr;\
+											AddComponent<type>(d, c);\
+										}
+
+// Only for colliders as PhyX needs Actor
+#define DUPLICATE_COMPONENT_COLLIDER(type, d, o)	if(HasComponent<type>(o) && HasComponent<Transform>(o))\
+													{\
+														type* oPtr = GetComponent<type>(o);\
+														AddComponent<type>(d, type(GetComponent<Transform>(d)));\
+														type* dPtr= GetComponent<type>(d);\
+														*dPtr = *oPtr;\
+														dPtr->CreateActor();\
+														dPtr->AddActor();\
+													}
 
 
 namespace Engine
@@ -117,36 +129,95 @@ namespace Engine
 	}
 
 
-	void Coordinator::DuplicateEntity(EntityID __id__)
+	void Coordinator::DuplicateEntity(EntityID o_id, EntityID d_id)
 	{
-		Entity original = *GetEntity(__id__);
+		Entity original = *GetEntity(o_id);
 
-		EntityID id = CreateEntity(original.GetEntityName() + "(D)");
-		Entity& duplicated = *GetEntity(id);
-		duplicated.SetPrefab(original.GetPrefab());
+		// Highest level/ Top of "tree", parent and not a child
+		if (original.isParent() && !original.IsChild())
+		{
+			// Create and duplicate entity
+			EntityID id = CreateEntity();
+			Entity& duplicated = *GetEntity(id);
+			duplicated = original;
+			DUPLICATE_COMPONENTS(duplicated, original)
 
-		DUPLICATE_COMPONENTS
+			// Get children from original
+			for (auto& child : mParentChild[o_id])
+			{
+				EntityID c_id = CreateChild(id);
+				Entity& c_duplicated = *GetEntity(c_id);
+				Entity& c_original = *GetEntity(child);
+				c_duplicated = c_original;
+				DUPLICATE_COMPONENTS(c_duplicated, c_original)
+
+				// If it is a parent/child
+				if (c_original.isParent())
+				{
+					DuplicateEntity(child, c_id);
+				}
+			}
+		}
+		// If it is a parent/child (To eliminate creating of same entity)
+		else if (original.isParent() && original.IsChild())
+		{
+			// Get children from original
+			for (auto& child : mParentChild[o_id])
+			{
+				// Create child with duplicated's parent id
+				EntityID c_id = CreateChild(d_id);
+				Entity& c_duplicated = *GetEntity(c_id);
+				Entity& c_original = *GetEntity(child);
+				c_duplicated = c_original;
+				DUPLICATE_COMPONENTS(c_duplicated, c_original)
+
+				// If it is a parent/child
+				if (c_original.isParent())
+				{
+					DuplicateEntity(child, c_id);
+				}
+			}
+		}
+		// Basic entity without parent or child
+		else
+		{
+			// Create and duplicate entity
+			EntityID id = CreateEntity();
+			Entity& duplicated = *GetEntity(id);
+			duplicated = original;
+			DUPLICATE_COMPONENTS(duplicated, original)
+		}
 	}
 
 
-	Entity Coordinator::CreateChild(EntityID parent, const std::string& __name__)
+	EntityID Coordinator::CreateChild(EntityID parent, const std::string& __name__)
 	{
+		(*GetEntity(parent)).SetIs_Parent(true);
+
 		Entity e = mEntityManager->CreateChild(parent, __name__);
 		mEntities.emplace_back(e); //insert this
 		mParentChild[parent].emplace_back(e.GetEntityID());
 
-		return e;
+		return e.GetEntityID();
 	}
 
 
 	void Coordinator::ToChild(EntityID parent, EntityID child)
 	{
 		Entity& e = *GetEntity(child);
+		(*GetEntity(parent)).SetIs_Parent(true);
+
 		if (e.IsChild())
 		{
 			// Remove child from the vector in mParentChild
 			std::vector<EntityID>& childs = mParentChild[e.GetParent()];
 			childs.erase(std::find(childs.begin(), childs.end(), child));
+
+			if (mParentChild[e.GetParent()].size() == 0)
+			{
+				GetEntity(e.GetParent())->SetIs_Parent(false);
+				mParentChild.erase(e.GetParent());
+			}
 		}
 		else
 		{
@@ -194,6 +265,25 @@ namespace Engine
 
 	void Coordinator::DestroyEntity(EntityID e)
 	{
+		// Remove from mEntities container
+		int index = 0;
+		for (int i = 0; i < mEntities.size(); ++i)
+		{
+			if (e == mEntities[i].GetEntityID())
+			{
+				index = i;
+				break;
+			}
+		}
+		mEntities.erase(mEntities.begin() + index);
+
+		mEntityManager->DestroyEntity(e);
+		mComponentManager->DestroyEntity(e);
+		mSystemManager->DestroyEntity(e);
+	}
+	/*
+	void Coordinator::DestroyEntity(EntityID e)
+	{
 		Entity* ent = GetEntity(e);
 
 		// Delete child id from parent's vector
@@ -205,11 +295,20 @@ namespace Engine
 			{
 				mParentChild[ent->GetParent()].erase(child);
 			}
+
+			if (mParentChild[ent->GetParent()].size() == 0)
+			{
+				GetEntity(ent->GetParent())->SetIs_Parent(false);
+				mParentChild.erase(ent->GetParent());
+			}
 		}
+
 		mEntityManager->DestroyEntity(e);
 		mComponentManager->DestroyEntity(e);
 		mSystemManager->DestroyEntity(e);
 
+
+		// Remove from mEntities container
 		int index = 0;
 		for (; index < mEntities.size(); ++index)
 		{
@@ -221,17 +320,27 @@ namespace Engine
 		}
 		mEntities.erase(mEntities.begin() + index);
 
+
+
+		for (auto& entity : mEntities)
+		{
+			std::cout << "asdadsad: " << entity.GetEntityID() << "\n";
+		}
+
+
 		// Recursively delete all child entities
 		std::map<EntityID, std::vector<EntityID>>::iterator it = mParentChild.find(e);
 		if (it != mParentChild.end())
 		{
 			for (EntityID child : it->second)
 			{
+				std::cout << "child1: " << child << "\n";
 				DestroyEntity(child);
 			}
 			mParentChild.erase(e);
 		}
 	}
+	*/
 
 
 	std::vector<Entity>& Coordinator::GetEntities()

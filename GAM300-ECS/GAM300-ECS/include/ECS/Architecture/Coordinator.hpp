@@ -71,10 +71,9 @@ namespace Engine
 
 		// Creates an entity and returns the ID
 		EntityID CreateEntity(std::string __name__ = "");
-		void DuplicateEntity(EntityID __id__);
+		void DuplicateEntity(EntityID o_id, EntityID d_id = MAX_ENTITIES + 1);
 
-		// Creates a child entity and returns the ID
-		Entity CreateChild(EntityID parent, const std::string&__name__ = "");
+		EntityID CreateChild(EntityID parent, const std::string&__name__ = "");
 
 		// Convert the entity (child) into a child passing in the parent-to-be (parent)
 		void ToChild(EntityID parent, EntityID child);

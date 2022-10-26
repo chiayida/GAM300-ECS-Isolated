@@ -45,6 +45,18 @@ namespace Engine
 		void SetEntityName(std::string __name__);
 		std::string GetEntityName() const;
 
+		// For duplication
+		void Copy(const Entity& rhs)
+		{
+			is_child = rhs.is_child;
+			is_parent = rhs.is_parent;
+
+			parent = rhs.parent;
+			prefab = rhs.GetPrefab();
+
+			name = rhs.GetEntityName() + "(D)";
+		}
+
 		bool isParent() const;
 		bool IsChild() const;
 		void SetIs_Child(bool);
