@@ -139,7 +139,7 @@ namespace Engine
 			// Create and duplicate entity
 			EntityID id = CreateEntity();
 			Entity& duplicated = *GetEntity(id);
-			duplicated = original;
+			duplicated.Copy(original);
 			DUPLICATE_COMPONENTS(duplicated, original)
 
 			// Get children from original
@@ -148,7 +148,7 @@ namespace Engine
 				EntityID c_id = CreateChild(id);
 				Entity& c_duplicated = *GetEntity(c_id);
 				Entity& c_original = *GetEntity(child);
-				c_duplicated = c_original;
+				c_duplicated.Copy(c_original);
 				DUPLICATE_COMPONENTS(c_duplicated, c_original)
 
 				// If it is a parent/child
@@ -168,7 +168,7 @@ namespace Engine
 				EntityID c_id = CreateChild(d_id);
 				Entity& c_duplicated = *GetEntity(c_id);
 				Entity& c_original = *GetEntity(child);
-				c_duplicated = c_original;
+				c_duplicated.Copy(c_original);
 				DUPLICATE_COMPONENTS(c_duplicated, c_original)
 
 				// If it is a parent/child
@@ -184,7 +184,7 @@ namespace Engine
 			// Create and duplicate entity
 			EntityID id = CreateEntity();
 			Entity& duplicated = *GetEntity(id);
-			duplicated = original;
+			duplicated.Copy(original);
 			DUPLICATE_COMPONENTS(duplicated, original)
 		}
 	}
@@ -262,26 +262,7 @@ namespace Engine
 		DestroyEntity(e.GetEntityID());
 	}
 
-
-	void Coordinator::DestroyEntity(EntityID e)
-	{
-		// Remove from mEntities container
-		int index = 0;
-		for (int i = 0; i < mEntities.size(); ++i)
-		{
-			if (e == mEntities[i].GetEntityID())
-			{
-				index = i;
-				break;
-			}
-		}
-		mEntities.erase(mEntities.begin() + index);
-
-		mEntityManager->DestroyEntity(e);
-		mComponentManager->DestroyEntity(e);
-		mSystemManager->DestroyEntity(e);
-	}
-	/*
+	
 	void Coordinator::DestroyEntity(EntityID e)
 	{
 		Entity* ent = GetEntity(e);
@@ -303,44 +284,35 @@ namespace Engine
 			}
 		}
 
-		mEntityManager->DestroyEntity(e);
-		mComponentManager->DestroyEntity(e);
-		mSystemManager->DestroyEntity(e);
-
-
-		// Remove from mEntities container
-		int index = 0;
-		for (; index < mEntities.size(); ++index)
-		{
-			// Swaps last element with current and remove it
-			if (e == mEntities[index].GetEntityID())
-			{
-				break;
-			}
-		}
-		mEntities.erase(mEntities.begin() + index);
-
-
-
-		for (auto& entity : mEntities)
-		{
-			std::cout << "asdadsad: " << entity.GetEntityID() << "\n";
-		}
-
-
 		// Recursively delete all child entities
 		std::map<EntityID, std::vector<EntityID>>::iterator it = mParentChild.find(e);
 		if (it != mParentChild.end())
 		{
 			for (EntityID child : it->second)
 			{
-				std::cout << "child1: " << child << "\n";
 				DestroyEntity(child);
 			}
 			mParentChild.erase(e);
 		}
+
+		// Remove from mEntities container
+		int index = 0;
+		for (int i = 0; i < mEntities.size(); ++i)
+		{
+			//std::cout << "entity id to be deleted: " << e << std::endl;
+
+			if (e == mEntities[i].GetEntityID())
+			{
+				index = i;
+				break;
+			}
+		}
+		mEntities.erase(mEntities.begin() + index);
+
+		mEntityManager->DestroyEntity(e);
+		mComponentManager->DestroyEntity(e);
+		mSystemManager->DestroyEntity(e);
 	}
-	*/
 
 
 	std::vector<Entity>& Coordinator::GetEntities()

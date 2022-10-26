@@ -22,91 +22,15 @@ int main()
 	gCoordinator.Init();
 
 	EntityID id_0 = gCoordinator.CreateEntity(); // 0
-	//Entity& entity_0 = *gCoordinator.GetEntity(id_0); // Entity 0
-
 	EntityID id_1 = gCoordinator.CreateEntity(); // 1
-	//Entity& entity_1 = *gCoordinator.GetEntity(id_1); // Entity 1
-
-
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.CreateEntity(); // 1
-
-
-
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << " id: " << entity.GetEntityID() << "\n";
-	}
-
-
-	gCoordinator.DestroyEntity(2); // 1
-	//gCoordinator.DestroyEntity(10); // 1
-	//gCoordinator.DestroyEntity(11); // 1
-
-	std::cout << "==================\n";
-
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << " id: " << entity.GetEntityID() << "\n";
-	}
-
-
-
-
-	/*
 	gCoordinator.CreateChild(id_1); // 2
 	gCoordinator.CreateChild(id_1); // 3
-
 	gCoordinator.CreateChild(2); // 4
 	gCoordinator.CreateChild(4); // 5
 
 	gCoordinator.ToChild(0, 5);
 
-	std::cout << "AAAA\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << " id: " << entity.GetEntityID();
-		std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
-	}
-
-
-	gCoordinator.DestroyEntity(2);
-
-
-	std::cout << "--------------------------\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << " id: " << entity.GetEntityID();
-		std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
-	}
-
-
-
-	gCoordinator.DestroyEntity(3);
-
-
-	std::cout << "===================\n";
+	std::cout << "===================\n\n";
 	for (auto& map : gCoordinator.GetMap())
 	{
 		std::cout << "Parent: " << map.first << "\n";
@@ -121,8 +45,31 @@ int main()
 
 
 
+	std::cout << "--------------------------\n";
+	for (auto& entity : gCoordinator.GetEntities())
+	{
+		std::cout << " id: " << entity.GetEntityID();
+		std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
+	}
+	std::cout << "--------------------------\n";
+
+	gCoordinator.DuplicateEntity(1);
+
+	std::cout << "\nDDDDDDDDDDDDDDDDDDDDDDDDDDD\n\n";
 
 
+	std::cout << "===================\n\n";
+	for (auto& map : gCoordinator.GetMap())
+	{
+		std::cout << "Parent: " << map.first << "\n";
+
+		for (auto& child : map.second)
+		{
+			std::cout << "Child ID: " << child << std::endl;
+		}
+		std::cout << "\n";
+	}
+	std::cout << "===================\n";
 
 
 
@@ -131,39 +78,12 @@ int main()
 	{
 		std::cout << " id: " << entity.GetEntityID();
 		std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
+
+		std::cout << "parent: " << entity.GetParent() << "\n";
 	}
+	std::cout << "--------------------------\n";
 
 
-
-
-
-
-
-
-
-
-	gCoordinator.DuplicateEntity(0);
-
-
-
-
-
-
-
-	std::cout << "==========================\n\n";
-	for (auto& map : gCoordinator.GetMap())
-	{
-		std::cout << "Parent ID: " << map.first << std::endl;
-
-		for (auto& child : map.second)
-		{
-			std::cout << "Child ID: " << child << std::endl;
-		}
-		std::cout << "\n";
-	}
-	std::cout << "==========================\n";
-
-	*/
 
 	// Printing to check
 	std::cout << "\nSTART: Printing to check\n";
