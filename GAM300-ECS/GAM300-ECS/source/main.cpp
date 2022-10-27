@@ -30,59 +30,61 @@ int main()
 
 	gCoordinator.ToChild(0, 5);
 
-	std::cout << "===================\n\n";
-	for (auto& map : gCoordinator.GetMap())
-	{
-		std::cout << "Parent: " << map.first << "\n";
-
-		for (auto& child : map.second)
-		{
-			std::cout << "Child ID: " << child << std::endl;
-		}
-		std::cout << "\n";
-	}
-	std::cout << "===================\n";
-
-
-
-	std::cout << "--------------------------\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << " id: " << entity.GetEntityID();
-		std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
-	}
-	std::cout << "--------------------------\n";
-
 	Entity& entity_1 = *gCoordinator.GetEntity(id_1);
 	gCoordinator.DuplicateEntity(entity_1, entity_1.GetParent());
 
-	std::cout << "\nDDDDDDDDDDDDDDDDDDDDDDDDDDD\n\n";
+	Entity& ee = *gCoordinator.GetEntity(7);
+	gCoordinator.DuplicateEntity(ee, ee.GetParent());
 
 
-	std::cout << "===================\n\n";
-	for (auto& map : gCoordinator.GetMap())
-	{
-		std::cout << "Parent: " << map.first << " vector size: " << map.second.size() << "\n";
-
-		for (auto& child : map.second)
-		{
-			std::cout << "Child ID: " << child << std::endl;
-		}
-		std::cout << "\n";
-	}
-	std::cout << "===================\n";
-
-
-
-	std::cout << "--------------------------\n";
+	std::cout << "!!!Before Destroy!!!\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
-		std::cout << "id: " << entity.GetEntityID();
-		std::cout << " | isParent: " << entity.isParent() << " | isChild: " << entity.IsChild() << "\n";
-		std::cout << "parent: " << entity.GetParent() << "\n";
-	}
-	std::cout << "--------------------------\n";
+		std::cout << "\n";
 
+		std::cout << "Entity ID: " << entity.GetEntityID() << "\n";
+
+		// Parent
+		if (entity.isParent())
+		{
+			for (auto& child : gCoordinator.GetChildObjects(entity.GetEntityID()))
+			{
+				std::cout << "Child ID: " << child << "\n";
+			}
+		}
+		if (entity.IsChild())
+		{
+			std::cout << "Parent ID: " << entity.GetParent() << "\n";
+		}
+
+		std::cout << "\n";
+	}
+
+	gCoordinator.DestroyEntity(6);
+
+
+	std::cout << "===After Destroy===\n";
+	for (auto& entity : gCoordinator.GetEntities())
+	{
+		std::cout << "\n";
+
+		std::cout << "Entity ID: " << entity.GetEntityID() << "\n";
+
+		// Parent
+		if (entity.isParent())
+		{
+			for (auto& child : gCoordinator.GetChildObjects(entity.GetEntityID()))
+			{
+				std::cout << "Child ID: " << child << "\n";
+			}
+		}
+		if (entity.IsChild())
+		{
+			std::cout << "Parent ID: " << entity.GetParent() << "\n";
+		}
+
+		std::cout << "\n";
+	}
 
 
 	// Printing to check
@@ -129,8 +131,6 @@ int main()
 		}
 	}
 	std::cout << "\nEND: Printing to check\n";
-
-
 
 
 	return 0;

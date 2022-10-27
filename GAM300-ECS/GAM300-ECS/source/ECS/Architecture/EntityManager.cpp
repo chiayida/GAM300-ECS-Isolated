@@ -144,7 +144,7 @@ namespace Engine
 		LOG_ASSERT(e.GetEntityID() < MAX_ENTITIES && "Entity is out of range.");
 
 		// Reset the entity's name
-		e.SetEntityName(DEFAULT_ENTITY_NAME);
+		//e.SetEntityName(DEFAULT_ENTITY_NAME);
 
 		// Resets the entity's signature bits (reset to zero)
 		EntitiesSignatures[e.GetEntityID()].reset();

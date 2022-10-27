@@ -131,94 +131,23 @@ namespace Engine
 
 	void Coordinator::DuplicateEntity(Entity entity, EntityID parentID)
 	{
-		std::cout << "id: " << entity.GetEntityID() << "parentID: " << parentID << "\n";
-
 		// Create new entity based on parentID (As a standalone or as a child)
 		EntityID duplicated_id = entity.GetParent() < MAX_ENTITIES ? CreateChild(parentID) : CreateEntity();
 		Entity& duplicated_entity = *GetEntity(duplicated_id);
-
-		std::cout << "HERE\n";
-		for (auto& entity : GetEntities())
-		{
-			std::cout << " id: " << entity.GetEntityID();
-			std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
-		}
-		std::cout << "HERE\n";
-
 
 		// Duplicate entity (Copy all variables + Components) based on original
 		duplicated_entity.Copy(entity);
 		DUPLICATE_COMPONENTS(duplicated_entity, entity)
 
 		// Loop original entity children
-		for (auto& child : mParentChild[entity.GetEntityID()])
+		if (mParentChild.find(entity.GetEntityID()) != mParentChild.end())
 		{
-			DuplicateEntity(*GetEntity(child), duplicated_id);
-		}
-	}
-
-
-	/*
-	void Coordinator::DuplicateEntity(EntityID o_id, EntityID d_id)
-	{
-		Entity original = *GetEntity(o_id);
-
-		// Highest level/ Top of "tree", parent and not a child
-		if (original.isParent() && !original.IsChild())
-		{
-			// Create and duplicate entity
-			EntityID id = CreateEntity();
-			Entity& duplicated = *GetEntity(id);
-			duplicated.Copy(original);
-			DUPLICATE_COMPONENTS(duplicated, original)
-
-			// Get children from original
-			for (auto& child : mParentChild[o_id])
+			for (auto& child : mParentChild[entity.GetEntityID()])
 			{
-				EntityID c_id = CreateChild(id);
-				Entity& c_duplicated = *GetEntity(c_id);
-				Entity& c_original = *GetEntity(child);
-				c_duplicated.Copy(c_original);
-				DUPLICATE_COMPONENTS(c_duplicated, c_original)
-
-				// If it is a parent/child
-				if (c_original.isParent())
-				{
-					DuplicateEntity(child, c_id);
-				}
+				DuplicateEntity(*GetEntity(child), duplicated_id);
 			}
 		}
-		// If it is a parent/child (To eliminate creating of same entity)
-		else if (original.isParent() && original.IsChild())
-		{
-			// Get children from original
-			for (auto& child : mParentChild[o_id])
-			{
-				// Create child with duplicated's parent id
-				EntityID c_id = CreateChild(d_id);
-				Entity& c_duplicated = *GetEntity(c_id);
-				Entity& c_original = *GetEntity(child);
-				c_duplicated.Copy(c_original);
-				DUPLICATE_COMPONENTS(c_duplicated, c_original)
-
-				// If it is a parent/child
-				if (c_original.isParent())
-				{
-					DuplicateEntity(child, c_id);
-				}
-			}
-		}
-		// Basic entity without parent or child
-		else
-		{
-			// Create and duplicate entity
-			EntityID id = CreateEntity();
-			Entity& duplicated = *GetEntity(id);
-			duplicated.Copy(original);
-			DUPLICATE_COMPONENTS(duplicated, original)
-		}
 	}
-	*/
 
 
 	EntityID Coordinator::CreateChild(EntityID parent, const std::string& __name__)
@@ -293,45 +222,45 @@ namespace Engine
 		DestroyEntity(e.GetEntityID());
 	}
 
-	
+
 	void Coordinator::DestroyEntity(EntityID e)
 	{
-		Entity* ent = GetEntity(e);
-
-		// Delete child id from parent's vector
-		if (ent && ent->IsChild())
+		// Recursive, DFS to first child
+		for (auto& child : GetChildObjects(e))
 		{
-			std::vector<EntityID>& children = mParentChild[ent->GetParent()];
-			auto child = std::find(children.begin(), children.end(), ent->GetEntityID());
-			if (child != children.end())
+			DestroyEntity(child);
+		}
+
+		Entity& entity = *GetEntity(e);
+		EntityID parentID = entity.GetParent();
+
+		// If valid parentID, remove from parent-child container
+		if (parentID < MAX_ENTITIES)
+		{
+			std::vector<EntityID>& children = mParentChild[parentID];
+			auto itr = std::find(children.begin(), children.end(), e);
+
+			if (itr != children.end())
 			{
-				mParentChild[ent->GetParent()].erase(child);
+				mParentChild[parentID].erase(itr);
 			}
 
-			if (mParentChild[ent->GetParent()].size() == 0)
+			// If there is no more children, get rid of parentID in map
+			if (mParentChild[parentID].size() == 0)
 			{
-				GetEntity(ent->GetParent())->SetIs_Parent(false);
-				mParentChild.erase(ent->GetParent());
+				Entity* entity_parent = GetEntity(parentID);
+				if (entity_parent)
+				{
+					entity_parent->SetIs_Parent(false);
+				}
+				mParentChild.erase(parentID);
 			}
 		}
 
-		// Recursively delete all child entities
-		std::map<EntityID, std::vector<EntityID>>::iterator it = mParentChild.find(e);
-		if (it != mParentChild.end())
-		{
-			for (EntityID child : it->second)
-			{
-				DestroyEntity(child);
-			}
-			mParentChild.erase(e);
-		}
-
-		// Remove from mEntities container
+		// Remove entity from mEntities container
 		int index = 0;
 		for (int i = 0; i < mEntities.size(); ++i)
 		{
-			//std::cout << "entity id to be deleted: " << e << std::endl;
-
 			if (e == mEntities[i].GetEntityID())
 			{
 				index = i;

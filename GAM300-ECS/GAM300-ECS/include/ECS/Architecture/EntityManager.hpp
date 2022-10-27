@@ -51,7 +51,7 @@ namespace Engine
 			is_child = rhs.is_child;
 			is_parent = rhs.is_parent;
 
-			parent = rhs.parent;
+			//parent = rhs.parent;
 			prefab = rhs.GetPrefab();
 
 			name = rhs.GetEntityName() + "(D)";
