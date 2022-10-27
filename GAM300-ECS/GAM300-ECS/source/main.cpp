@@ -53,7 +53,8 @@ int main()
 	}
 	std::cout << "--------------------------\n";
 
-	gCoordinator.DuplicateEntity(1);
+	Entity& entity_1 = *gCoordinator.GetEntity(id_1);
+	gCoordinator.DuplicateEntity(entity_1, entity_1.GetParent());
 
 	std::cout << "\nDDDDDDDDDDDDDDDDDDDDDDDDDDD\n\n";
 
@@ -61,7 +62,7 @@ int main()
 	std::cout << "===================\n\n";
 	for (auto& map : gCoordinator.GetMap())
 	{
-		std::cout << "Parent: " << map.first << "\n";
+		std::cout << "Parent: " << map.first << " vector size: " << map.second.size() << "\n";
 
 		for (auto& child : map.second)
 		{
@@ -76,9 +77,8 @@ int main()
 	std::cout << "--------------------------\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
-		std::cout << " id: " << entity.GetEntityID();
-		std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
-
+		std::cout << "id: " << entity.GetEntityID();
+		std::cout << " | isParent: " << entity.isParent() << " | isChild: " << entity.IsChild() << "\n";
 		std::cout << "parent: " << entity.GetParent() << "\n";
 	}
 	std::cout << "--------------------------\n";

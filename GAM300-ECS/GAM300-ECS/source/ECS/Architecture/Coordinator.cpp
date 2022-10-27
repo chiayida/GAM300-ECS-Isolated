@@ -129,6 +129,36 @@ namespace Engine
 	}
 
 
+	void Coordinator::DuplicateEntity(Entity entity, EntityID parentID)
+	{
+		std::cout << "id: " << entity.GetEntityID() << "parentID: " << parentID << "\n";
+
+		// Create new entity based on parentID (As a standalone or as a child)
+		EntityID duplicated_id = entity.GetParent() < MAX_ENTITIES ? CreateChild(parentID) : CreateEntity();
+		Entity& duplicated_entity = *GetEntity(duplicated_id);
+
+		std::cout << "HERE\n";
+		for (auto& entity : GetEntities())
+		{
+			std::cout << " id: " << entity.GetEntityID();
+			std::cout << " isParent: " << entity.isParent() << " isChild: " << entity.IsChild() << "\n";
+		}
+		std::cout << "HERE\n";
+
+
+		// Duplicate entity (Copy all variables + Components) based on original
+		duplicated_entity.Copy(entity);
+		DUPLICATE_COMPONENTS(duplicated_entity, entity)
+
+		// Loop original entity children
+		for (auto& child : mParentChild[entity.GetEntityID()])
+		{
+			DuplicateEntity(*GetEntity(child), duplicated_id);
+		}
+	}
+
+
+	/*
 	void Coordinator::DuplicateEntity(EntityID o_id, EntityID d_id)
 	{
 		Entity original = *GetEntity(o_id);
@@ -188,6 +218,7 @@ namespace Engine
 			DUPLICATE_COMPONENTS(duplicated, original)
 		}
 	}
+	*/
 
 
 	EntityID Coordinator::CreateChild(EntityID parent, const std::string& __name__)
