@@ -78,9 +78,6 @@
         "name": "nofab",
         "prefab": "transform.prefab"
     },
-    "Script": {
-        "mono_string": "newScript3.c"
-    },
     "Transform": {
         "isOverridePosition": false,
         "isOverrideRotation": false,

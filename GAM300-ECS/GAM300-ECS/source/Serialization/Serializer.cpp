@@ -33,14 +33,14 @@
 							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS	DESERIALIZE_TRANSFORM\
-								DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+#define DESERIALIZE_COMPONENTS	if DESERIALIZE_TRANSFORM\
+								else if DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+								else if DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS_PREFAB	DESERIALIZE_TRANSFORM_PREFAB\
-										DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-										DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+#define DESERIALIZE_COMPONENTS_PREFAB	if DESERIALIZE_TRANSFORM_PREFAB\
+										else if DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+										else if DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
 #define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
@@ -63,7 +63,7 @@
 												}
 
 
-#define DESERIALIZE_TRANSFORM	if (component.first == "Transform")\
+#define DESERIALIZE_TRANSFORM	(component.first == "Transform")\
 								{\
 									Transform transform{};\
 									json component_json_value = component.second.get<json::object_t>();\
@@ -93,7 +93,7 @@
 								}
 
 
-#define DESERIALIZE_TRANSFORM_PREFAB	if (component.first == "Transform")\
+#define DESERIALIZE_TRANSFORM_PREFAB	(component.first == "Transform")\
 										{\
 											Transform transform{};\
 											json component_json_value = component.second.get<json::object_t>();\
@@ -101,9 +101,18 @@
 											if (coordinator->HasComponent<Transform>(*entity))\
 											{\
 												Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
-												ptr->position = transform.position;\
-												ptr->rot_q = transform.rot_q;\
-												ptr->scale = transform.scale;\
+												if (!ptr->isOverridePosition)\
+												{\
+													ptr->position = transform.position;\
+												}\
+												if (!ptr->isOverrideRotation)\
+												{\
+													ptr->rot_q = transform.rot_q;\
+												}\
+												if (!ptr->isOverrideScale)\
+												{\
+													ptr->scale = transform.scale;\
+												}\
 											}\
 											else\
 											{\
@@ -114,7 +123,7 @@
 										}
 
 
-#define DESERIALIZE_OBJECT_COMBINE(type, oName)	else if (component.first == oName)\
+#define DESERIALIZE_OBJECT_COMBINE(type, oName)	(component.first == oName)\
 												{\
 													type t{};\
 													json component_json_value = component.second.get<json::object_t>();\
@@ -133,7 +142,7 @@
 												}
 
 
-#define DESERIALIZE_OBJECT_BASIC(type, oName)	else if (component.first == oName)\
+#define DESERIALIZE_OBJECT_BASIC(type, oName)	(component.first == oName)\
 												{\
 													type t{};\
 													json component_json_value = component.second.get<json::object_t>();\
@@ -152,7 +161,7 @@
 												}
 
 
-#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	else if (component.first == vName)\
+#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	(component.first == vName)\
 														{\
 															vType v{};\
 															type t{};\
@@ -245,39 +254,8 @@ namespace Engine
 		{
 			if (entity.GetPrefab() == filename)
 			{
-				Transform transform{};
-				bool flag = false;
-
-				// Get a copy of the original transform
-				if (coordinator->HasComponent<Transform>(entity))
-				{
-					Transform* ptr = coordinator->GetComponent<Transform>(entity);
-					transform = *ptr;
-					flag = true;
-				}
-
 				// Replace with prefab components
 				DeserializePrefab(coordinator, &entity, filename);
-
-				// Check whether needs to override (Transform only)
-				if (flag)
-				{
-					// If no original has no override, replace back with original
-					Transform* ptr = coordinator->GetComponent<Transform>(entity);
-					
-					if (transform.isOverridePosition)
-					{
-						ptr->position = transform.position;
-					}
-					if (transform.isOverrideRotation)
-					{
-						ptr->rot_q = transform.rot_q;
-					}
-					if (transform.isOverrideScale)
-					{
-						ptr->scale = transform.scale;
-					}
-				}
 			}
 		}
 	}

@@ -42,8 +42,8 @@ int main()
 			transform.rot_q = { 3, 3, 3, 3 };
 
 			transform.isOverridePosition = true;
-			transform.isOverrideRotation = false;
-			transform.isOverrideScale = true;
+			transform.isOverrideScale = false;
+			transform.isOverrideRotation = true;
 		}
 		else
 		{
@@ -52,8 +52,8 @@ int main()
 			transform.rot_q = { 6, 6, 6, 6 };
 
 			transform.isOverridePosition = false;
-			transform.isOverrideRotation = false;
-			transform.isOverrideScale = true;
+			transform.isOverrideScale = false;
+			transform.isOverrideRotation = true;
 		}
 
 		script.mono_string = std::to_string(entity_id) + ".cs";
@@ -64,8 +64,9 @@ int main()
 	}
 
 	// Save Prefab
-	Serializer::SerializePrefab(&gCoordinator, 0, "transform.prefab");
-	Serializer::ApplyUpdatedPrefab(&gCoordinator, "transform.prefab");
+	//Serializer::SerializePrefab(&gCoordinator, 0, "transform.prefab");
+	//Serializer::ApplyUpdatedPrefab(&gCoordinator, "transform.prefab");
+	Serializer::CreateEntityPrefab(&gCoordinator, "transform.prefab");
 
 
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
@@ -103,9 +104,9 @@ int main()
 
 			std::cout << "\nTransform:\n";
 			std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
-				"\n" << "rot_q: " << transform->rot_q.w << " " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z <<
 				"\n" << "scale: " << transform->scale.x << " " << transform->scale.y << " " << transform->scale.z <<
-				"\n" << "isOverride: " << transform->isOverridePosition << " " << transform->isOverrideScale << " " << transform->isOverrideRotation <<
+				"\n" << "rot_q: " << transform->rot_q.w << " " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z <<
+				"\n" << "isOverridePosition: " << transform->isOverridePosition << " isOverrideScale: " << transform->isOverrideScale << " isOverrideRotation: " << transform->isOverrideRotation <<
 				"\n";
 		}
 		
@@ -127,8 +128,8 @@ int main()
 			{
 				std::cout << "\nTransform index: " << i++ << "\n";
 				std::cout << "position: " << transform.position.x << " " << transform.position.y << " " << transform.position.z <<
-					"\n" << "rot_q: " << transform.rot_q.w << " " << transform.rot_q.x << " " << transform.rot_q.y << " " << transform.rot_q.z <<
 					"\n" << "scale: " << transform.scale.x << " " << transform.scale.y << " " << transform.scale.z <<
+					"\n" << "rot_q: " << transform.rot_q.w << " " << transform.rot_q.x << " " << transform.rot_q.y << " " << transform.rot_q.z <<
 					"\n";
 			}
 		}
