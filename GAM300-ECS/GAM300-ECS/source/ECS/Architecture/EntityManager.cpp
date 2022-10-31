@@ -214,9 +214,10 @@ RTTR_REGISTRATION
 {
 	using namespace rttr;
 	using namespace Engine;
-	registration::class_<Entity>("AAEntity")
+	registration::class_<Entity>("0Entity")
 		.constructor<>()
 		.property("name", &Entity::GetEntityName, &Entity::SetEntityName)
 		.property("prefab", &Entity::GetPrefab, &Entity::SetPrefab)
+		.property("parent", &Entity::GetParent, &Entity::SetParentID)
 		;
 }

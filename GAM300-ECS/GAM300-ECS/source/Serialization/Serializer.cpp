@@ -28,7 +28,7 @@
 #include "include/Serialization/Serializer.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
-#define SERIALIZE_COMPONENTS SERIALIZE_OBJECT(Transform, "Transform")\
+#define SERIALIZE_COMPONENTS SERIALIZE_OBJECT(Transform, "1Transform")\
 							 SERIALIZE_OBJECT(Script, "Script")\
 							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
 
@@ -63,7 +63,7 @@
 												}
 
 
-#define DESERIALIZE_TRANSFORM	(component.first == "Transform")\
+#define DESERIALIZE_TRANSFORM	(component.first == "1Transform")\
 								{\
 									Transform transform{};\
 									json component_json_value = component.second.get<json::object_t>();\
@@ -93,7 +93,7 @@
 								}
 
 
-#define DESERIALIZE_TRANSFORM_PREFAB	(component.first == "Transform")\
+#define DESERIALIZE_TRANSFORM_PREFAB	(component.first == "1Transform")\
 										{\
 											Transform transform{};\
 											json component_json_value = component.second.get<json::object_t>();\
@@ -199,10 +199,27 @@ namespace Engine
 		for (auto& entity : coordinator->GetEntities())
 		{
 			json writer;
-			writer = Serializer::InstanceToJson(writer, entity, "AAEntity");
+
+			EntityID parentID = entity.GetParent();
+
+			if (entity.IsChild())
+			{
+				int index = MAX_ENTITIES + 1;
+				for (int i = 0; i < coordinator->GetEntities().size(); ++i)
+				{
+					if (parentID == coordinator->GetEntities()[i].GetEntityID())
+					{
+						entity.SetParentID(i);
+					}
+				}
+			}
+
+			writer = Serializer::InstanceToJson(writer, entity, "0Entity");
 			SERIALIZE_COMPONENTS
 
 			vJsonStrings.emplace_back(writer.dump(4));
+
+			entity.SetParentID(parentID);
 		}
 
 		// Formatting json objects string
@@ -297,17 +314,17 @@ namespace Engine
 		for (auto& object : writer)
 		{
 			// Check if object has "Entity", false = invalid
-			if (!(object.contains("AAEntity")))
+			if (!(object.contains("0Entity")))
 			{
 				LOG_ERROR("Object does not have an Entity! Json file will NOT be deserialized!");
 				return;
 			}
 
 			// Always deserialize entity first, set its properties, then proceed
-			EntityID entity_id = coordinator->CreateEntity(object["AAEntity"]["name"]);
+			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
 			Entity* entity = coordinator->GetEntity(entity_id);
 
-			entity->SetPrefab(object["AAEntity"]["prefab"]);
+			entity->SetPrefab(object["0Entity"]["prefab"]);
 			if (std::string prefabFile = entity->GetPrefab(); prefabFile != "")
 			{
 				DeserializePrefab(coordinator, entity, prefabFile);

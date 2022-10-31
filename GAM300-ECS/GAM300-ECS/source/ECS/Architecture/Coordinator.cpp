@@ -96,6 +96,7 @@ namespace Engine
 			mSystemManager->DestroyEntity(e);
 		}
 		GetEntities().clear();
+		GetMap().clear();
 
 		mComponentManager->FreeCustomAllocator();
 

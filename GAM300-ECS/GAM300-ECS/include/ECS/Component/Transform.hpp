@@ -64,7 +64,7 @@ namespace Engine
 			.property("IsActive", &IComponent::isActive)
 			;
 
-		registration::class_<Transform>("Transform")
+		registration::class_<Transform>("1Transform")
 			.constructor<>()
 			.property("position", &Transform::position)
 			.property("scale", &Transform::scale)
