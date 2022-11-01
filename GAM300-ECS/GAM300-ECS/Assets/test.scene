@@ -3,12 +3,12 @@
     "0Entity": {
         "name": "Entity 0",
         "parent": 5001,
-        "prefab": ""
+        "prefab": "transform.prefab"
     },
     "1Transform": {
         "isOverridePosition": false,
         "isOverrideRotation": false,
-        "isOverrideScale": false,
+        "isOverrideScale": true,
         "position": [
             0.0,
             0.0,
@@ -22,8 +22,8 @@
         ],
         "scale": [
             1.0,
-            1.0,
-            1.0
+            94.0,
+            2.0
         ]
     },
     "Script": {
@@ -34,7 +34,7 @@
     "0Entity": {
         "name": "Entity 1",
         "parent": 5001,
-        "prefab": ""
+        "prefab": "transform.prefab"
     }
 },
 {
@@ -132,7 +132,7 @@
     "0Entity": {
         "name": "Entity 31",
         "parent": 9,
-        "prefab": ""
+        "prefab": "transform.prefab"
     }
 }
 ]

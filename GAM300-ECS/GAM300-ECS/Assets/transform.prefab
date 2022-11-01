@@ -1,28 +1,28 @@
 [
-{
+  {
     "Script": {
-        "mono_string": "0.cs"
+      "mono_string": "0.cs"
     },
-    "Transform": {
-        "isOverridePosition": true,
-        "isOverrideRotation": true,
-        "isOverrideScale": false,
-        "position": [
-            1.0,
-            1.0,
-            1.0
-        ],
-        "rot_q": [
-            3.0,
-            3.0,
-            3.0,
-            3.0
-        ],
-        "scale": [
-            2.0,
-            2.0,
-            2.0
-        ]
+    "1Transform": {
+      "isOverridePosition": false,
+      "isOverrideRotation": false,
+      "isOverrideScale": false,
+      "position": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rot_q": [
+        3.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "scale": [
+        2.0,
+        2.0,
+        2.0
+      ]
     }
-}
+  }
 ]

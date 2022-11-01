@@ -84,6 +84,9 @@
 										{\
 											ptr->scale = transform.scale;\
 										}\
+										ptr->isOverridePosition = transform.isOverridePosition;\
+										ptr->isOverrideRotation = transform.isOverrideRotation;\
+										ptr->isOverrideScale = transform.isOverrideScale;\
 									}\
 									else\
 									{\
@@ -351,6 +354,8 @@ namespace Engine
 			Entity* entity = coordinator->GetEntity(entity_id);
 
 			entity->SetPrefab(object["0Entity"]["prefab"]);
+			entity->SetParentID(object["0Entity"]["parent"]);
+
 			if (std::string prefabFile = entity->GetPrefab(); prefabFile != "")
 			{
 				DeserializePrefab(coordinator, entity, prefabFile);
@@ -366,6 +371,16 @@ namespace Engine
 				// Get variant, type and add component to coordinator through component name string
 				DESERIALIZE_COMPONENTS
 			}
+		}
+
+		for (auto& entity : coordinator->GetEntities())
+		{
+			if (entity.GetParent() > MAX_ENTITIES)
+			{
+				continue;
+			}
+
+			coordinator->ToChild(entity.GetParent(), entity.GetEntityID());
 		}
 	}
 

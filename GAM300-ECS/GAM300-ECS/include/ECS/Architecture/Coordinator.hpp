@@ -69,7 +69,7 @@ namespace Engine
 		void RegisterComponents(); // Function is to register all components
 		void RegisterSystems();	   // Function is to register all systems
 
-		void EndOfLoopUpdate(); // Function is to update at the end (Scripts)
+		//void EndOfLoopUpdate(); // Function is to update at the end (Scripts)
 
 		// Creates an entity and returns the ID
 		EntityID CreateEntity(std::string __name__ = "");

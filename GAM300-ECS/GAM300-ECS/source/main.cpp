@@ -54,13 +54,13 @@ int main()
 	gCoordinator.AddComponent<Transform>(0);
 	gCoordinator.AddComponent<Script>(0);
 
-	Serializer::SerializeEntities(&gCoordinator, "test.scene");
+	//Serializer::SerializeEntities(&gCoordinator, "test.scene");
 		
 	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
-		std::cout << "id: " << entity.GetEntityID() << "\n";
+		std::cout << "id: " << entity.GetEntityID() << " " << entity.isParent() << " " << entity.IsChild() << "\n";
 	}
 
 
@@ -128,16 +128,14 @@ int main()
 
 	std::cout << "START HERE\n";
 
-
-
-
+	Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
 
 
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
-		std::cout << "id: " << entity.GetEntityID() << "\n";
+		std::cout << "id: " << entity.GetEntityID() << " " << entity.isParent() << " " << entity.IsChild() << "\n";
 	}
 
 
