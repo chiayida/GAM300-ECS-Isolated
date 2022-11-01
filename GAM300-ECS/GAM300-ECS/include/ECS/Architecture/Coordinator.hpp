@@ -14,7 +14,7 @@
   This enables us to have a single instance of the coordinator which we then can
   use it to interface with the other managers.
 
-
+  
   Sequence of using the coordinator (Coordinator gCoordinator):
   1) Coordinator gCoordinator;	gCoordinator.Init();
   - Initialise Entity Manager, Component Manager, System Manager.
@@ -69,15 +69,18 @@ namespace Engine
 		void RegisterComponents(); // Function is to register all components
 		void RegisterSystems();	   // Function is to register all systems
 
+		void EndOfLoopUpdate(); // Function is to update at the end (Scripts)
+
 		// Creates an entity and returns the ID
 		EntityID CreateEntity(std::string __name__ = "");
-		//void DuplicateEntity(EntityID o_id, EntityID d_id = MAX_ENTITIES + 1);
 		void DuplicateEntity(Entity entity, EntityID parentID);
 
+		// Creates a child entity and returns the ID
 		EntityID CreateChild(EntityID parent, const std::string&__name__ = "");
 
 		// Convert the entity (child) into a child passing in the parent-to-be (parent)
 		void ToChild(EntityID parent, EntityID child);
+		void UnChild(EntityID parent, EntityID child);
 
 		// Get a vector of the child objects based on the entity ID
 		std::vector<EntityID> GetChildObjects(EntityID id);
@@ -88,6 +91,7 @@ namespace Engine
 		// Resets entity's signature, remove it from component arrays and systems
 		void DestroyEntity(Entity &e);
 		void DestroyEntity(EntityID e);
+		void DestroyEntity(Entity e, float delay);
 
 		// Tag component to entity, update signature in EntityManager, SystemManager System's entities
 		template <typename T, unsigned N = 1, typename... argv>
@@ -167,6 +171,9 @@ namespace Engine
 		std::vector<Entity> mEntities{};
 		// 1 level of child
 		std::map<EntityID, std::vector<EntityID>> mParentChild;
+
+		// Timed Destroy (Scripts)
+		std::vector<std::pair<unsigned int, float>> v_timed_destroys;
 	};
 
 	// Templated class functions implementations

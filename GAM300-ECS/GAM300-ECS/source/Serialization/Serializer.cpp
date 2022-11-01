@@ -28,19 +28,20 @@
 #include "include/Serialization/Serializer.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
+
 #define SERIALIZE_COMPONENTS SERIALIZE_OBJECT(Transform, "1Transform")\
 							 SERIALIZE_OBJECT(Script, "Script")\
 							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS	if DESERIALIZE_TRANSFORM\
-								else if DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-								else if DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+#define DESERIALIZE_COMPONENTS	DESERIALIZE_TRANSFORM\
+								DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS_PREFAB	if DESERIALIZE_TRANSFORM_PREFAB\
-										else if DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-										else if DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+#define DESERIALIZE_COMPONENTS_PREFAB	DESERIALIZE_TRANSFORM_PREFAB\
+										DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+										DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
 #define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
@@ -63,7 +64,7 @@
 												}
 
 
-#define DESERIALIZE_TRANSFORM	(component.first == "1Transform")\
+#define DESERIALIZE_TRANSFORM	if (component.first == "1Transform")\
 								{\
 									Transform transform{};\
 									json component_json_value = component.second.get<json::object_t>();\
@@ -93,7 +94,7 @@
 								}
 
 
-#define DESERIALIZE_TRANSFORM_PREFAB	(component.first == "1Transform")\
+#define DESERIALIZE_TRANSFORM_PREFAB	if (component.first == "1Transform")\
 										{\
 											Transform transform{};\
 											json component_json_value = component.second.get<json::object_t>();\
@@ -123,7 +124,7 @@
 										}
 
 
-#define DESERIALIZE_OBJECT_COMBINE(type, oName)	(component.first == oName)\
+#define DESERIALIZE_OBJECT_COMBINE(type, oName)	else if (component.first == oName)\
 												{\
 													type t{};\
 													json component_json_value = component.second.get<json::object_t>();\
@@ -142,7 +143,7 @@
 												}
 
 
-#define DESERIALIZE_OBJECT_BASIC(type, oName)	(component.first == oName)\
+#define DESERIALIZE_OBJECT_BASIC(type, oName)	else if (component.first == oName)\
 												{\
 													type t{};\
 													json component_json_value = component.second.get<json::object_t>();\
@@ -161,7 +162,29 @@
 												}
 
 
-#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	(component.first == vName)\
+#define DESERIALIZE_OBJECT_COLLIDER(type, oName)	else if (component.first == oName)\
+													{\
+														type t{};\
+														json component_json_value = component.second.get<json::object_t>();\
+														JsonToInstance(t, component_json_value);\
+														if (coordinator->HasComponent<type>(*entity))\
+														{\
+															type* ptr = coordinator->GetComponent<type>(*entity);\
+															ptr->RemoveActor();\
+															*ptr = t;\
+															ptr->CreateActor();\
+														}\
+														else\
+														{\
+															coordinator->AddComponent<type>(*entity, type(coordinator->GetComponent<Transform>(*entity)));\
+															type* ptr = coordinator->GetComponent<type>(*entity);\
+															*ptr = t;\
+															ptr->CreateActor();\
+														}\
+													}
+
+
+#define DESERIALIZE_OBJECT_VECTOR(vType, type, vName)	else if (component.first == vName)\
 														{\
 															vType v{};\
 															type t{};\
@@ -193,13 +216,14 @@
 
 namespace Engine
 {
+	//using namespace Graphics::Addition;
+
 	void Serializer::SerializeEntities(Coordinator* coordinator, std::string scenefile)
 	{
 		std::vector<std::string> vJsonStrings{};
 		for (auto& entity : coordinator->GetEntities())
 		{
 			json writer;
-
 			EntityID parentID = entity.GetParent();
 
 			if (entity.IsChild())
@@ -256,12 +280,14 @@ namespace Engine
 	}
 
 
-	void Serializer::CreateEntityPrefab(Coordinator* coordinator, std::string filename)
+	EntityID Serializer::CreateEntityPrefab(Coordinator* coordinator, std::string filename)
 	{
 		EntityID entity_id = coordinator->CreateEntity();
 		Entity* entity = coordinator->GetEntity(entity_id);
 
 		DeserializePrefab(coordinator, entity, filename);
+
+		return entity->GetEntityID();
 	}
 
 
@@ -454,8 +480,8 @@ namespace Engine
 			AssociativeContainer(var.create_associative_view(), writer);
 		}
 		// For specific glm types that should be stored as an array
-		else if (varType == type::get<glm::vec2>() || varType == type::get<glm::vec3>() || varType == type::get<glm::vec4>() || varType == type::get<glm::uvec4>()
-			|| varType == type::get<glm::mat3>() || varType == type::get<glm::mat4>() || varType == type::get<glm::quat>())
+		else if (varType == type::get<glm::vec2>() || varType == type::get<glm::vec3>() || varType == type::get<glm::vec4>() || varType == type::get<glm::uvec4>() || 
+			varType == type::get<glm::mat3>() || varType == type::get<glm::mat4>() || varType == type::get<glm::quat>())
 		{
 			writer = json::array();
 			if (varType == type::get<glm::vec2>())

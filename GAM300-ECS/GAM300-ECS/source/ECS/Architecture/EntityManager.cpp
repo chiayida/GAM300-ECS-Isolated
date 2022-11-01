@@ -48,6 +48,17 @@ namespace Engine
 	}
 
 
+	void Entity::Copy(const Entity& rhs)
+	{
+		is_child = rhs.is_child;
+		is_parent = rhs.is_parent;
+
+		prefab = rhs.GetPrefab();
+
+		name = rhs.GetEntityName() + "(D)";
+	}
+
+
 	bool Entity::IsChild() const
 	{
 		return is_child;

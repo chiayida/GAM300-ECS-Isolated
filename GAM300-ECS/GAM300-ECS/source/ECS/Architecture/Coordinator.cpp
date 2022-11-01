@@ -33,7 +33,7 @@
 									DUPLICATE_COMPONENT(std::vector<Transform>, d, o)
 
 
-#define DUPLICATE_COMPONENT(type, d, o)	if(HasComponent<type>(o))\
+#define DUPLICATE_COMPONENT(type, d, o)	if (HasComponent<type>(o))\
 										{\
 											type* oPtr = GetComponent<type>(o);\
 											type c = *oPtr;\
@@ -41,14 +41,13 @@
 										}
 
 // Only for colliders as PhyX needs Actor
-#define DUPLICATE_COMPONENT_COLLIDER(type, d, o)	if(HasComponent<type>(o) && HasComponent<Transform>(o))\
+#define DUPLICATE_COMPONENT_COLLIDER(type, d, o)	if (HasComponent<type>(o) && HasComponent<Transform>(o))\
 													{\
 														type* oPtr = GetComponent<type>(o);\
 														AddComponent<type>(d, type(GetComponent<Transform>(d)));\
 														type* dPtr= GetComponent<type>(d);\
 														*dPtr = *oPtr;\
 														dPtr->CreateActor();\
-														dPtr->AddActor();\
 													}
 
 
@@ -121,6 +120,38 @@ namespace Engine
 	}
 
 
+	/*
+	void Coordinator::EndOfLoopUpdate()
+	{
+		if (!v_timed_destroys.size())
+		{
+			return;
+		}
+			
+			
+		for (int i{ static_cast<int>(v_timed_destroys.size()) }; i > 0; --i)
+		{
+			v_timed_destroys[i].second -= FrameTime::Get()->FixedDt();
+			if (v_timed_destroys[i].second <= 0.f)
+			{
+				unsigned int id = v_timed_destroys[i].first;
+				Entity* ent = GetEntity(id);
+				if (HasComponent<std::vector<Scripting::ScriptInstance>>(*ent))
+				{
+					std::vector<Scripting::ScriptInstance>* scripts = S_COORD.GetComponent<std::vector<Scripting::ScriptInstance>>(id);
+					for (auto script : *scripts)
+					{
+						script.Invoke(script.GetOnDestroy());
+					}
+				}
+				DestroyEntity(*ent);
+				v_timed_destroys.erase(v_timed_destroys.begin() + i);
+			}
+		}
+	}
+	*/
+
+
 	EntityID Coordinator::CreateEntity(std::string __name__)
 	{
 		Entity e = mEntityManager->CreateEntity(__name__);
@@ -188,6 +219,26 @@ namespace Engine
 
 		// Add child to mParentChild
 		mParentChild[parent].emplace_back(child);
+	}
+
+
+	void Coordinator::UnChild(EntityID parent, EntityID child)
+	{
+		Entity& ChildE = *GetEntity(child);
+		Entity& ParentE = *GetEntity(parent);
+		ChildE.SetIs_Child(false);
+		std::vector<EntityID>& children = GetMap()[parent];
+		auto childpos = std::find(children.begin(), children.end(), child);
+		if (childpos != children.end())
+		{
+			GetMap()[parent].erase(childpos);
+		}
+		// if no more child
+		if (GetMap()[parent].size() == 0)
+		{
+			ParentE.SetIs_Parent(false);
+		}
+		ChildE.SetParentID(MAX_ENTITIES + 1);
 	}
 
 
@@ -273,6 +324,12 @@ namespace Engine
 		mEntityManager->DestroyEntity(e);
 		mComponentManager->DestroyEntity(e);
 		mSystemManager->DestroyEntity(e);
+	}
+
+
+	void Coordinator::DestroyEntity(Entity e, float delay)
+	{
+		v_timed_destroys.emplace_back(std::pair<unsigned int, float>(e.GetEntityID(), delay));
 	}
 
 
