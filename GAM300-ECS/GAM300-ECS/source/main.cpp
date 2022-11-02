@@ -20,118 +20,9 @@ int main()
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
-
-	// Initialise Entities
-	for (int i = 0; i < 32; ++i)
-	{
-		gCoordinator.CreateEntity(); // E0 to E31
-	}
-	for (int i = 0; i < 32; ++i)
-	{
-		if (!(i == 0 || i == 1 || i == 3 || i == 5 || i == 9 || i == 11 || i == 12 || i == 13 ||
-			i == 14 || i == 15 || i == 17 || i == 22 || i == 23 || i == 24 || i == 30 || i == 31))
-		{
-			gCoordinator.DestroyEntity(i); // E0 to E31
-		}
-	}
-
-	gCoordinator.ToChild(0, 24);
-	gCoordinator.ToChild(0, 30);
-	gCoordinator.ToChild(30, 15);
-	gCoordinator.ToChild(15, 31);
-	gCoordinator.ToChild(31, 17);
-
-	gCoordinator.ToChild(1, 3);
-	gCoordinator.ToChild(1, 5);
-	gCoordinator.ToChild(3, 11);
-	gCoordinator.ToChild(3, 22);
-	gCoordinator.ToChild(5, 12);
-	gCoordinator.ToChild(22, 23);
-
-	gCoordinator.ToChild(9, 13);
-	gCoordinator.ToChild(13, 14);
-
-	gCoordinator.AddComponent<Transform>(0);
-	gCoordinator.AddComponent<Script>(0);
-
-	//Serializer::SerializeEntities(&gCoordinator, "test.scene");
-		
-	
-	std::cout << "\n==========================\n       All Entities\n==========================\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << "id: " << entity.GetEntityID() << " " << entity.isParent() << " " << entity.IsChild() << "\n";
-	}
-
-
-	std::cout << "\n===========================\n     Parent-Child Tree\n===========================\n";
-	for (auto& parent : gCoordinator.GetMap())
-	{
-		std::cout << "Parent: " << parent.first << " Children: ";
-
-		for (auto& child : parent.second)
-		{
-			std::cout << child << " ";
-		}
-		std::cout << "\n";
-	}
-	
-
-	std::cout << "\n==========================\n        Components\n==========================\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << "-------------------------\n"
-			<< "Entity name: " << entity.GetEntityName() << "\nID: " << entity.GetEntityID();
-		std::cout << "\nprefab: " << entity.GetPrefab() << "\n";
-
-		if (gCoordinator.HasComponent<Transform>(entity))
-		{
-			Transform* transform = gCoordinator.GetComponent<Transform>(entity);
-
-			std::cout << "\nTransform:\n";
-			std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
-				"\n" << "scale: " << transform->scale.x << " " << transform->scale.y << " " << transform->scale.z <<
-				"\n" << "rot_q: " << transform->rot_q.w << " " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z <<
-				"\n" << "isOverridePosition: " << transform->isOverridePosition << " isOverrideScale: " << transform->isOverrideScale << " isOverrideRotation: " << transform->isOverrideRotation <<
-				"\n";
-		}
-		
-		if (gCoordinator.HasComponent<Script>(entity))
-		{
-			Script* script = gCoordinator.GetComponent<Script>(entity);
-			std::cout << "\nScript:\n";
-			std::cout << "mono_string: " << script->mono_string <<
-				"\n";
-		}
-
-		if (gCoordinator.HasComponent<std::vector<Transform>>(entity))
-		{
-			std::cout << "\nstd::vector<Transform>:";
-			std::vector<Transform>* vtransform = gCoordinator.GetComponent<std::vector<Transform>>(entity);
-			
-			int i = 0;
-			for (auto& transform : *vtransform)
-			{
-				std::cout << "\nTransform index: " << i++ << "\n";
-				std::cout << "position: " << transform.position.x << " " << transform.position.y << " " << transform.position.z <<
-					"\n" << "scale: " << transform.scale.x << " " << transform.scale.y << " " << transform.scale.z <<
-					"\n" << "rot_q: " << transform.rot_q.w << " " << transform.rot_q.x << " " << transform.rot_q.y << " " << transform.rot_q.z <<
-					"\n";
-			}
-		}
-	}
-
-	std::cout << "\n\n\n";
-
-	gCoordinator.Destroy();
-	gCoordinator.Init();
-
-	std::cout << "START HERE\n";
-
 	Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
 
-
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
@@ -156,7 +47,7 @@ int main()
 	for (auto& entity : gCoordinator.GetEntities())
 	{
 		std::cout << "-------------------------\n"
-			<< "Entity name: " << entity.GetEntityName() << "\nID: " << entity.GetEntityID();
+			<< "Entity name: " << entity.GetEntityName() << "\nEntity ID: " << entity.GetEntityID() << " Parent ID: " << entity.GetParent();
 		std::cout << "\nprefab: " << entity.GetPrefab() << "\n";
 
 		if (gCoordinator.HasComponent<Transform>(entity))

@@ -54,8 +54,6 @@ namespace Engine
 		is_parent = rhs.is_parent;
 
 		prefab = rhs.GetPrefab();
-
-		name = rhs.GetEntityName() + "(D)";
 	}
 
 

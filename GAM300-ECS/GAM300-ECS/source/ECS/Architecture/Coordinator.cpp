@@ -167,8 +167,26 @@ namespace Engine
 		EntityID duplicated_id = entity.GetParent() < MAX_ENTITIES ? CreateChild(parentID) : CreateEntity();
 		Entity& duplicated_entity = *GetEntity(duplicated_id);
 
-		// Duplicate entity (Copy all variables + Components) based on original
+		// Duplicate entity (Copy all variables + Components) based on original except name
 		duplicated_entity.Copy(entity);
+		 
+		std::string entity_name = entity.GetEntityName();
+		std::string duplicate_name{};
+
+		int i = 1;
+		for (int size = 0; size < mEntities.size(); ++size)
+		{
+			duplicate_name = entity_name + "(" + std::to_string(i) + ")";
+
+			if (mEntities[size].GetEntityName() == duplicate_name);
+			{
+				// Increament till highest value, reset back loop to check again.
+				++i;
+				size = 0;
+			}
+		}
+		duplicated_entity.SetEntityName(duplicate_name);
+
 		DUPLICATE_COMPONENTS(duplicated_entity, entity)
 
 		// Loop original entity children
@@ -224,21 +242,27 @@ namespace Engine
 
 	void Coordinator::UnChild(EntityID parent, EntityID child)
 	{
-		Entity& ChildE = *GetEntity(child);
-		Entity& ParentE = *GetEntity(parent);
-		ChildE.SetIs_Child(false);
-		std::vector<EntityID>& children = GetMap()[parent];
-		auto childpos = std::find(children.begin(), children.end(), child);
-		if (childpos != children.end())
+		Entity* entity_child = GetEntity(child);
+		entity_child->SetIs_Child(false);
+		entity_child->SetParentID(MAX_ENTITIES + 1);
+
+		std::vector<EntityID>& children = mParentChild[parent];
+		auto itr = std::find(children.begin(), children.end(), child);
+		if (itr != children.end())
 		{
-			GetMap()[parent].erase(childpos);
+			mParentChild[parent].erase(itr);
 		}
-		// if no more child
-		if (GetMap()[parent].size() == 0)
+
+		// If there is no more children, get rid of parent ID in map
+		if (mParentChild[parent].size() == 0)
 		{
-			ParentE.SetIs_Parent(false);
+			Entity* entity_parent = GetEntity(parent);
+			if (entity_parent)
+			{
+				entity_parent->SetIs_Parent(false);
+			}
+			mParentChild.erase(parent);
 		}
-		ChildE.SetParentID(MAX_ENTITIES + 1);
 	}
 
 
@@ -291,7 +315,6 @@ namespace Engine
 		{
 			std::vector<EntityID>& children = mParentChild[parentID];
 			auto itr = std::find(children.begin(), children.end(), e);
-
 			if (itr != children.end())
 			{
 				mParentChild[parentID].erase(itr);
