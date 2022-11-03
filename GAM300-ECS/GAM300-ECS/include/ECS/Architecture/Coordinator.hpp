@@ -85,6 +85,7 @@ namespace Engine
 		// Get a vector of the child objects based on the entity ID
 		std::vector<EntityID> GetChildObjects(EntityID id);
 		Entity *GetChildObject(EntityID parent, uint32_t index = 0);
+		void GetAllChildren(std::vector<EntityID>& container, EntityID id);
 
 		std::map<EntityID, std::vector<EntityID>>& GetMap();
 

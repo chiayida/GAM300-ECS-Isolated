@@ -20,8 +20,15 @@ int main()
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
-	Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
+	// Initialise entities
+	for (int i = 0; i < 10; ++i)
+	{
+		gCoordinator.CreateEntity();
+	}
+
+	//Serializer::SerializePrefab(&gCoordinator, 4, "test.prefab");
+	Serializer::CreateEntityPrefab(&gCoordinator, "test.prefab");
 
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())

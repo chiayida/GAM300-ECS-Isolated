@@ -231,7 +231,6 @@ namespace Engine
 
 			if (entity.IsChild())
 			{
-				int index = MAX_ENTITIES + 1;
 				for (int i = 0; i < coordinator->GetEntities().size(); ++i)
 				{
 					if (parentID == coordinator->GetEntities()[i].GetEntityID())
@@ -268,12 +267,60 @@ namespace Engine
 
 	void Serializer::SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename)
 	{
-		Entity& entity = *(coordinator->GetEntity(id));
-
+		std::vector<std::string> vJsonStrings{};
 		json writer;
-		SERIALIZE_COMPONENTS
 
-		Serializer::StringToJson(filename, writer.dump(4));
+		// Need to recursively get all the children and store into container
+		std::vector<EntityID> ids{};
+		coordinator->GetAllChildren(ids, id);
+
+		// Deserialise root entity first, parent of it will always be nothing
+		Entity& entity = *coordinator->GetEntity(ids[0]);
+		EntityID parentID = entity.GetParent();
+		entity.SetParentID(MAX_ENTITIES + 1);
+
+		writer = Serializer::InstanceToJson(writer, entity, "0Entity");
+		SERIALIZE_COMPONENTS
+		vJsonStrings.emplace_back(writer.dump(4));
+		entity.SetParentID(parentID);
+
+		// If entity has children
+		for (int i = 1;  i < ids.size(); ++i)
+		{
+			Entity& entity = *coordinator->GetEntity(ids[i]);
+			EntityID parentID = entity.GetParent();
+
+			for (int j = 0; j < ids.size(); ++j)
+			{
+				if (parentID == ids[j])
+				{
+					// Set index according to container for serialisation of prefabs
+					entity.SetParentID(j);
+
+					writer = Serializer::InstanceToJson(writer, entity, "0Entity");
+					SERIALIZE_COMPONENTS
+					vJsonStrings.emplace_back(writer.dump(4));
+
+					// Reset the ID back to original
+					entity.SetParentID(parentID);
+				}
+			}
+		}
+
+		// Formatting json objects string
+		std::string js{};
+		for (int i = 0; i < vJsonStrings.size(); ++i)
+		{
+			if (i != vJsonStrings.size() - 1)
+			{
+				js += vJsonStrings[i] + ",\n";
+			}
+			else
+			{
+				js += vJsonStrings[i];
+			}
+		}
+		Serializer::StringToJson(filename, js);
 	}
 
 

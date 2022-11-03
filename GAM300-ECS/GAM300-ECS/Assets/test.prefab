@@ -1,0 +1,602 @@
+[
+{
+    "0Entity": {
+        "name": "Entity 4",
+        "parent": 5001,
+        "prefab": "4.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            4.0,
+            5.0,
+            6.0
+        ],
+        "rot_q": [
+            5.0,
+            6.0,
+            7.0,
+            4.0
+        ],
+        "scale": [
+            4.0,
+            4.0,
+            4.0
+        ]
+    },
+    "Script": {
+        "mono_string": "4.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                4.0,
+                5.0,
+                6.0
+            ],
+            "rot_q": [
+                5.0,
+                6.0,
+                7.0,
+                4.0
+            ],
+            "scale": [
+                4.0,
+                4.0,
+                4.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                4.0,
+                3.0,
+                2.0
+            ],
+            "rot_q": [
+                3.0,
+                2.0,
+                1.0,
+                4.0
+            ],
+            "scale": [
+                4.0,
+                4.0,
+                4.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 30",
+        "parent": 0,
+        "prefab": "30.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            30.0,
+            31.0,
+            32.0
+        ],
+        "rot_q": [
+            31.0,
+            32.0,
+            33.0,
+            30.0
+        ],
+        "scale": [
+            30.0,
+            30.0,
+            30.0
+        ]
+    },
+    "Script": {
+        "mono_string": "30.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                30.0,
+                31.0,
+                32.0
+            ],
+            "rot_q": [
+                31.0,
+                32.0,
+                33.0,
+                30.0
+            ],
+            "scale": [
+                30.0,
+                30.0,
+                30.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                30.0,
+                29.0,
+                28.0
+            ],
+            "rot_q": [
+                29.0,
+                28.0,
+                27.0,
+                30.0
+            ],
+            "scale": [
+                30.0,
+                30.0,
+                30.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 5",
+        "parent": 1,
+        "prefab": "5.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            5.0,
+            6.0,
+            7.0
+        ],
+        "rot_q": [
+            6.0,
+            7.0,
+            8.0,
+            5.0
+        ],
+        "scale": [
+            5.0,
+            5.0,
+            5.0
+        ]
+    },
+    "Script": {
+        "mono_string": "5.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                5.0,
+                6.0,
+                7.0
+            ],
+            "rot_q": [
+                6.0,
+                7.0,
+                8.0,
+                5.0
+            ],
+            "scale": [
+                5.0,
+                5.0,
+                5.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                5.0,
+                4.0,
+                3.0
+            ],
+            "rot_q": [
+                4.0,
+                3.0,
+                2.0,
+                5.0
+            ],
+            "scale": [
+                5.0,
+                5.0,
+                5.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 31",
+        "parent": 2,
+        "prefab": "31.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            31.0,
+            32.0,
+            33.0
+        ],
+        "rot_q": [
+            32.0,
+            33.0,
+            34.0,
+            31.0
+        ],
+        "scale": [
+            31.0,
+            31.0,
+            31.0
+        ]
+    },
+    "Script": {
+        "mono_string": "31.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                31.0,
+                32.0,
+                33.0
+            ],
+            "rot_q": [
+                32.0,
+                33.0,
+                34.0,
+                31.0
+            ],
+            "scale": [
+                31.0,
+                31.0,
+                31.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                31.0,
+                30.0,
+                29.0
+            ],
+            "rot_q": [
+                30.0,
+                29.0,
+                28.0,
+                31.0
+            ],
+            "scale": [
+                31.0,
+                31.0,
+                31.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 35",
+        "parent": 2,
+        "prefab": "35.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            35.0,
+            36.0,
+            37.0
+        ],
+        "rot_q": [
+            36.0,
+            37.0,
+            38.0,
+            35.0
+        ],
+        "scale": [
+            35.0,
+            35.0,
+            35.0
+        ]
+    },
+    "Script": {
+        "mono_string": "35.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                35.0,
+                36.0,
+                37.0
+            ],
+            "rot_q": [
+                36.0,
+                37.0,
+                38.0,
+                35.0
+            ],
+            "scale": [
+                35.0,
+                35.0,
+                35.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                35.0,
+                34.0,
+                33.0
+            ],
+            "rot_q": [
+                34.0,
+                33.0,
+                32.0,
+                35.0
+            ],
+            "scale": [
+                35.0,
+                35.0,
+                35.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 9",
+        "parent": 1,
+        "prefab": "9.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            9.0,
+            10.0,
+            11.0
+        ],
+        "rot_q": [
+            10.0,
+            11.0,
+            12.0,
+            9.0
+        ],
+        "scale": [
+            9.0,
+            9.0,
+            9.0
+        ]
+    },
+    "Script": {
+        "mono_string": "9.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                9.0,
+                10.0,
+                11.0
+            ],
+            "rot_q": [
+                10.0,
+                11.0,
+                12.0,
+                9.0
+            ],
+            "scale": [
+                9.0,
+                9.0,
+                9.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                9.0,
+                8.0,
+                7.0
+            ],
+            "rot_q": [
+                8.0,
+                7.0,
+                6.0,
+                9.0
+            ],
+            "scale": [
+                9.0,
+                9.0,
+                9.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 50",
+        "parent": 0,
+        "prefab": "50.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            50.0,
+            51.0,
+            52.0
+        ],
+        "rot_q": [
+            51.0,
+            52.0,
+            53.0,
+            50.0
+        ],
+        "scale": [
+            50.0,
+            50.0,
+            50.0
+        ]
+    },
+    "Script": {
+        "mono_string": "50.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                50.0,
+                51.0,
+                52.0
+            ],
+            "rot_q": [
+                51.0,
+                52.0,
+                53.0,
+                50.0
+            ],
+            "scale": [
+                50.0,
+                50.0,
+                50.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                50.0,
+                49.0,
+                48.0
+            ],
+            "rot_q": [
+                49.0,
+                48.0,
+                47.0,
+                50.0
+            ],
+            "scale": [
+                50.0,
+                50.0,
+                50.0
+            ]
+        }
+    ]
+},
+{
+    "0Entity": {
+        "name": "Entity 10",
+        "parent": 6,
+        "prefab": "10.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            10.0,
+            11.0,
+            12.0
+        ],
+        "rot_q": [
+            11.0,
+            12.0,
+            13.0,
+            10.0
+        ],
+        "scale": [
+            10.0,
+            10.0,
+            10.0
+        ]
+    },
+    "Script": {
+        "mono_string": "10.cs"
+    },
+    "vTransform": [
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                10.0,
+                11.0,
+                12.0
+            ],
+            "rot_q": [
+                11.0,
+                12.0,
+                13.0,
+                10.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ]
+        },
+        {
+            "isOverridePosition": false,
+            "isOverrideRotation": false,
+            "isOverrideScale": false,
+            "position": [
+                10.0,
+                9.0,
+                8.0
+            ],
+            "rot_q": [
+                9.0,
+                8.0,
+                7.0,
+                10.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ]
+        }
+    ]
+}
+]

@@ -287,6 +287,17 @@ namespace Engine
 	}
 
 
+	void Coordinator::GetAllChildren(std::vector<EntityID>& container, EntityID id)
+	{
+		container.emplace_back(id);
+
+		for (auto& i : GetChildObjects(id))
+		{
+			GetAllChildren(container, i);
+		}
+	}
+
+
 	std::map<EntityID, std::vector<EntityID>>& Coordinator::GetMap()
 	{
 		return mParentChild;
