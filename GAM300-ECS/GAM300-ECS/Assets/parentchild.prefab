@@ -1,0 +1,82 @@
+[
+{
+    "0Entity": {
+        "name": "PC0",
+        "parent": 5001,
+        "prefab": "parentchild.prefab"
+    }
+},
+{
+    "0Entity": {
+        "name": "PC1",
+        "parent": 0,
+        "prefab": ""
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            3.0,
+            2.0,
+            1.0
+        ],
+        "rot_q": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Script": {
+        "mono_string": "Shoot.cs"
+    }
+},
+{
+    "0Entity": {
+        "name": "PC2",
+        "parent": 1,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "PC3",
+        "parent": 2,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "PC4",
+        "parent": 2,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "PC5",
+        "parent": 1,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "PC6",
+        "parent": 0,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "PC7",
+        "parent": 6,
+        "prefab": ""
+    }
+}
+]

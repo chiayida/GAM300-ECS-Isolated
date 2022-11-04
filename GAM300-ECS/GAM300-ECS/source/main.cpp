@@ -21,14 +21,56 @@ int main()
 	Coordinator gCoordinator;
 	gCoordinator.Init();
 
-	// Initialise entities
-	for (int i = 0; i < 10; ++i)
+	// Initialise entities accordingly
+	for (int i = 0; i < 51; ++i)
 	{
 		gCoordinator.CreateEntity();
 	}
+	
+	std::vector<EntityID> ids{};
+	for (auto& e : gCoordinator.GetEntities())
+	{
+		EntityID id = e.GetEntityID();
 
-	//Serializer::SerializePrefab(&gCoordinator, 4, "test.prefab");
-	Serializer::CreateEntityPrefab(&gCoordinator, "test.prefab");
+		if (!(id == 0 || id == 1 || id == 2 || id == 4 || id == 5 || id == 9 || id == 10 || id == 22 || id == 30 || id == 31 || id == 35 || id == 50))
+		{
+			ids.emplace_back(id);
+		}
+	}
+
+	for (auto& id : ids)
+	{
+		gCoordinator.DestroyEntity(id);
+	}
+
+	gCoordinator.ToChild(2, 22);
+	gCoordinator.ToChild(2, 4);
+	gCoordinator.ToChild(4, 30);
+	gCoordinator.ToChild(4, 50);
+	gCoordinator.ToChild(30, 5);
+	gCoordinator.ToChild(30, 9);
+	gCoordinator.ToChild(50, 10);
+	gCoordinator.ToChild(5, 31);
+	gCoordinator.ToChild(5, 35);
+
+
+	Script script;
+	script.mono_string = "Shoot.cs";
+	Transform transform;
+	transform.position = { 3.f, 2.f, 1.f };
+	transform.scale = { 1.f, 1.f, 1.f };
+	transform.rot_q = { 1.f, 1.f, 1.f, 1.f };
+	gCoordinator.AddComponent<Transform>(30, transform);
+	gCoordinator.AddComponent<Script>(30, script);
+
+	//Serializer::SerializePrefab(&gCoordinator, 30, "single.prefab");
+	//Serializer::CreateEntityPrefab(&gCoordinator, "single.prefab");
+
+	Entity& entity = *gCoordinator.GetEntity(4);
+	entity.SetPrefab("parentchild.prefab");
+	Serializer::SerializePrefab(&gCoordinator, 4, "parentchild.prefab");
+	Serializer::CreateEntityPrefab(&gCoordinator, "parentchild.prefab");
+
 
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
@@ -95,6 +137,13 @@ int main()
 	}
 
 	std::cout << "\n\n\n";
+
+	Serializer::SerializeEntities(&gCoordinator, "test.scene");
+
+
+	gCoordinator.Destroy();
+	gCoordinator.Init();
+	Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
 	return 0;
 }

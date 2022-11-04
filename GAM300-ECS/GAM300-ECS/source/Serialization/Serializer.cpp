@@ -229,6 +229,7 @@ namespace Engine
 			json writer;
 			EntityID parentID = entity.GetParent();
 
+			// Set parent ID according to coordinator's mEntities indexing, then set it back to normal after serialising
 			if (entity.IsChild())
 			{
 				for (int i = 0; i < coordinator->GetEntities().size(); ++i)
@@ -274,7 +275,7 @@ namespace Engine
 		std::vector<EntityID> ids{};
 		coordinator->GetAllChildren(ids, id);
 
-		// Deserialise root entity first, parent of it will always be nothing
+		// Serialise root entity first. Parent will be nothing -> Reset back afterwards
 		Entity& entity = *coordinator->GetEntity(ids[0]);
 		EntityID parentID = entity.GetParent();
 		entity.SetParentID(MAX_ENTITIES + 1);
@@ -282,23 +283,32 @@ namespace Engine
 		writer = Serializer::InstanceToJson(writer, entity, "0Entity");
 		SERIALIZE_COMPONENTS
 		vJsonStrings.emplace_back(writer.dump(4));
+
+		// Reset parent ID back
 		entity.SetParentID(parentID);
 
-		// If entity has children
+
+		// If entity has children, similar process, parent id is index in ids instead.
 		for (int i = 1;  i < ids.size(); ++i)
 		{
 			Entity& entity = *coordinator->GetEntity(ids[i]);
 			EntityID parentID = entity.GetParent();
 
+			writer.clear();
+
 			for (int j = 0; j < ids.size(); ++j)
 			{
 				if (parentID == ids[j])
 				{
-					// Set index according to container for serialisation of prefabs
 					entity.SetParentID(j);
 
 					writer = Serializer::InstanceToJson(writer, entity, "0Entity");
+
+					std::cout << "entity id: " << entity.GetEntityID() << " Transform?: " << coordinator->HasComponent<Transform>(entity)
+						<< " Script?: " << coordinator->HasComponent<Script>(entity) << "\n";
+
 					SERIALIZE_COMPONENTS
+
 					vJsonStrings.emplace_back(writer.dump(4));
 
 					// Reset the ID back to original
@@ -332,12 +342,66 @@ namespace Engine
 
 	EntityID Serializer::CreateEntityPrefab(Coordinator* coordinator, std::string filename)
 	{
-		EntityID entity_id = coordinator->CreateEntity();
-		Entity* entity = coordinator->GetEntity(entity_id);
+		// Parse string to writer, check error
+		std::ifstream ifs{ "Assets/" + filename };
+		json writer;
 
-		DeserializePrefab(coordinator, entity, filename);
+		// Check for parse error
+		try
+		{
+			writer = json::parse(ifs);
+		}
+		catch (json::parse_error& e)
+		{
+			LOG_WARNING("Parse Error: PREFAB file either does not exist or has formatting issues", e.what());
+			return MAX_ENTITIES + 1;
+		}
 
-		return entity->GetEntityID();
+		std::vector<EntityID> ids{};
+
+		for (auto& object : writer)
+		{
+			// Check if object has "Entity", false = invalid
+			if (!(object.contains("0Entity")))
+			{
+				LOG_ERROR("Object does not have an Entity! Json file will NOT be deserialized!");
+				return MAX_ENTITIES + 1;
+			}
+
+			// Always deserialize entity first, set its properties, then proceed. Prefabs should not have entities that contains any prefabs.
+			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
+			Entity* entity = coordinator->GetEntity(entity_id);
+			entity->SetParentID(object["0Entity"]["parent"]);
+			
+			// Push back to container to update to the correct parent id for coordinator's container
+			ids.emplace_back(entity_id);
+
+			// Get all component names, remove "Entity"
+			auto componentList = object.get<json::object_t>();
+			componentList.erase(componentList.begin());
+
+			// Go through each component of an object
+			for (auto& component : componentList)
+			{
+				// Get variant, type and add component to coordinator through component name string
+				DESERIALIZE_COMPONENTS_PREFAB
+			}
+		}
+
+		// Skip ids[0] as parent id will always be invalid 
+		EntityID offset = ids[0];
+
+		// Once prefab entities are deserialised, set parent ids accordingly.
+		for (int i = 1; i < ids.size(); ++i)
+		{
+			EntityID id = ids[i];
+			Entity* entity = coordinator->GetEntity(id);
+
+			coordinator->ToChild(offset + entity->GetParent(), id);
+		}
+
+		// Return head entity id
+		return offset;
 	}
 
 
