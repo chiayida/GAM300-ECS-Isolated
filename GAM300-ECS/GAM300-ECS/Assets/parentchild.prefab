@@ -1,14 +1,14 @@
 [
 {
     "0Entity": {
-        "name": "PC0",
+        "name": "Entity 4",
         "parent": 5001,
         "prefab": "parentchild.prefab"
     }
 },
 {
     "0Entity": {
-        "name": "PC1",
+        "name": "Entity 30",
         "parent": 0,
         "prefab": ""
     },
@@ -39,42 +39,42 @@
 },
 {
     "0Entity": {
-        "name": "PC2",
+        "name": "Entity 5",
         "parent": 1,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "PC3",
+        "name": "Entity 31",
         "parent": 2,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "PC4",
+        "name": "Entity 35",
         "parent": 2,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "PC5",
+        "name": "Entity 9",
         "parent": 1,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "PC6",
+        "name": "Entity 50",
         "parent": 0,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "PC7",
+        "name": "Entity 10",
         "parent": 6,
         "prefab": ""
     }

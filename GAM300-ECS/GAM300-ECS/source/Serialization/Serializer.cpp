@@ -303,12 +303,7 @@ namespace Engine
 					entity.SetParentID(j);
 
 					writer = Serializer::InstanceToJson(writer, entity, "0Entity");
-
-					std::cout << "entity id: " << entity.GetEntityID() << " Transform?: " << coordinator->HasComponent<Transform>(entity)
-						<< " Script?: " << coordinator->HasComponent<Script>(entity) << "\n";
-
 					SERIALIZE_COMPONENTS
-
 					vJsonStrings.emplace_back(writer.dump(4));
 
 					// Reset the ID back to original
@@ -368,11 +363,28 @@ namespace Engine
 				return MAX_ENTITIES + 1;
 			}
 
-			// Always deserialize entity first, set its properties, then proceed. Prefabs should not have entities that contains any prefabs.
-			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
+			// Always deserialize entity first, set its properties, then proceed.
+			// Get correct naming before creating entity
+			std::string entity_name = object["0Entity"]["name"];
+			std::string duplicate_name{};
+
+			int i = 1;
+			for (int size = 0; size < coordinator->GetEntities().size(); ++size)
+			{
+				duplicate_name = entity_name + "(" + std::to_string(i) + ")";
+
+				if (coordinator->GetEntities()[size].GetEntityName() == duplicate_name)
+				{
+					// Increament till highest value, reset back loop to check again.
+					++i;
+					size = 0;
+				}
+			}
+			EntityID entity_id = coordinator->CreateEntity(duplicate_name);
 			Entity* entity = coordinator->GetEntity(entity_id);
 			entity->SetParentID(object["0Entity"]["parent"]);
-			
+			entity->SetPrefab(object["0Entity"]["prefab"]);
+
 			// Push back to container to update to the correct parent id for coordinator's container
 			ids.emplace_back(entity_id);
 
@@ -510,6 +522,13 @@ namespace Engine
 		catch (json::parse_error& e)
 		{
 			LOG_WARNING("Parse Error: PREFAB file either does not exist or has formatting issues", e.what());
+			return;
+		}
+
+		// Unable to deserialise parent-child prefab
+		// For both Scene file and Reloading
+		if (writer.size() > 1)
+		{
 			return;
 		}
 

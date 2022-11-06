@@ -3,7 +3,7 @@
     "0Entity": {
         "name": "Entity 0",
         "parent": 5001,
-        "prefab": ""
+        "prefab": "single.prefab"
     }
 },
 {
@@ -109,14 +109,14 @@
 },
 {
     "0Entity": {
-        "name": "Entity 4",
+        "name": "Entity 4(1)",
         "parent": 5001,
-        "prefab": ""
+        "prefab": "parentchild.prefab"
     }
 },
 {
     "0Entity": {
-        "name": "Entity 30",
+        "name": "Entity 30(1)",
         "parent": 12,
         "prefab": ""
     },
@@ -147,42 +147,42 @@
 },
 {
     "0Entity": {
-        "name": "Entity 5",
+        "name": "Entity 5(1)",
         "parent": 13,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 31",
+        "name": "Entity 31(1)",
         "parent": 14,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 35",
+        "name": "Entity 35(1)",
         "parent": 14,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 9",
+        "name": "Entity 9(1)",
         "parent": 13,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 50",
+        "name": "Entity 50(1)",
         "parent": 12,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 10",
+        "name": "Entity 10(1)",
         "parent": 18,
         "prefab": ""
     }

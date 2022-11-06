@@ -178,7 +178,7 @@ namespace Engine
 		{
 			duplicate_name = entity_name + "(" + std::to_string(i) + ")";
 
-			if (mEntities[size].GetEntityName() == duplicate_name);
+			if (mEntities[size].GetEntityName() == duplicate_name)
 			{
 				// Increament till highest value, reset back loop to check again.
 				++i;
