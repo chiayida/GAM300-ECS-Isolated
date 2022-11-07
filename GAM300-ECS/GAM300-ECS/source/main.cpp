@@ -21,7 +21,6 @@ int main()
 	Coordinator gCoordinator;
 	gCoordinator.Init();
 
-	/*
 	// Initialise entities accordingly
 	for (int i = 0; i < 51; ++i)
 	{
@@ -140,7 +139,6 @@ int main()
 
 	Serializer::SerializeEntities(&gCoordinator, "test.scene");
 
-	*/
 
 	gCoordinator.Destroy();
 	gCoordinator.Init();

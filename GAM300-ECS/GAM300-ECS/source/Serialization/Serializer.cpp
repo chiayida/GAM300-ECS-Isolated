@@ -34,14 +34,8 @@
 							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS	DESERIALIZE_TRANSFORM\
-								DESERIALIZE_OBJECT_BASIC(Script, "Script")\
+#define DESERIALIZE_COMPONENTS	DESERIALIZE_OBJECT_BASIC(Script, "Script")\
 								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
-
-
-#define DESERIALIZE_COMPONENTS_PREFAB	DESERIALIZE_TRANSFORM_PREFAB\
-										DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-										DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
 #define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
@@ -69,31 +63,9 @@
 									Transform transform{};\
 									json component_json_value = component.second.get<json::object_t>();\
 									JsonToInstance(transform, component_json_value);\
-									if (coordinator->HasComponent<Transform>(*entity))\
-									{\
-										Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
-										if (transform.isOverridePosition)\
-										{\
-											ptr->position = transform.position;\
-										}\
-										if (transform.isOverrideRotation)\
-										{\
-											ptr->rot_q = transform.rot_q;\
-										}\
-										if (transform.isOverrideScale)\
-										{\
-											ptr->scale = transform.scale;\
-										}\
-										ptr->isOverridePosition = transform.isOverridePosition;\
-										ptr->isOverrideRotation = transform.isOverrideRotation;\
-										ptr->isOverrideScale = transform.isOverrideScale;\
-									}\
-									else\
-									{\
-										coordinator->AddComponent<Transform>(*entity);\
-										Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
-										*ptr = transform;\
-									}\
+									coordinator->AddComponent<Transform>(*entity);\
+									Transform* ptr = coordinator->GetComponent<Transform>(*entity);\
+									*ptr = transform;\
 								}
 
 
@@ -279,6 +251,7 @@ namespace Engine
 		Entity& entity = *coordinator->GetEntity(ids[0]);
 		EntityID parentID = entity.GetParent();
 		entity.SetParentID(MAX_ENTITIES + 1);
+		entity.SetPrefab(filename);
 
 		writer = Serializer::InstanceToJson(writer, entity, "0Entity");
 		SERIALIZE_COMPONENTS
@@ -396,7 +369,8 @@ namespace Engine
 			for (auto& component : componentList)
 			{
 				// Get variant, type and add component to coordinator through component name string
-				DESERIALIZE_COMPONENTS_PREFAB
+				DESERIALIZE_TRANSFORM_PREFAB
+				DESERIALIZE_COMPONENTS
 			}
 		}
 
@@ -475,14 +449,10 @@ namespace Engine
 			// Always deserialize entity first, set its properties, then proceed
 			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
 			Entity* entity = coordinator->GetEntity(entity_id);
-
+			
+			// Dont deserialise prefab as its properties should be serialised
 			entity->SetPrefab(object["0Entity"]["prefab"]);
-			entity->SetParentID(object["0Entity"]["parent"]);
-
-			if (std::string prefabFile = entity->GetPrefab(); prefabFile != "")
-			{
-				DeserializePrefab(coordinator, entity, prefabFile);
-			}
+			entity->SetParentID(object["0Entity"]["parent"]); 
 
 			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
@@ -492,6 +462,7 @@ namespace Engine
 			for (auto& component : componentList)
 			{
 				// Get variant, type and add component to coordinator through component name string
+				DESERIALIZE_TRANSFORM
 				DESERIALIZE_COMPONENTS
 			}
 		}
@@ -544,7 +515,8 @@ namespace Engine
 			for (auto& component : componentList)
 			{
 				// Get variant, type and add component to coordinator through component name string
-				DESERIALIZE_COMPONENTS_PREFAB
+				DESERIALIZE_TRANSFORM_PREFAB
+				DESERIALIZE_COMPONENTS
 			}
 		}
 	}
