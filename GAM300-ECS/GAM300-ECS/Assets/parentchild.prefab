@@ -1,81 +1,60 @@
 [
 {
     "0Entity": {
-        "name": "Entity 4",
+        "name": "Entity 9",
         "parent": 5001,
         "prefab": "parentchild.prefab"
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 30",
-        "parent": 0,
-        "prefab": ""
     },
     "1Transform": {
         "isOverridePosition": false,
         "isOverrideRotation": false,
         "isOverrideScale": false,
         "position": [
-            3.0,
-            2.0,
-            1.0
+            9.0,
+            9.0,
+            9.0
         ],
         "rot_q": [
-            1.0,
-            1.0,
-            1.0,
-            1.0
+            9.0,
+            9.0,
+            9.0,
+            9.0
         ],
         "scale": [
-            1.0,
-            1.0,
-            1.0
+            9.0,
+            9.0,
+            9.0
         ]
     },
     "Script": {
-        "mono_string": "Shoot.cs"
+        "mono_string": "Shoot30.cs"
     }
 },
 {
     "0Entity": {
-        "name": "Entity 5",
-        "parent": 1,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 31",
-        "parent": 2,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 35",
-        "parent": 2,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 9",
-        "parent": 1,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 50",
+        "name": "Entity 15",
         "parent": 0,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 10",
-        "parent": 6,
+        "name": "Entity 20",
+        "parent": 0,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "Entity 23",
+        "parent": 2,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "Entity 29",
+        "parent": 2,
         "prefab": ""
     }
 }

@@ -228,18 +228,19 @@ namespace Engine
 		std::vector<EntityID> ids{};
 		coordinator->GetAllChildren(ids, id);
 
+		// Get all the entity names (to be replaced for later)
+		std::vector<std::string> names{};
+
 		// Serialise root entity first. Parent will be nothing -> Reset back afterwards
 		Entity& entity = *coordinator->GetEntity(ids[0]);
 		EntityID parentID = entity.GetParent();
 		entity.SetParentID(MAX_ENTITIES + 1);
 		entity.SetPrefab(filename);
+		names.emplace_back(entity.GetEntityName());
 
 		writer = Serializer::InstanceToJson(writer, entity, "0Entity");
 		SERIALIZE_COMPONENTS
 		vJsonStrings.emplace_back(writer.dump(4));
-
-		// Reset parent ID back
-		entity.SetParentID(parentID);
 
 
 		// If entity has children, similar process, parent id is index in ids instead.
@@ -247,6 +248,7 @@ namespace Engine
 		{
 			Entity& entity = *coordinator->GetEntity(ids[i]);
 			EntityID parentID = entity.GetParent();
+			names.emplace_back(entity.GetEntityName());
 
 			writer.clear();
 
@@ -280,6 +282,25 @@ namespace Engine
 			}
 		}
 		Serializer::StringToJson(filename, js);
+
+		// Create a new set of entities and delete the "old" one (ID to be iterative)
+		// Reset parent ID back (For Parent-Child container)
+		entity.SetParentID(parentID);
+		coordinator->DestroyEntity(id);
+
+		EntityID entity_id_new = CreateEntityPrefab(coordinator, filename);
+
+		if (parentID <= MAX_ENTITIES)
+		{
+			coordinator->ToChild(parentID, entity_id_new);
+		}
+
+		// Reset name
+		for (int i = 0; i < names.size(); ++i)
+		{
+			Entity& entity_updated = *coordinator->GetEntity(entity_id_new + i);
+			entity_updated.SetEntityName(names[i]);
+		}
 	}
 
 

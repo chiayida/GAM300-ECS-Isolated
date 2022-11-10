@@ -1,189 +1,147 @@
 [
 {
     "0Entity": {
-        "name": "Entity 0",
-        "parent": 5001,
-        "prefab": "single.prefab"
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 1",
-        "parent": 5001,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 2",
-        "parent": 5001,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 4",
-        "parent": 2,
-        "prefab": "parentchild.prefab"
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 5",
-        "parent": 8,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 9",
-        "parent": 8,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
         "name": "Entity 10",
-        "parent": 11,
-        "prefab": ""
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 22",
-        "parent": 2,
+        "parent": 5001,
         "prefab": ""
     }
 },
 {
     "0Entity": {
         "name": "Entity 30",
-        "parent": 3,
-        "prefab": ""
-    },
-    "1Transform": {
-        "isOverridePosition": false,
-        "isOverrideRotation": false,
-        "isOverrideScale": false,
-        "position": [
-            3.0,
-            2.0,
-            1.0
-        ],
-        "rot_q": [
-            1.0,
-            1.0,
-            1.0,
-            1.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
-        ]
-    },
-    "Script": {
-        "mono_string": "Shoot.cs"
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 31",
-        "parent": 4,
+        "parent": 0,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 35",
-        "parent": 4,
+        "name": "Entity 51",
+        "parent": 1,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 50",
-        "parent": 3,
+        "name": "Entity 52",
+        "parent": 1,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 4(1)",
-        "parent": 5001,
+        "name": "Entity 9",
+        "parent": 0,
         "prefab": "parentchild.prefab"
-    }
-},
-{
-    "0Entity": {
-        "name": "Entity 30(1)",
-        "parent": 12,
-        "prefab": ""
     },
     "1Transform": {
         "isOverridePosition": false,
         "isOverrideRotation": false,
         "isOverrideScale": false,
         "position": [
-            3.0,
-            2.0,
-            1.0
+            9.0,
+            9.0,
+            9.0
         ],
         "rot_q": [
-            1.0,
-            1.0,
-            1.0,
-            1.0
+            9.0,
+            9.0,
+            9.0,
+            9.0
         ],
         "scale": [
-            1.0,
-            1.0,
-            1.0
+            9.0,
+            9.0,
+            9.0
         ]
     },
     "Script": {
-        "mono_string": "Shoot.cs"
+        "mono_string": "Shoot30.cs"
     }
 },
 {
     "0Entity": {
-        "name": "Entity 5(1)",
-        "parent": 13,
+        "name": "Entity 15",
+        "parent": 4,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 31(1)",
-        "parent": 14,
+        "name": "Entity 20",
+        "parent": 4,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 35(1)",
-        "parent": 14,
+        "name": "Entity 23",
+        "parent": 6,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "Entity 29",
+        "parent": 6,
         "prefab": ""
     }
 },
 {
     "0Entity": {
         "name": "Entity 9(1)",
-        "parent": 13,
+        "parent": 5001,
+        "prefab": "parentchild.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            9.0,
+            9.0,
+            9.0
+        ],
+        "rot_q": [
+            9.0,
+            9.0,
+            9.0,
+            9.0
+        ],
+        "scale": [
+            9.0,
+            9.0,
+            9.0
+        ]
+    },
+    "Script": {
+        "mono_string": "Shoot30.cs"
+    }
+},
+{
+    "0Entity": {
+        "name": "Entity 15(1)",
+        "parent": 9,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 50(1)",
-        "parent": 12,
+        "name": "Entity 20(1)",
+        "parent": 9,
         "prefab": ""
     }
 },
 {
     "0Entity": {
-        "name": "Entity 10(1)",
-        "parent": 18,
+        "name": "Entity 23(1)",
+        "parent": 11,
+        "prefab": ""
+    }
+},
+{
+    "0Entity": {
+        "name": "Entity 29(1)",
+        "parent": 11,
         "prefab": ""
     }
 }

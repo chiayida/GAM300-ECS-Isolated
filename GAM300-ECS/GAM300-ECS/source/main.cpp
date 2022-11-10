@@ -22,7 +22,7 @@ int main()
 	gCoordinator.Init();
 
 	// Initialise entities accordingly
-	for (int i = 0; i < 51; ++i)
+	for (int i = 0; i < 53; ++i)
 	{
 		gCoordinator.CreateEntity();
 	}
@@ -32,7 +32,7 @@ int main()
 	{
 		EntityID id = e.GetEntityID();
 
-		if (!(id == 0 || id == 1 || id == 2 || id == 4 || id == 5 || id == 9 || id == 10 || id == 22 || id == 30 || id == 31 || id == 35 || id == 50))
+		if (!(id == 9 || id == 10 || id == 15 || id == 20 || id == 23 || id == 29 || id == 30 || id == 51 || id == 52))
 		{
 			ids.emplace_back(id);
 		}
@@ -43,109 +43,36 @@ int main()
 		gCoordinator.DestroyEntity(id);
 	}
 
-	gCoordinator.ToChild(2, 22);
-	gCoordinator.ToChild(2, 4);
-	gCoordinator.ToChild(4, 30);
-	gCoordinator.ToChild(4, 50);
-	gCoordinator.ToChild(30, 5);
-	gCoordinator.ToChild(30, 9);
-	gCoordinator.ToChild(50, 10);
-	gCoordinator.ToChild(5, 31);
-	gCoordinator.ToChild(5, 35);
-
+	gCoordinator.ToChild(10, 9);
+	gCoordinator.ToChild(10, 30);
+	gCoordinator.ToChild(9, 15);
+	gCoordinator.ToChild(9, 20);
+	gCoordinator.ToChild(20, 23);
+	gCoordinator.ToChild(20, 29);
+	gCoordinator.ToChild(30, 51);
+	gCoordinator.ToChild(30, 52);
 
 	Script script;
-	script.mono_string = "Shoot.cs";
+	script.mono_string = "Shoot30.cs";
 	Transform transform;
-	transform.position = { 3.f, 2.f, 1.f };
-	transform.scale = { 1.f, 1.f, 1.f };
-	transform.rot_q = { 1.f, 1.f, 1.f, 1.f };
-	gCoordinator.AddComponent<Transform>(30, transform);
-	gCoordinator.AddComponent<Script>(30, script);
+	transform.position = { 9.f, 9.f, 9.f };
+	transform.scale = { 9.f, 9.f, 9.f };
+	transform.rot_q = { 9.f, 9.f, 9.f, 9.f };
+	gCoordinator.AddComponent<Transform>(9, transform);
+	gCoordinator.AddComponent<Script>(9, script);
 
-	//Serializer::SerializePrefab(&gCoordinator, 30, "single.prefab");
-	//Serializer::CreateEntityPrefab(&gCoordinator, "single.prefab");
-
-	Entity& entity = *gCoordinator.GetEntity(4);
+	Entity& entity = *gCoordinator.GetEntity(9);
 	entity.SetPrefab("parentchild.prefab");
-	Serializer::SerializePrefab(&gCoordinator, 4, "parentchild.prefab");
+	Serializer::SerializePrefab(&gCoordinator, 9, "parentchild.prefab");
 	Serializer::CreateEntityPrefab(&gCoordinator, "parentchild.prefab");
-
-
-	std::cout << "\n==========================\n       All Entities\n==========================\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << "id: " << entity.GetEntityID() << " " << entity.isParent() << " " << entity.IsChild() << "\n";
-	}
-
-
-	std::cout << "\n===========================\n     Parent-Child Tree\n===========================\n";
-	for (auto& parent : gCoordinator.GetMap())
-	{
-		std::cout << "Parent: " << parent.first << " Children: ";
-
-		for (auto& child : parent.second)
-		{
-			std::cout << child << " ";
-		}
-		std::cout << "\n";
-	}
-
-
-	std::cout << "\n==========================\n        Components\n==========================\n";
-	for (auto& entity : gCoordinator.GetEntities())
-	{
-		std::cout << "-------------------------\n"
-			<< "Entity name: " << entity.GetEntityName() << "\nEntity ID: " << entity.GetEntityID() << " Parent ID: " << entity.GetParent();
-		std::cout << "\nprefab: " << entity.GetPrefab() << "\n";
-
-		if (gCoordinator.HasComponent<Transform>(entity))
-		{
-			Transform* transform = gCoordinator.GetComponent<Transform>(entity);
-
-			std::cout << "\nTransform:\n";
-			std::cout << "position: " << transform->position.x << " " << transform->position.y << " " << transform->position.z <<
-				"\n" << "scale: " << transform->scale.x << " " << transform->scale.y << " " << transform->scale.z <<
-				"\n" << "rot_q: " << transform->rot_q.w << " " << transform->rot_q.x << " " << transform->rot_q.y << " " << transform->rot_q.z <<
-				"\n" << "isOverridePosition: " << transform->isOverridePosition << " isOverrideScale: " << transform->isOverrideScale << " isOverrideRotation: " << transform->isOverrideRotation <<
-				"\n";
-		}
-
-		if (gCoordinator.HasComponent<Script>(entity))
-		{
-			Script* script = gCoordinator.GetComponent<Script>(entity);
-			std::cout << "\nScript:\n";
-			std::cout << "mono_string: " << script->mono_string <<
-				"\n";
-		}
-
-		if (gCoordinator.HasComponent<std::vector<Transform>>(entity))
-		{
-			std::cout << "\nstd::vector<Transform>:";
-			std::vector<Transform>* vtransform = gCoordinator.GetComponent<std::vector<Transform>>(entity);
-
-			int i = 0;
-			for (auto& transform : *vtransform)
-			{
-				std::cout << "\nTransform index: " << i++ << "\n";
-				std::cout << "position: " << transform.position.x << " " << transform.position.y << " " << transform.position.z <<
-					"\n" << "scale: " << transform.scale.x << " " << transform.scale.y << " " << transform.scale.z <<
-					"\n" << "rot_q: " << transform.rot_q.w << " " << transform.rot_q.x << " " << transform.rot_q.y << " " << transform.rot_q.z <<
-					"\n";
-			}
-		}
-	}
-	std::cout << "\n\n\n";
-
 	Serializer::SerializeEntities(&gCoordinator, "test.scene");
-
 
 	gCoordinator.Destroy();
 	gCoordinator.Init();
-	Serializer::DeserializeJson(&gCoordinator, "test.scene");
-	std::cout << "\n\nDESTROYED\n\n";
-	
+	//Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
+
+	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
@@ -210,6 +137,7 @@ int main()
 		}
 	}
 
+	std::cout << "\n\n\n";
 
 	return 0;
 }
