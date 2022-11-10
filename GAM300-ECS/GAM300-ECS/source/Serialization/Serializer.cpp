@@ -99,25 +99,6 @@
 										}
 
 
-#define DESERIALIZE_OBJECT_COMBINE(type, oName)	else if (component.first == oName)\
-												{\
-													type t{};\
-													json component_json_value = component.second.get<json::object_t>();\
-													JsonToInstance(t, component_json_value);\
-													if (coordinator->HasComponent<type>(*entity))\
-													{\
-														type* ptr = coordinator->GetComponent<type>(*entity);\
-														*ptr += t;\
-													}\
-													else\
-													{\
-														coordinator->AddComponent<type>(*entity);\
-														type* ptr = coordinator->GetComponent<type>(*entity);\
-														*ptr = t;\
-													}\
-												}
-
-
 #define DESERIALIZE_OBJECT_BASIC(type, oName)	else if (component.first == oName)\
 												{\
 													type t{};\
