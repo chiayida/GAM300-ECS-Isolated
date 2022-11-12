@@ -144,5 +144,67 @@
         "parent": 11,
         "prefab": ""
     }
+},
+{
+    "0Entity": {
+        "name": "single(1)",
+        "parent": 5001,
+        "prefab": "single.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            1.0,
+            2.0,
+            3.0
+        ],
+        "rot_q": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Script": {
+        "mono_string": "Movement.cs"
+    }
+},
+{
+    "0Entity": {
+        "name": "single(2)",
+        "parent": 5001,
+        "prefab": "single.prefab"
+    },
+    "1Transform": {
+        "isOverridePosition": false,
+        "isOverrideRotation": false,
+        "isOverrideScale": false,
+        "position": [
+            1.0,
+            2.0,
+            3.0
+        ],
+        "rot_q": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Script": {
+        "mono_string": "Movement.cs"
+    }
 }
 ]

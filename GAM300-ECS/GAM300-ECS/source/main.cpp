@@ -9,7 +9,7 @@
 
 #include "include/ECS/Component/Transform.hpp"
 
-// #define MEMORY_SIZE 1e8 // 1 * 10^8 bytes
+// #define MEMORY_SIZE 1e8 // 1 * 10^8 bytes	
 
 using namespace Engine;
 
@@ -65,12 +65,19 @@ int main()
 	entity.SetPrefab("parentchild.prefab");
 	Serializer::SerializePrefab(&gCoordinator, 9, "parentchild.prefab");
 	Serializer::CreateEntityPrefab(&gCoordinator, "parentchild.prefab");
-	Serializer::SerializeEntities(&gCoordinator, "test.scene");
 
+	Entity& entity58 = *gCoordinator.GetEntity(58);
+	gCoordinator.DuplicateEntity(entity58, entity58.GetParent());	
+
+	gCoordinator.DestroyEntity(63);
+
+	Serializer::CreateEntityPrefab(&gCoordinator, "single.prefab");
+	Serializer::CreateEntityPrefab(&gCoordinator, "single.prefab");
+	
+	Serializer::SerializeEntities(&gCoordinator, "test.scene");
 	gCoordinator.Destroy();
 	gCoordinator.Init();
-	//Serializer::DeserializeJson(&gCoordinator, "test.scene");
-
+	Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
 	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
@@ -90,6 +97,23 @@ int main()
 			std::cout << child << " ";
 		}
 		std::cout << "\n";
+	}
+
+
+	std::cout << "\n===========================\n      Prefab Container\n===========================\n";
+	std::cout << "\parentchild.PREFAB\n";
+	std::vector<EntityID>& prefab_container1 = gCoordinator.GetPrefabContainer("parentchild.prefab");
+	for (auto id : prefab_container1)
+	{
+		std::cout << "id: " << id << " Prefab: " << gCoordinator.GetEntity(id)->GetPrefab() << "\n";
+	}
+
+	std::cout << "\nSINGLE.PREFAB\n";
+
+	std::vector<EntityID>& prefab_container2 = gCoordinator.GetPrefabContainer("single.prefab");
+	for (auto id : prefab_container2)
+	{
+		std::cout << "id: " << id << " Prefab: " << gCoordinator.GetEntity(id)->GetPrefab() << "\n";
 	}
 
 
@@ -136,9 +160,8 @@ int main()
 			}
 		}
 	}
-
 	std::cout << "\n\n\n";
-
+	
 	return 0;
 }
 

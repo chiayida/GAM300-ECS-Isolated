@@ -41,6 +41,7 @@
 										}
 
 // Only for colliders as PhyX needs Actor
+/*
 #define DUPLICATE_COMPONENT_COLLIDER(type, d, o)	if (HasComponent<type>(o) && HasComponent<Transform>(o))\
 													{\
 														type* oPtr = GetComponent<type>(o);\
@@ -49,6 +50,7 @@
 														*dPtr = *oPtr;\
 														dPtr->CreateActor();\
 													}
+*/
 
 
 namespace Engine
@@ -94,8 +96,9 @@ namespace Engine
 			mComponentManager->DestroyEntity(e);
 			mSystemManager->DestroyEntity(e);
 		}
-		GetEntities().clear();
-		GetMap().clear();
+		mEntities.clear();
+		mParentChild.clear();
+		mPrefabReloading.clear();
 
 		mComponentManager->FreeCustomAllocator();
 
@@ -169,6 +172,10 @@ namespace Engine
 
 		// Duplicate entity (Copy all variables + Components) based on original except name
 		duplicated_entity.Copy(entity);
+		if (std::string prefabName = duplicated_entity.GetPrefab(); prefabName != "")
+		{
+			AddToPrefabMap(prefabName, duplicated_id);
+		}
 		 
 		std::string entity_name = entity.GetEntityName();
 		std::string duplicate_name{};
@@ -298,11 +305,60 @@ namespace Engine
 	}
 
 
+	std::vector<Entity>& Coordinator::GetEntities()
+	{
+		return mEntities;
+	}
+
+
 	std::map<EntityID, std::vector<EntityID>>& Coordinator::GetMap()
 	{
 		return mParentChild;
 	}
 
+
+	std::vector<EntityID>& Coordinator::GetPrefabContainer(std::string prefabName)
+	{
+		return mPrefabReloading[prefabName];
+	}
+
+
+	void Coordinator::AddToPrefabMap(std::string prefabName, EntityID id)
+	{
+		std::vector<EntityID>& value = mPrefabReloading[prefabName];
+		
+		// To avoid same id being added twice
+		for (int i = 0; i < value.size(); ++i)
+		{
+			if (id == value[i])
+			{
+				return;
+			}
+		}
+
+		value.emplace_back(id);
+	}
+	
+
+	void Coordinator::RemoveFromPrefabMap(std::string prefabName, EntityID id)
+	{
+		std::vector<EntityID>& value = mPrefabReloading[prefabName];
+
+		int index = MAX_ENTITIES + 1;
+		for (int i = 0; i < value.size(); ++i)
+		{
+			if (id == value[i])
+			{
+				index = i;
+				break;
+			}
+		}
+
+		if (index < MAX_ENTITIES)
+		{
+			value.erase(value.begin() + index);
+		}
+	}
 
 	void Coordinator::DestroyEntity(Entity& e)
 	{
@@ -319,9 +375,13 @@ namespace Engine
 		}
 
 		Entity& entity = *GetEntity(e);
-		EntityID parentID = entity.GetParent();
+
+		// If valid prefabName, remove from prefabName-EntityID container
+		std::string prefabName = entity.GetPrefab();
+		RemoveFromPrefabMap(prefabName, e);
 
 		// If valid parentID, remove from parent-child container
+		EntityID parentID = entity.GetParent();
 		if (parentID < MAX_ENTITIES)
 		{
 			std::vector<EntityID>& children = mParentChild[parentID];
@@ -367,12 +427,6 @@ namespace Engine
 	}
 
 
-	std::vector<Entity>& Coordinator::GetEntities()
-	{
-		return mEntities;
-	}
-
-
 	Entity* Coordinator::GetEntity(EntityID id)
 	{
 		for (int i = 0; i < mEntities.size(); ++i)
@@ -382,7 +436,6 @@ namespace Engine
 				return &mEntities[i];
 			}
 		}
-
 		return nullptr;
 	}
 
@@ -396,7 +449,6 @@ namespace Engine
 				return &mEntities[i];
 			}
 		}
-
 		return nullptr;
 	}
 
@@ -410,16 +462,15 @@ namespace Engine
 				return true;
 			}
 		}
-
 		return false;
 	}
 
 
-	bool Coordinator::EntityExists(Entity const& ent) const
+	bool Coordinator::DoesEntityExists(EntityID id)
 	{
-		for (Entity const& e : mEntities)
+		for (int i = 0; i < mEntities.size(); ++i)
 		{
-			if (e.GetEntityID() == ent.GetEntityID())
+			if (id == mEntities[i].GetEntityID())
 			{
 				return true;
 			}

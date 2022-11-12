@@ -75,40 +75,43 @@ namespace Engine
 		EntityID CreateEntity(std::string __name__ = "");
 		void DuplicateEntity(Entity entity, EntityID parentID);
 
-		// Creates a child entity and returns the ID
-		EntityID CreateChild(EntityID parent, const std::string&__name__ = "");
-
-		// Convert the entity (child) into a child passing in the parent-to-be (parent)
+		// Parent-Child functions
+		EntityID CreateChild(EntityID parent, const std::string& __name__ = "");
 		void ToChild(EntityID parent, EntityID child);
 		void UnChild(EntityID parent, EntityID child);
-
-		// Get a vector of the child objects based on the entity ID
 		std::vector<EntityID> GetChildObjects(EntityID id);
 		Entity *GetChildObject(EntityID parent, uint32_t index = 0);
 		void GetAllChildren(std::vector<EntityID>& container, EntityID id);
 
+		// Retrieve Containers
+		std::vector<Entity>& GetEntities();
 		std::map<EntityID, std::vector<EntityID>>& GetMap();
+		std::vector<EntityID>& GetPrefabContainer(std::string prefabName);
+		
+		// PrefabReloading functions, only stores the "head" EntityID
+		void AddToPrefabMap(std::string prefabName, EntityID id);
+		void RemoveFromPrefabMap(std::string prefabName, EntityID id);
 
 		// Resets entity's signature, remove it from component arrays and systems
-		void DestroyEntity(Entity &e);
+		void DestroyEntity(Entity& e);
 		void DestroyEntity(EntityID e);
 		void DestroyEntity(Entity e, float delay);
 
 		// Tag component to entity, update signature in EntityManager, SystemManager System's entities
 		template <typename T, unsigned N = 1, typename... argv>
-		void AddComponent(Entity &e, argv... args);
+		void AddComponent(Entity& e, argv... args);
 		template <typename T, unsigned N = 1, typename... argv>
 		void AddComponent(EntityID e, argv... args);
 
 		// Remove tagged component from entity, update signature in EntityManager and System's entities
 		template <typename T, unsigned N = 0>
-		void RemoveComponent(Entity &e);
+		void RemoveComponent(Entity& e);
 		template <typename T, unsigned N = 0>
 		void RemoveComponent(EntityID e);
 
 		// Checks whether entity has a component
 		template <typename T>
-		bool HasComponent(Entity &e);
+		bool HasComponent(Entity& e);
 		template <typename T>
 		bool HasComponent(EntityID e);
 
@@ -125,11 +128,9 @@ namespace Engine
 
 		Entity* GetEntity(EntityID id);
 		Entity* GetEntityByName(std::string name);
-		std::vector<Entity>& GetEntities();
 
 		bool IsNameRepeated(std::string name);
-
-		bool EntityExists(Entity const& ent) const;
+		bool DoesEntityExists(EntityID id);
 	private:
 		/* Member Functions */
 
@@ -152,11 +153,11 @@ namespace Engine
 
 		// Variadic templated function for assigning System's signature (To be looped)
 		template <typename T, typename... argv>
-		void AssignSystemSig(Signature &s, T var1, argv... args);
+		void AssignSystemSig(Signature& s, T var1, argv... args);
 
 		// Variadic templated function for assigning System's signature (Last loop)
 		template <typename T>
-		void AssignSystemSig(Signature &s, T var1);
+		void AssignSystemSig(Signature& s, T var1);
 
 		// Tag signature to system
 		template <typename T>
@@ -170,8 +171,9 @@ namespace Engine
 		std::unique_ptr<SystemManager> mSystemManager;
 
 		std::vector<Entity> mEntities{};
-		// 1 level of child
-		std::map<EntityID, std::vector<EntityID>> mParentChild;
+		std::map<EntityID, std::vector<EntityID>> mParentChild{};
+		std::unordered_map<std::string, std::vector<EntityID>> mPrefabReloading{};
+
 
 		// Timed Destroy (Scripts)
 		std::vector<std::pair<unsigned int, float>> v_timed_destroys;
@@ -181,7 +183,7 @@ namespace Engine
 
 
 	template <typename T, unsigned N, typename... argv>
-	void Coordinator::AddComponent(Entity &e, argv... args)
+	void Coordinator::AddComponent(Entity& e, argv... args)
 	{
 		mComponentManager->AddComponent<T, N>(e, args...);
 
@@ -211,7 +213,7 @@ namespace Engine
 
 
 	template <typename T, unsigned N>
-	void Coordinator::RemoveComponent(Entity &e)
+	void Coordinator::RemoveComponent(Entity& e)
 	{
 		mComponentManager->RemoveComponent<T, N>(e);
 
@@ -241,7 +243,7 @@ namespace Engine
 
 
 	template <typename T>
-	bool Coordinator::HasComponent(Entity &e)
+	bool Coordinator::HasComponent(Entity& e)
 	{
 		return mComponentManager->HasComponent<T>(e);
 	}
@@ -310,7 +312,7 @@ namespace Engine
 
 
 	template <typename T, typename... argv>
-	void Coordinator::AssignSystemSig(Signature &s, T var1, argv... args)
+	void Coordinator::AssignSystemSig(Signature& s, T var1, argv... args)
 	{
 		UNUSED(var1);
 
@@ -320,7 +322,7 @@ namespace Engine
 
 
 	template <typename T>
-	void Coordinator::AssignSystemSig(Signature &s, T var1)
+	void Coordinator::AssignSystemSig(Signature& s, T var1)
 	{
 		UNUSED(var1);
 

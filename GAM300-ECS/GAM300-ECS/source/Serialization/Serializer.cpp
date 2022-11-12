@@ -289,7 +289,7 @@ namespace Engine
 		coordinator->DestroyEntity(id);
 
 		EntityID entity_id_new = CreateEntityPrefab(coordinator, filename);
-
+		coordinator->AddToPrefabMap(filename, entity_id_new);
 		if (parentID <= MAX_ENTITIES)
 		{
 			coordinator->ToChild(parentID, entity_id_new);
@@ -301,6 +301,7 @@ namespace Engine
 			Entity& entity_updated = *coordinator->GetEntity(entity_id_new + i);
 			entity_updated.SetEntityName(names[i]);
 		}
+
 	}
 
 
@@ -328,7 +329,6 @@ namespace Engine
 		}
 
 		std::vector<EntityID> ids{};
-
 		for (auto& object : writer)
 		{
 			// Check if object has "Entity", false = invalid
@@ -378,6 +378,8 @@ namespace Engine
 
 		// Skip ids[0] as parent id will always be invalid 
 		EntityID offset = ids[0];
+		
+		coordinator->AddToPrefabMap(filename, ids[0]);
 
 		// Once prefab entities are deserialised, set parent ids accordingly.
 		for (int i = 1; i < ids.size(); ++i)
@@ -451,10 +453,15 @@ namespace Engine
 			// Always deserialize entity first, set its properties, then proceed
 			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
 			Entity* entity = coordinator->GetEntity(entity_id);
-			
-			// Dont deserialise prefab as its properties should be serialised
-			entity->SetPrefab(object["0Entity"]["prefab"]);
 			entity->SetParentID(object["0Entity"]["parent"]); 
+			
+			// Dont need to deserialise prefab as full properties should serialised already
+			if (std::string prefabName = object["0Entity"]["prefab"]; prefabName != "")
+			{
+				entity->SetPrefab(prefabName);
+				coordinator->AddToPrefabMap(prefabName, entity_id);
+			}
+
 
 			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
