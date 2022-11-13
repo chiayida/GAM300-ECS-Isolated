@@ -89,7 +89,7 @@ namespace Engine
 
 	class Serializer
 	{
-	public:
+	public:	
 		static void SerializeEntities(Coordinator* coordinator, std::string scenefile);
 		static void SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename);
 		static void DeserializeJson(Coordinator* coordinator, std::string filename);
@@ -99,7 +99,7 @@ namespace Engine
 	private:
 		static json InstanceToJson(json writer, instance obj, std::string name);
 		static void DeserializeJsonInternal(Coordinator* coordinator, std::string filename);
-		static void DeserializePrefab(Coordinator* coordinator, Entity* entity, std::string filename);
+		static void DeserializePrefab(Coordinator* coordinator, EntityID id, std::string filename);
 
 		static std::string CombineTwoJsonWriters(json j1, json j2);
 		static std::string CombineStringJsonWriter(std::string j1, json j2);

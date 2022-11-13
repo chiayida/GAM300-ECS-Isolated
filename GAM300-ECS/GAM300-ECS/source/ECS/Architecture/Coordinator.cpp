@@ -176,7 +176,8 @@ namespace Engine
 		{
 			AddToPrefabMap(prefabName, duplicated_id);
 		}
-		 
+
+		// Getting a unique name based on prefab's entity name
 		std::string entity_name = entity.GetEntityName();
 		std::string duplicate_name{};
 
@@ -194,6 +195,7 @@ namespace Engine
 		}
 		duplicated_entity.SetEntityName(duplicate_name);
 
+		// Duplicate components
 		DUPLICATE_COMPONENTS(duplicated_entity, entity)
 
 		// Loop original entity children
@@ -320,6 +322,17 @@ namespace Engine
 	std::vector<EntityID>& Coordinator::GetPrefabContainer(std::string prefabName)
 	{
 		return mPrefabReloading[prefabName];
+	}
+
+
+	void Coordinator::UntagPrefab(EntityID id)
+	{
+		// Reset Prefab Name and remove from container
+
+		std::string prefabName = GetEntity(id)->GetPrefab();
+		GetEntity(id)->SetPrefab("");
+
+		RemoveFromPrefabMap(prefabName, id);
 	}
 
 

@@ -79,6 +79,9 @@ int main()
 	gCoordinator.Init();
 	Serializer::DeserializeJson(&gCoordinator, "test.scene");
 
+	gCoordinator.UntagPrefab(4);
+
+	Serializer::ApplyUpdatedPrefab(&gCoordinator, "parentchild.prefab");
 	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())

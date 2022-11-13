@@ -89,6 +89,7 @@ namespace Engine
 		std::vector<EntityID>& GetPrefabContainer(std::string prefabName);
 		
 		// PrefabReloading functions, only stores the "head" EntityID
+		void UntagPrefab(EntityID id);
 		void AddToPrefabMap(std::string prefabName, EntityID id);
 		void RemoveFromPrefabMap(std::string prefabName, EntityID id);
 

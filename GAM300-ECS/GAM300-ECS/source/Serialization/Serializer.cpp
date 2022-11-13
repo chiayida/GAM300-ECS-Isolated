@@ -170,6 +170,18 @@
 														}
 
 
+#define REMOVE_COMPONENTS	REMOVE_COMPONENT(Transform, "1Transform")\
+							REMOVE_COMPONENT(Script, "Script")\
+							REMOVE_COMPONENT(std::vector<Transform>, "vTransform")
+
+
+#define REMOVE_COMPONENT(type, name) if (auto itr = component_container.find(name);\
+										 coordinator->HasComponent<type>(*entity) && itr == component_container.end())\
+									 {\
+										coordinator->RemoveComponent<type>(*entity);\
+									 }
+
+
 namespace Engine
 {
 	//using namespace Graphics::Addition;
@@ -397,13 +409,12 @@ namespace Engine
 
 	void Serializer::ApplyUpdatedPrefab(Coordinator* coordinator, std::string filename)
 	{
-		for (auto& entity : coordinator->GetEntities())
+		// Get ids that contains prefab name
+		std::vector<EntityID>& ids = coordinator->GetPrefabContainer(filename);
+		for (int i = 0; i < ids.size(); ++i)
 		{
-			if (entity.GetPrefab() == filename)
-			{
-				// Replace with prefab components
-				DeserializePrefab(coordinator, &entity, filename);
-			}
+			// Replace with prefab components
+			DeserializePrefab(coordinator, ids[i], filename);
 		}
 	}
 
@@ -443,13 +454,6 @@ namespace Engine
 		// Loop through each object in writer
 		for (auto& object : writer)
 		{
-			// Check if object has "Entity", false = invalid
-			if (!(object.contains("0Entity")))
-			{
-				LOG_ERROR("Object does not have an Entity! Json file will NOT be deserialized!");
-				return;
-			}
-
 			// Always deserialize entity first, set its properties, then proceed
 			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
 			Entity* entity = coordinator->GetEntity(entity_id);
@@ -488,7 +492,7 @@ namespace Engine
 	}
 
 
-	void Serializer::DeserializePrefab(Coordinator* coordinator, Entity* entity, std::string filename)
+	void Serializer::DeserializePrefab(Coordinator* coordinator, EntityID id, std::string filename)
 	{
 		// Parse string to writer, check error
 		std::ifstream ifs{ "Assets/" + filename };
@@ -505,28 +509,36 @@ namespace Engine
 			return;
 		}
 
-		// Unable to deserialise parent-child prefab
-		// For both Scene file and Reloading
-		if (writer.size() > 1)
-		{
-			return;
-		}
-
-		entity->SetPrefab(filename);
-
 		// Loop through each object in writer
+		int index = 0;
 		for (auto& object : writer)
 		{
-			// Get all component names
+			// To get the correct entity
+			if (!(coordinator->DoesEntityExists(id + index)))
+			{
+				continue;
+			}
+			Entity* entity = coordinator->GetEntity(id + index);
+
+			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
+			componentList.erase(componentList.begin());
 
 			// Go through each component of an object
+			std::unordered_map<std::string, bool> component_container{};
 			for (auto& component : componentList)
 			{
+				component_container.insert({ component.first, true });
+
 				// Get variant, type and add component to coordinator through component name string
 				DESERIALIZE_TRANSFORM_PREFAB
 				DESERIALIZE_COMPONENTS
 			}
+
+			// if entity have component but cannot be found in json file -> remove it
+			REMOVE_COMPONENTS
+
+			index += 1;
 		}
 	}
 
