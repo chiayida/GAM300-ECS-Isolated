@@ -24,10 +24,10 @@
 
 namespace Engine
 {
-	Entity::Entity(EntityID __id__, std::string __name__) : id{ __id__ }, parent{ MAX_ENTITIES + 1 }, is_parent{ false }, is_child{ false }, name{ __name__ } {}
+	Entity::Entity(EntityID __id__, std::string __name__) : id{ __id__ }, parent{ MAX_ENTITIES + 1 }, is_parent{ false }, is_child{ false }, isActive{ true }, name{ __name__ } {}
 
 	Entity::Entity(EntityID __id__, EntityID __parent__, std::string __name__) :
-		id{ __id__ }, parent{ __parent__ }, name{ __name__ }, is_parent{ false }, is_child{ true } {};
+		id{ __id__ }, parent{ __parent__ }, name{ __name__ }, is_parent{ false }, is_child{ true }, isActive{ true } {};
 
 
 	EntityID Entity::GetEntityID() const
@@ -52,6 +52,7 @@ namespace Engine
 	{
 		is_child = rhs.is_child;
 		is_parent = rhs.is_parent;
+		isActive = rhs.isActive;
 
 		prefab = rhs.GetPrefab();
 	}
@@ -102,6 +103,18 @@ namespace Engine
 	std::string Entity::GetPrefab() const
 	{
 		return prefab;
+	}
+		
+
+	void Entity::SetIs_Active(bool val)
+	{
+		isActive = val;
+	}
+
+
+	bool Entity::GetIsActive()
+	{
+		return isActive;
 	}
 
 
@@ -228,5 +241,6 @@ RTTR_REGISTRATION
 		.property("name", &Entity::GetEntityName, &Entity::SetEntityName)
 		.property("prefab", &Entity::GetPrefab, &Entity::SetPrefab)
 		.property("parent", &Entity::GetParent, &Entity::SetParentID)
+		.property("isActive", &Entity::GetIsActive, &Entity::SetIs_Active)
 		;
 }

@@ -40,18 +40,6 @@
 											AddComponent<type>(d, c);\
 										}
 
-// Only for colliders as PhyX needs Actor
-/*
-#define DUPLICATE_COMPONENT_COLLIDER(type, d, o)	if (HasComponent<type>(o) && HasComponent<Transform>(o))\
-													{\
-														type* oPtr = GetComponent<type>(o);\
-														AddComponent<type>(d, type(GetComponent<Transform>(d)));\
-														type* dPtr= GetComponent<type>(d);\
-														*dPtr = *oPtr;\
-														dPtr->CreateActor();\
-													}
-*/
-
 
 namespace Engine
 {
@@ -373,6 +361,7 @@ namespace Engine
 		}
 	}
 
+
 	void Coordinator::DestroyEntity(Entity& e)
 	{
 		DestroyEntity(e.GetEntityID());
@@ -479,7 +468,7 @@ namespace Engine
 	}
 
 
-	bool Coordinator::DoesEntityExists(EntityID id)
+	bool Coordinator::EntityExists(EntityID id)
 	{
 		for (int i = 0; i < mEntities.size(); ++i)
 		{

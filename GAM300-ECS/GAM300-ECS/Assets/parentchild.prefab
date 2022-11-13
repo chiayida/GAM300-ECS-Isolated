@@ -1,6 +1,7 @@
 [
 {
     "0Entity": {
+        "isActive": true,
         "name": "Entity 9",
         "parent": 5001,
         "prefab": "parentchild.prefab"
@@ -32,6 +33,7 @@
 },
 {
     "0Entity": {
+        "isActive": true,
         "name": "Entity 15",
         "parent": 0,
         "prefab": ""
@@ -39,6 +41,7 @@
 },
 {
     "0Entity": {
+        "isActive": true,
         "name": "Entity 20",
         "parent": 0,
         "prefab": ""
@@ -46,6 +49,7 @@
 },
 {
     "0Entity": {
+        "isActive": true,
         "name": "Entity 23",
         "parent": 2,
         "prefab": ""
@@ -53,6 +57,7 @@
 },
 {
     "0Entity": {
+        "isActive": true,
         "name": "Entity 29",
         "parent": 2,
         "prefab": ""

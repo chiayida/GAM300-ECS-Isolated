@@ -28,34 +28,37 @@
 #include "include/Serialization/Serializer.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
+#pragma warning( push )
+#pragma warning( disable : 6262 )
 
-#define SERIALIZE_COMPONENTS SERIALIZE_OBJECT(Transform, "1Transform")\
-							 SERIALIZE_OBJECT(Script, "Script")\
-							 SERIALIZE_OBJECT_VECTOR(std::vector<Transform>, "vTransform")
+
+#define SERIALIZE_COMPONENTS(entity) SERIALIZE_OBJECT(entity, Transform, "1Transform")\
+									 SERIALIZE_OBJECT(entity, Script, "Script")\
+									 SERIALIZE_OBJECT_VECTOR(entity, std::vector<Transform>, "vTransform")
 
 
 #define DESERIALIZE_COMPONENTS	DESERIALIZE_OBJECT_BASIC(Script, "Script")\
 								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
-#define SERIALIZE_OBJECT(type, oName)	if (coordinator->HasComponent<type>(entity))\
-										{\
-											type* ptr = coordinator->GetComponent<type>(entity);\
-											instance t = ptr;\
-											writer = Serializer::InstanceToJson(writer, ptr, oName);\
-										}
-
-
-#define SERIALIZE_OBJECT_VECTOR(vType, vName)	if (coordinator->HasComponent<vType>(entity))\
+#define SERIALIZE_OBJECT(entity, type, oName)	if (coordinator->HasComponent<type>(entity))\
 												{\
-													vType* ptr = coordinator->GetComponent<vType>(entity);\
-													int i = 0;\
-													for (auto& t : *ptr)\
-													{\
-														VariantToWriter(t, writer[vName][i]);\
-														i++;\
-													}\
+													type* ptr = coordinator->GetComponent<type>(entity);\
+													instance t = ptr;\
+													writer = Serializer::InstanceToJson(writer, ptr, oName);\
 												}
+
+
+#define SERIALIZE_OBJECT_VECTOR(entity, vType, vName)	if (coordinator->HasComponent<vType>(entity))\
+														{\
+															vType* ptr = coordinator->GetComponent<vType>(entity);\
+															int i = 0;\
+															for (auto& t : *ptr)\
+															{\
+																VariantToWriter(t, writer[vName][i]);\
+																i++;\
+															}\
+														}
 
 
 #define DESERIALIZE_TRANSFORM	if (component.first == "1Transform")\
@@ -207,7 +210,7 @@ namespace Engine
 			}
 
 			writer = Serializer::InstanceToJson(writer, entity, "0Entity");
-			SERIALIZE_COMPONENTS
+			SERIALIZE_COMPONENTS(entity)
 
 			vJsonStrings.emplace_back(writer.dump(4));
 
@@ -244,21 +247,21 @@ namespace Engine
 		std::vector<std::string> names{};
 
 		// Serialise root entity first. Parent will be nothing -> Reset back afterwards
-		Entity& entity = *coordinator->GetEntity(ids[0]);
-		EntityID parentID = entity.GetParent();
-		entity.SetParentID(MAX_ENTITIES + 1);
-		entity.SetPrefab(filename);
-		names.emplace_back(entity.GetEntityName());
+		Entity& entity_h = *coordinator->GetEntity(ids[0]);
+		EntityID parent_id = entity_h.GetParent();
+		entity_h.SetParentID(MAX_ENTITIES + 1);
+		entity_h.SetPrefab(filename);
+		names.emplace_back(entity_h.GetEntityName());
 
-		writer = Serializer::InstanceToJson(writer, entity, "0Entity");
-		SERIALIZE_COMPONENTS
+		writer = Serializer::InstanceToJson(writer, entity_h, "0Entity");
+		SERIALIZE_COMPONENTS(entity_h)
 		vJsonStrings.emplace_back(writer.dump(4));
 
 
 		// If entity has children, similar process, parent id is index in ids instead.
-		for (int i = 1;  i < ids.size(); ++i)
+		for (int idx = 1; idx < ids.size(); ++idx)
 		{
-			Entity& entity = *coordinator->GetEntity(ids[i]);
+			Entity& entity = *coordinator->GetEntity(ids[idx]);
 			EntityID parentID = entity.GetParent();
 			names.emplace_back(entity.GetEntityName());
 
@@ -271,7 +274,7 @@ namespace Engine
 					entity.SetParentID(j);
 
 					writer = Serializer::InstanceToJson(writer, entity, "0Entity");
-					SERIALIZE_COMPONENTS
+					SERIALIZE_COMPONENTS(entity)
 					vJsonStrings.emplace_back(writer.dump(4));
 
 					// Reset the ID back to original
@@ -297,14 +300,14 @@ namespace Engine
 
 		// Create a new set of entities and delete the "old" one (ID to be iterative)
 		// Reset parent ID back (For Parent-Child container)
-		entity.SetParentID(parentID);
+		entity_h.SetParentID(parent_id);
 		coordinator->DestroyEntity(id);
 
 		EntityID entity_id_new = CreateEntityPrefab(coordinator, filename);
 		coordinator->AddToPrefabMap(filename, entity_id_new);
-		if (parentID <= MAX_ENTITIES)
+		if (parent_id <= MAX_ENTITIES)
 		{
-			coordinator->ToChild(parentID, entity_id_new);
+			coordinator->ToChild(parent_id, entity_id_new);
 		}
 
 		// Reset name
@@ -313,7 +316,6 @@ namespace Engine
 			Entity& entity_updated = *coordinator->GetEntity(entity_id_new + i);
 			entity_updated.SetEntityName(names[i]);
 		}
-
 	}
 
 
@@ -337,6 +339,7 @@ namespace Engine
 		catch (json::parse_error& e)
 		{
 			LOG_WARNING("Parse Error: PREFAB file either does not exist or has formatting issues", e.what());
+			UNUSED(e);
 			return MAX_ENTITIES + 1;
 		}
 
@@ -448,6 +451,7 @@ namespace Engine
 		catch (json::parse_error& e)
 		{
 			LOG_WARNING("Parse Error: SCENE file either does not exist or has formatting issues", e.what());
+			UNUSED(e);
 			return;
 		}
 
@@ -457,7 +461,8 @@ namespace Engine
 			// Always deserialize entity first, set its properties, then proceed
 			EntityID entity_id = coordinator->CreateEntity(object["0Entity"]["name"]);
 			Entity* entity = coordinator->GetEntity(entity_id);
-			entity->SetParentID(object["0Entity"]["parent"]); 
+			entity->SetParentID(object["0Entity"]["parent"]);
+			entity->SetIs_Active(object["0Entity"]["isActive"]);
 			
 			// Dont need to deserialise prefab as full properties should serialised already
 			if (std::string prefabName = object["0Entity"]["prefab"]; prefabName != "")
@@ -465,7 +470,6 @@ namespace Engine
 				entity->SetPrefab(prefabName);
 				coordinator->AddToPrefabMap(prefabName, entity_id);
 			}
-
 
 			// Get all component names, remove "Entity"
 			auto componentList = object.get<json::object_t>();
@@ -506,6 +510,7 @@ namespace Engine
 		catch (json::parse_error& e)
 		{
 			LOG_WARNING("Parse Error: PREFAB file either does not exist or has formatting issues", e.what());
+			UNUSED(e);
 			return;
 		}
 
@@ -514,7 +519,7 @@ namespace Engine
 		for (auto& object : writer)
 		{
 			// To get the correct entity
-			if (!(coordinator->DoesEntityExists(id + index)))
+			if (!(coordinator->EntityExists(id + index)))
 			{
 				continue;
 			}
@@ -1170,3 +1175,5 @@ namespace Engine
 	}
 
 } // end of namespace
+
+#pragma warning (pop)

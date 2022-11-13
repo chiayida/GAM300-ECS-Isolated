@@ -80,18 +80,10 @@ namespace Engine
 		void ToChild(EntityID parent, EntityID child);
 		void UnChild(EntityID parent, EntityID child);
 		std::vector<EntityID> GetChildObjects(EntityID id);
-		Entity *GetChildObject(EntityID parent, uint32_t index = 0);
+		Entity* GetChildObject(EntityID parent, uint32_t index = 0);
 		void GetAllChildren(std::vector<EntityID>& container, EntityID id);
 
-		// Retrieve Containers
-		std::vector<Entity>& GetEntities();
 		std::map<EntityID, std::vector<EntityID>>& GetMap();
-		std::vector<EntityID>& GetPrefabContainer(std::string prefabName);
-		
-		// PrefabReloading functions, only stores the "head" EntityID
-		void UntagPrefab(EntityID id);
-		void AddToPrefabMap(std::string prefabName, EntityID id);
-		void RemoveFromPrefabMap(std::string prefabName, EntityID id);
 
 		// Resets entity's signature, remove it from component arrays and systems
 		void DestroyEntity(Entity& e);
@@ -103,6 +95,15 @@ namespace Engine
 		void AddComponent(Entity& e, argv... args);
 		template <typename T, unsigned N = 1, typename... argv>
 		void AddComponent(EntityID e, argv... args);
+
+		// Retrieve Containers
+		std::vector<Entity>& GetEntities();
+		std::vector<EntityID>& GetPrefabContainer(std::string prefabName);
+		
+		// PrefabReloading functions, only stores the "head" EntityID
+		void UntagPrefab(EntityID id);
+		void AddToPrefabMap(std::string prefabName, EntityID id);
+		void RemoveFromPrefabMap(std::string prefabName, EntityID id);
 
 		// Remove tagged component from entity, update signature in EntityManager and System's entities
 		template <typename T, unsigned N = 0>
@@ -121,7 +122,7 @@ namespace Engine
 		template <typename T>
 		T* GetComponent(const Entity& e);
 		template <typename T>
-		T *GetComponent(EntityID e);
+		T* GetComponent(EntityID e);
 
 		// Retrieve pointer of system using type.
 		template <typename T>
@@ -131,7 +132,7 @@ namespace Engine
 		Entity* GetEntityByName(std::string name);
 
 		bool IsNameRepeated(std::string name);
-		bool DoesEntityExists(EntityID id);
+		bool EntityExists(EntityID id);
 	private:
 		/* Member Functions */
 
@@ -165,7 +166,7 @@ namespace Engine
 		void SetSystemSignature(Signature signature);
 
 		/* Data Members */
-		Allocator *mFreeListAllocator = nullptr;
+		Allocator* mFreeListAllocator = nullptr;
 
 		std::unique_ptr<EntityManager> mEntityManager;
 		std::unique_ptr<ComponentManager> mComponentManager;
@@ -174,7 +175,6 @@ namespace Engine
 		std::vector<Entity> mEntities{};
 		std::map<EntityID, std::vector<EntityID>> mParentChild{};
 		std::unordered_map<std::string, std::vector<EntityID>> mPrefabReloading{};
-
 
 		// Timed Destroy (Scripts)
 		std::vector<std::pair<unsigned int, float>> v_timed_destroys;

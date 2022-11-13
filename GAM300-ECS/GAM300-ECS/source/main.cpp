@@ -20,68 +20,8 @@ int main()
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
-
-	// Initialise entities accordingly
-	for (int i = 0; i < 53; ++i)
-	{
-		gCoordinator.CreateEntity();
-	}
-	
-	std::vector<EntityID> ids{};
-	for (auto& e : gCoordinator.GetEntities())
-	{
-		EntityID id = e.GetEntityID();
-
-		if (!(id == 9 || id == 10 || id == 15 || id == 20 || id == 23 || id == 29 || id == 30 || id == 51 || id == 52))
-		{
-			ids.emplace_back(id);
-		}
-	}
-
-	for (auto& id : ids)
-	{
-		gCoordinator.DestroyEntity(id);
-	}
-
-	gCoordinator.ToChild(10, 9);
-	gCoordinator.ToChild(10, 30);
-	gCoordinator.ToChild(9, 15);
-	gCoordinator.ToChild(9, 20);
-	gCoordinator.ToChild(20, 23);
-	gCoordinator.ToChild(20, 29);
-	gCoordinator.ToChild(30, 51);
-	gCoordinator.ToChild(30, 52);
-
-	Script script;
-	script.mono_string = "Shoot30.cs";
-	Transform transform;
-	transform.position = { 9.f, 9.f, 9.f };
-	transform.scale = { 9.f, 9.f, 9.f };
-	transform.rot_q = { 9.f, 9.f, 9.f, 9.f };
-	gCoordinator.AddComponent<Transform>(9, transform);
-	gCoordinator.AddComponent<Script>(9, script);
-
-	Entity& entity = *gCoordinator.GetEntity(9);
-	entity.SetPrefab("parentchild.prefab");
-	Serializer::SerializePrefab(&gCoordinator, 9, "parentchild.prefab");
-	Serializer::CreateEntityPrefab(&gCoordinator, "parentchild.prefab");
-
-	Entity& entity58 = *gCoordinator.GetEntity(58);
-	gCoordinator.DuplicateEntity(entity58, entity58.GetParent());	
-
-	gCoordinator.DestroyEntity(63);
-
-	Serializer::CreateEntityPrefab(&gCoordinator, "single.prefab");
-	Serializer::CreateEntityPrefab(&gCoordinator, "single.prefab");
-	
-	Serializer::SerializeEntities(&gCoordinator, "test.scene");
-	gCoordinator.Destroy();
-	gCoordinator.Init();
+	 
 	Serializer::DeserializeJson(&gCoordinator, "test.scene");
-
-	gCoordinator.UntagPrefab(4);
-
-	Serializer::ApplyUpdatedPrefab(&gCoordinator, "parentchild.prefab");
 	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
