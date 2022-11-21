@@ -60,9 +60,9 @@ namespace Engine
 		ComponentArray(Allocator* allocator_);
 
 		template <typename... argv>
-		void AddComponent(Entity& e, argv... args);
+		bool AddComponent(Entity& e, argv... args);
 		template <typename... argv>
-		void AddComponent(EntityID& e, argv... args);
+		bool AddComponent(EntityID& e, argv... args);
 
 		void RemoveComponent(Entity& e);
 		void RemoveComponent(EntityID& e);
@@ -106,42 +106,43 @@ namespace Engine
 
 	template <typename T, unsigned N>
 	template <typename... argv>
-	void ComponentArray<T, N>::AddComponent(Entity& e, argv... args)
+	bool ComponentArray<T, N>::AddComponent(Entity& e, argv... args)
 	{
-		//assert(EntityToIndexMap.find(e) == EntityToIndexMap.end() && "Repeated component added to same entity.");
 		if (EntityComponentMap.find(e.GetEntityID()) != EntityComponentMap.end())
 		{
 			LOG_WARNING("Repeated component added to same entity.");
-			return;
+			return false;
 		}
 
-		// Put new entry at end and update the maps
-		//size_t newIndex = Size;
-		//EntityToIndexMap[e] = newIndex;
-		//IndexToEntityMap[newIndex] = e;
-
-		//mComponentArray[newIndex] = component;
-
-		//++Size;
-
 		T* component = mComponentArrayAllocator->Allocate(args ...);
+		if (component == nullptr)
+		{
+			return false;
+		}
+
 		EntityComponentMap[e.GetEntityID()] = component;
+		return true;
 	}
 
 
 	template <typename T, unsigned N>
 	template <typename... argv>
-	void ComponentArray<T, N>::AddComponent(EntityID& e, argv... args)
+	bool ComponentArray<T, N>::AddComponent(EntityID& e, argv... args)
 	{
-		//assert(EntityToIndexMap.find(e) == EntityToIndexMap.end() && "Repeated component added to same entity.");
 		if (EntityComponentMap.find(e) != EntityComponentMap.end())
 		{
 			LOG_WARNING("Repeated component added to same entity.");
-			return;
+			return false;
 		}
 
 		T* component = mComponentArrayAllocator->Allocate(args ...);
+		if (component == nullptr)
+		{
+			return false;
+		}
+
 		EntityComponentMap[e] = component;
+		return true;
 	}
 
 

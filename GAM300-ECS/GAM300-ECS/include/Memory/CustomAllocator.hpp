@@ -68,6 +68,11 @@ T* CustomAllocator<T, N>::Allocate(argv... args)
 {
     void* ptr = m_allocator.Allocate();
 
+    if (ptr == nullptr)
+    {
+        return nullptr;
+    }
+
     // Explicitly calls constructor with Placement New Operator
     new (ptr) T(args ...);
 

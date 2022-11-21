@@ -1141,6 +1141,8 @@ namespace Engine
 
 	void Serializer::SetAssociativeContainerRecursive(variant_associative_view& view, json& variable)
 	{
+		view.clear();
+
 		for (size_t i = 0; i < variable.size(); ++i)
 		{
 			auto& jsonIndexValue = variable[i];

@@ -97,6 +97,11 @@ void* PoolAllocator::Allocate()
 {
     Node* freeNode = m_freeList.pop();
 
+    if (freeNode == nullptr)
+    {
+        return nullptr;
+    }
+
     //assert(freeNode != nullptr && "The pool allocator is full");
     LOG_ASSERT(freeNode != nullptr && "The pool allocator is full");
 

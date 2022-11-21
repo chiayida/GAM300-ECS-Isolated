@@ -18,6 +18,8 @@ Technology is prohibited.
 #include "include/ECS/System/TransformSystem.hpp"
 #include "include/ECS/Component/Transform.hpp"
 
+#include <iostream>
+
 namespace Engine
 {
 	void TransformSystem::Init()
@@ -30,9 +32,11 @@ namespace Engine
 
 	void TransformSystem::Update()
 	{
+		std::cout << "entities: ";
 		for (auto entity : mEntities)
 		{
 			// do nothing
+			std::cout << entity << std::endl;
 		}
 	}
 

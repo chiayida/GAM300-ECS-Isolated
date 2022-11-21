@@ -47,6 +47,12 @@ template <typename T>
 typename StackLinkedList<T>::Node* StackLinkedList<T>::pop()
 {
     Node* tempNode = headNode;
+
+    if (headNode == nullptr)
+    {
+        return tempNode;
+    }
+
     headNode = headNode->nextNode;
 
     return tempNode;

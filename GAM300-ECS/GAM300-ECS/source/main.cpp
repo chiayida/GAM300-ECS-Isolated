@@ -8,6 +8,7 @@
 #include "include/Serialization/Serializer.hpp"
 
 #include "include/ECS/Component/Transform.hpp"
+#include "include/ECS/System/TransformSystem.hpp"
 
 // #define MEMORY_SIZE 1e8 // 1 * 10^8 bytes	
 
@@ -20,8 +21,18 @@ int main()
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
-	 
-	Serializer::DeserializeJson(&gCoordinator, "test.scene");
+
+	gCoordinator.CreateEntity(); // 0
+	gCoordinator.CreateEntity(); // 1
+	gCoordinator.CreateEntity(); // 2
+	gCoordinator.AddComponent<Transform>(0);
+	gCoordinator.AddComponent<Transform>(1);
+	gCoordinator.AddComponent<Transform>(2);
+
+	auto ptr = gCoordinator.GetSystem<TransformSystem>();
+
+	ptr->Update();
+
 	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())

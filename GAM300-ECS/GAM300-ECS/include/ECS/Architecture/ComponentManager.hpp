@@ -43,9 +43,9 @@ namespace Engine
 		ComponentType GetComponentType();
 
 		template<typename T, unsigned N, typename... argv>
-		void AddComponent(Entity& e, argv... args);
+		bool AddComponent(Entity& e, argv... args);
 		template<typename T, unsigned N, typename... argv>
-		void AddComponent(EntityID& e, argv... args);
+		bool AddComponent(EntityID& e, argv... args);
 
 		template<typename T, unsigned N>
 		void RemoveComponent(Entity& e);
@@ -137,18 +137,18 @@ namespace Engine
 
 
 	template<typename T, unsigned N, typename... argv>
-	void ComponentManager::AddComponent(Entity& e, argv... args)
+	bool ComponentManager::AddComponent(Entity& e, argv... args)
 	{
 		// Add component to the array
-		GetComponentArray<T, N>()->AddComponent(e, args ...);
+		return GetComponentArray<T, N>()->AddComponent(e, args ...);
 	}
 
 
 	template<typename T, unsigned N, typename... argv>
-	void ComponentManager::AddComponent(EntityID& e, argv... args)
+	bool ComponentManager::AddComponent(EntityID& e, argv... args)
 	{
 		// Add component to the array
-		GetComponentArray<T, N>()->AddComponent(e, args ...);
+		return GetComponentArray<T, N>()->AddComponent(e, args ...);
 	}
 
 

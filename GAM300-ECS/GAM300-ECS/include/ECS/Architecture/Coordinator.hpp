@@ -186,7 +186,12 @@ namespace Engine
 	template <typename T, unsigned N, typename... argv>
 	void Coordinator::AddComponent(Entity& e, argv... args)
 	{
-		mComponentManager->AddComponent<T, N>(e, args...);
+		bool flag = mComponentManager->AddComponent<T, N>(e, args...);
+		
+		if (flag == false)
+		{
+			return;
+		}
 
 		// Update Entity's signature
 		auto signature = mEntityManager->GetSignature(e);
@@ -201,7 +206,12 @@ namespace Engine
 	template <typename T, unsigned N, typename... argv>
 	void Coordinator::AddComponent(EntityID e, argv... args)
 	{
-		mComponentManager->AddComponent<T, N>(e, args...);
+		bool flag = mComponentManager->AddComponent<T, N>(e, args...);
+
+		if (flag == false)
+		{
+			return;
+		}
 
 		// Update Entity's signature
 		auto signature = mEntityManager->GetSignature(e);
