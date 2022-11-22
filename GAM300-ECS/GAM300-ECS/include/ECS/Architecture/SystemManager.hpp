@@ -38,7 +38,6 @@ namespace Engine
 	class SystemManager
 	{
 	public:
-		//std::shared_ptr<T> RegisterSystem();
 		template<typename T>
 		void RegisterSystem();
 
@@ -65,7 +64,6 @@ namespace Engine
 
 	// Templated functions implementations
 
-	//std::shared_ptr<T> SystemManager::RegisterSystem()
 	template<typename T>
 	void SystemManager::RegisterSystem()
 	{
@@ -81,8 +79,6 @@ namespace Engine
 		// Create a system pointer and add it to map
 		auto system = std::make_shared<T>();
 		mSystems.insert({ name, system });
-
-		//return system;
 	}
 
 
@@ -91,7 +87,6 @@ namespace Engine
 	{
 		const char* name = typeid(T).name();
 
-		//assert(mSystems.find(name) != mSystems.end() && "System is not registered.");
 		if (mSystems.find(name) == mSystems.end())
 		{
 			LOG_WARNING("System is not registered.");

@@ -57,7 +57,6 @@ namespace Engine
 		template<typename T, unsigned N = 1>
 		bool HasComponent(EntityID& e);
 
-		//T& GetComponent(EntityID e);
 		template<typename T, unsigned N = 1>
 		T* GetComponent(const Entity& e);
 		template<typename T, unsigned N = 1>
@@ -91,7 +90,6 @@ namespace Engine
 	{
 		const char* name = typeid(T).name();
 
-		//assert(mComponentTypes.find(name) != mComponentTypes.end() && "Component is not registered.");
 		if (mComponentTypes.find(name) == mComponentTypes.end())
 		{
 			LOG_WARNING("Component is not registered.");
@@ -107,7 +105,6 @@ namespace Engine
 	{
 		const char* name = typeid(T).name();
 
-		//assert(mComponentTypes.find(name) == mComponentTypes.end() && "Registering component more than once.");
 		if (mComponentTypes.find(name) != mComponentTypes.end())
 		{
 			LOG_WARNING("Registering component more than once.");
@@ -129,7 +126,6 @@ namespace Engine
 	{
 		const char* name = typeid(T).name();
 
-		//assert(mComponentTypes.find(name) != mComponentTypes.end() && "Component not registered.");
 		LOG_ASSERT(mComponentTypes.find(name) != mComponentTypes.end() && "Component not registered.");
 
 		return mComponentTypes[name];
@@ -194,7 +190,6 @@ namespace Engine
 	}
 
 
-	//T& ComponentManager::GetComponent(EntityID e)
 	template<typename T, unsigned N>
 	T* ComponentManager::GetComponent(const Entity& e)
 	{

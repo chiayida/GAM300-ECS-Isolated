@@ -70,7 +70,6 @@ namespace Engine
 		bool HasData(Entity& e);
 		bool HasData(EntityID& e);
 
-		//T& GetData(EntityID e);
 		T* GetData(const Entity& e);
 		T* GetData(EntityID& e);
 
@@ -80,18 +79,8 @@ namespace Engine
 
 	private:
 		// Packed array of T component.
-		//std::array<T, MAX_ENTITIES> mComponentArray{};
 		CustomAllocator<T, N>* mComponentArrayAllocator = nullptr;
 		std::unordered_map<EntityID, T*> EntityComponentMap{};
-
-		// Map from an entity ID to an array index.
-		//std::unordered_map<EntityID, size_t> EntityToIndexMap{};
-
-		// Map from an array index to an entity ID.
-		//std::unordered_map<size_t, EntityID> IndexToEntityMap{};
-
-		// Total size of valid entries in the array.
-		//size_t Size{};
 	};
 
 
@@ -149,30 +138,13 @@ namespace Engine
 	template <typename T, unsigned N>
 	void ComponentArray<T, N>::RemoveComponent(Entity& e)
 	{
-		//assert(EntityToIndexMap.find(e) != EntityToIndexMap.end() && "Removing non-existent component.");
 		if (EntityComponentMap.find(e.GetEntityID()) == EntityComponentMap.end())
 		{
 			LOG_WARNING("Removing non-existent component.");
 			return;
 		}
 
-		// Copy element at end into deleted element's place
-		//size_t IndexOfRemovedEntity = EntityToIndexMap[e];
-		//size_t IndexOfLastElement = Size - 1;
-		//mComponentArray[IndexOfRemovedEntity] = mComponentArray[IndexOfLastElement];
-
-		// Update maps to point to moved spot
-		//EntityID EntityOfLastElement = IndexToEntityMap[IndexOfLastElement];
-		//EntityToIndexMap[EntityOfLastElement] = IndexOfRemovedEntity;
-		//IndexToEntityMap[IndexOfRemovedEntity] = EntityOfLastElement;
-
-		//EntityToIndexMap.erase(e);
-		//IndexToEntityMap.erase(IndexOfLastElement);
-
-		//--Size;
-
 		T* component = GetData(e);
-
 		EntityComponentMap.erase(e.GetEntityID());
 		mComponentArrayAllocator->Free(component);
 	}
@@ -181,7 +153,6 @@ namespace Engine
 	template <typename T, unsigned N>
 	void ComponentArray<T, N>::RemoveComponent(EntityID& e)
 	{
-		//assert(EntityToIndexMap.find(e) != EntityToIndexMap.end() && "Removing non-existent component.");
 		if (EntityComponentMap.find(e) == EntityComponentMap.end())
 		{
 			LOG_WARNING("Removing non-existent component.");
@@ -189,7 +160,6 @@ namespace Engine
 		}
 
 		T* component = GetData(e);
-
 		EntityComponentMap.erase(e);
 		mComponentArrayAllocator->Free(component);
 	}
@@ -219,18 +189,15 @@ namespace Engine
 	}
 
 
-	//T& ComponentArray<T, N>::GetData(EntityID e)
 	template <typename T, unsigned N>
 	T* ComponentArray<T, N>::GetData(const Entity& e)
 	{
-		//assert(EntityToIndexMap.find(e) != EntityToIndexMap.end() && "Retrieving non-existent component.");
 		if (EntityComponentMap.find(e.GetEntityID()) == EntityComponentMap.end())
 		{
-			//LOG_WARNING("Retrieving non-existent component.");
+			LOG_WARNING("Retrieving non-existent component.");
 			return nullptr;
 		}
 
-		//return mComponentArray[EntityToIndexMap[e]];
 		return EntityComponentMap[e.GetEntityID()];
 	}
 
@@ -240,7 +207,7 @@ namespace Engine
 	{
 		if (EntityComponentMap.find(e) == EntityComponentMap.end())
 		{
-			//LOG_WARNING("Retrieving non-existent component.");
+			LOG_WARNING("Retrieving non-existent component.");
 			return nullptr;
 		}
 

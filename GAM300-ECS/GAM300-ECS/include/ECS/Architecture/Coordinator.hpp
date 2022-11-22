@@ -63,13 +63,10 @@ namespace Engine
 	public:
 		~Coordinator();
 		void Init();
-		void InitForLoading();
 		void Destroy();
 
 		void RegisterComponents(); // Function is to register all components
 		void RegisterSystems();	   // Function is to register all systems
-
-		//void EndOfLoopUpdate(); // Function is to update at the end (Scripts)
 
 		// Creates an entity and returns the ID
 		EntityID CreateEntity(std::string __name__ = "");
@@ -147,7 +144,6 @@ namespace Engine
 		// Register class as a System
 		template <typename T>
 		void RegisterSystem();
-		// std::shared_ptr<T> RegisterSystem();
 
 		// Variadic templated function to assign components to System's signature
 		template <typename T, typename... argv>
@@ -267,7 +263,6 @@ namespace Engine
 	}
 
 
-	//T& Coordinator::GetComponent(EntityID e)
 	template<typename T>
 	T* Coordinator::GetComponent(const Entity& e)
 	{
@@ -275,7 +270,6 @@ namespace Engine
 	}
 
 
-	//T& Coordinator::GetComponent(EntityID e)
 	template<typename T>
 	T* Coordinator::GetComponent(EntityID e)
 	{
@@ -304,7 +298,6 @@ namespace Engine
 	}
 
 
-	// std::shared_ptr<T> Coordinator::RegisterSystem()
 	template <typename T>
 	void Coordinator::RegisterSystem()
 	{

@@ -130,7 +130,6 @@ namespace Engine
 
 	Entity EntityManager::CreateEntity(std::string __name__, EntityID _parent)
 	{
-		//assert(EntityCount < MAX_ENTITIES && "Number of entities exceeds MAX_ENTITIES");
 		LOG_ASSERT(EntityCount < MAX_ENTITIES && "Number of entities exceeds MAX_ENTITIES");
 
 		// Take an ID from the front of the queue
@@ -162,11 +161,7 @@ namespace Engine
 
 	void EntityManager::DestroyEntity(Entity& e)
 	{
-		//assert(e < MAX_ENTITIES && "Entity is out of range.");
 		LOG_ASSERT(e.GetEntityID() < MAX_ENTITIES && "Entity is out of range.");
-
-		// Reset the entity's name
-		//e.SetEntityName(DEFAULT_ENTITY_NAME);
 
 		// Resets the entity's signature bits (reset to zero)
 		EntitiesSignatures[e.GetEntityID()].reset();
@@ -180,11 +175,7 @@ namespace Engine
 
 	void EntityManager::DestroyEntity(EntityID& e)
 	{
-		//assert(e < MAX_ENTITIES && "Entity is out of range.");
 		LOG_ASSERT(e < MAX_ENTITIES && "Entity is out of range.");
-
-		// Reset the entity's name
-		//e.SetEntityName(DEFAULT_ENTITY_NAME);
 
 		// Resets the entity's signature bits (reset to zero)
 		EntitiesSignatures[e].reset();
@@ -198,7 +189,6 @@ namespace Engine
 
 	void EntityManager::SetSignature(Entity& e, Signature s)
 	{
-		//assert(e < MAX_ENTITIES && "Entity is out of range.");
 		LOG_ASSERT(e.GetEntityID() < MAX_ENTITIES && "Entity is out of range.");
 
 		EntitiesSignatures[e.GetEntityID()] = s;
@@ -207,7 +197,6 @@ namespace Engine
 
 	void EntityManager::SetSignature(EntityID& e, Signature s)
 	{
-		//assert(e < MAX_ENTITIES && "Entity is out of range.");
 		LOG_ASSERT(e < MAX_ENTITIES && "Entity is out of range.");
 
 		EntitiesSignatures[e] = s;
@@ -216,7 +205,6 @@ namespace Engine
 
 	Signature EntityManager::GetSignature(Entity& e)
 	{
-		//assert(e < MAX_ENTITIES && "Entity is out of range.");
 		LOG_ASSERT(e.GetEntityID() < MAX_ENTITIES && "Entity is out of range.");
 
 		return EntitiesSignatures[e.GetEntityID()];

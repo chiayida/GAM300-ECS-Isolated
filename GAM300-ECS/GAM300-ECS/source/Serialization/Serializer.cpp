@@ -187,8 +187,6 @@
 
 namespace Engine
 {
-	//using namespace Graphics::Addition;
-
 	void Serializer::SerializeEntities(Coordinator* coordinator, std::string scenefile)
 	{
 		std::vector<std::string> vJsonStrings{};
@@ -1141,6 +1139,7 @@ namespace Engine
 
 	void Serializer::SetAssociativeContainerRecursive(variant_associative_view& view, json& variable)
 	{
+		// Clear previously allocated key-value as insert will not replace it with new key-value
 		view.clear();
 
 		for (size_t i = 0; i < variable.size(); ++i)

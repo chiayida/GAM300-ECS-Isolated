@@ -62,19 +62,6 @@ namespace Engine
 	}
 
 
-	void Coordinator::InitForLoading()
-	{
-		mFreeListAllocator = new FreeListAllocator((size_t)1e8);
-
-		mEntityManager = std::make_unique<EntityManager>();
-		mComponentManager = std::make_unique<ComponentManager>();
-		mSystemManager = std::make_unique<SystemManager>();
-
-		//using namespace Graphics::Addition;
-		//RegisterComponent<FullMesh, 1>();
-	}
-
-
 	void Coordinator::Destroy()
 	{
 		// Free all entities before allocators
@@ -109,38 +96,6 @@ namespace Engine
 		RegisterSystem<TransformSystem>();
 		AssignSystemSignature<TransformSystem, Transform>(Transform{});
 	}
-
-
-	/*
-	void Coordinator::EndOfLoopUpdate()
-	{
-		if (!v_timed_destroys.size())
-		{
-			return;
-		}
-			
-			
-		for (int i{ static_cast<int>(v_timed_destroys.size()) }; i > 0; --i)
-		{
-			v_timed_destroys[i].second -= FrameTime::Get()->FixedDt();
-			if (v_timed_destroys[i].second <= 0.f)
-			{
-				unsigned int id = v_timed_destroys[i].first;
-				Entity* ent = GetEntity(id);
-				if (HasComponent<std::vector<Scripting::ScriptInstance>>(*ent))
-				{
-					std::vector<Scripting::ScriptInstance>* scripts = S_COORD.GetComponent<std::vector<Scripting::ScriptInstance>>(id);
-					for (auto script : *scripts)
-					{
-						script.Invoke(script.GetOnDestroy());
-					}
-				}
-				DestroyEntity(*ent);
-				v_timed_destroys.erase(v_timed_destroys.begin() + i);
-			}
-		}
-	}
-	*/
 
 
 	EntityID Coordinator::CreateEntity(std::string __name__)
