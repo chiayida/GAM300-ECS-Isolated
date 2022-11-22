@@ -55,7 +55,7 @@ namespace Engine
 
 	private:
 		// Map system name to signature
-		std::unordered_map<const char*, Signature> mSignatures{};
+		std::unordered_map<const char*, std::vector<Signature>> mSignatures{};
 
 		// Map system name to system pointer
 		std::unordered_map<const char*, std::shared_ptr<System>> mSystems{};
@@ -92,9 +92,10 @@ namespace Engine
 			LOG_WARNING("System is not registered.");
 			return;
 		}
-
+		
 		// Set signature
-		mSignatures.insert({ name, signature });
+		std::vector<Signature>& signatures = mSignatures[name];
+		signatures.emplace_back(signature);
 	}
 
 

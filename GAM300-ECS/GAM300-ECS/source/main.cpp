@@ -23,7 +23,13 @@ int main()
 	gCoordinator.Init();
 
 	gCoordinator.CreateEntity(); // 0
+	gCoordinator.CreateEntity(); // 1
 	gCoordinator.AddComponent<Transform>(0);
+	gCoordinator.AddComponent<Script>(1);
+
+
+	auto ptr = gCoordinator.GetSystem<TransformSystem>();
+	ptr->Update();
 
 	
 	std::cout << "\n==========================\n       All Entities\n==========================\n";

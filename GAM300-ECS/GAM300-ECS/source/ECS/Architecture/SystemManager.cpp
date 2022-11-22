@@ -59,17 +59,21 @@ namespace Engine
 		{
 			auto const& name = pair.first;
 			auto const& system = pair.second;
-			auto const& systemSignature = mSignatures[name];
+			auto const& systemSignatures = mSignatures[name];
 
-			// Entity's signature matches system signature
-			if ((signature & systemSignature) == systemSignature)
+			for (auto sig : systemSignatures)
 			{
-				system->mEntities.insert(e.GetEntityID());
-			}
-			// Entity's signature does not match system signature
-			else
-			{
-				system->mEntities.erase(e.GetEntityID());
+				// Entity's signature matches system signature
+				if ((signature & sig) == sig)
+				{
+					system->mEntities.insert(e.GetEntityID());
+					break;
+				}
+				// Entity's signature does not match system signature
+				else
+				{
+					system->mEntities.erase(e.GetEntityID());
+				}
 			}
 		}
 	}
@@ -82,17 +86,21 @@ namespace Engine
 		{
 			auto const& name = pair.first;
 			auto const& system = pair.second;
-			auto const& systemSignature = mSignatures[name];
+			auto const& systemSignatures = mSignatures[name];
 
-			// Entity's signature matches system signature
-			if ((signature & systemSignature) == systemSignature)
+			for (auto sig : systemSignatures)
 			{
-				system->mEntities.insert(e);
-			}
-			// Entity's signature does not match system signature
-			else
-			{
-				system->mEntities.erase(e);
+				// Entity's signature matches system signature
+				if ((signature & sig) == sig)
+				{
+					system->mEntities.insert(e);
+					return;
+				}
+				// Entity's signature does not match system signature
+				else
+				{
+					system->mEntities.erase(e);
+				}
 			}
 		}
 	}

@@ -84,7 +84,7 @@ namespace Engine
 	void Coordinator::RegisterComponents()
 	{
 		// Register ALL components here
-		RegisterComponent<Transform, 2>();
+		RegisterComponent<Transform, MAX_ENTITIES>();
 		RegisterComponent<Script, MAX_ENTITIES>();
 		RegisterComponent<std::vector<Transform>, MAX_ENTITIES>();
 	}
@@ -95,6 +95,7 @@ namespace Engine
 		// Register ALL systems and their respective signature here
 		RegisterSystem<TransformSystem>();
 		AssignSystemSignature<TransformSystem, Transform>(Transform{});
+		AssignSystemSignature<TransformSystem, Script>(Script{});
 	}
 
 
