@@ -31,7 +31,10 @@ namespace Engine
 
 	using ComponentType = std::uint8_t;
 	const ComponentType MAX_COMPONENTS = 32;
-
 	using Signature = std::bitset<MAX_COMPONENTS>;
+
+	using Tag = std::uint8_t;
+	const Tag MAX_TAGS = 32;
+	using Tagging = std::bitset<MAX_TAGS>;
 
 } // end of namespace

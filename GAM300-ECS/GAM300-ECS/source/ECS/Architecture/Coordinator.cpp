@@ -436,4 +436,27 @@ namespace Engine
 		return false;
 	}
 
+
+	void Coordinator::RegisterTag(std::string name)
+	{
+		if (mTags.find(name) != mTags.end())
+		{
+			LOG_WARNING("Registering tag more than once.");
+			return;
+		}
+
+		// Add tag to map
+		mTags.insert({ name, NextTag });
+
+		++NextTag;
+	}
+
+
+	Tag Coordinator::GetTag(std::string name)
+	{
+		LOG_ASSERT(mTags.find(name) != mTags.end() && "Tag not registered.");
+
+		return mTags[name];
+	}
+
 } // end of namespace

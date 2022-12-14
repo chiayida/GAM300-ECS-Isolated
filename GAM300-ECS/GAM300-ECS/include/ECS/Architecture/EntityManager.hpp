@@ -60,6 +60,12 @@ namespace Engine
 		void SetPrefab(std::string __prefab__);
 		std::string GetPrefab() const;
 
+
+		void SetTag(std::string name)
+		{
+			tag = GetTag(name);
+		}
+
 		RTTR_ENABLE()
 	private:
 		EntityID id;
@@ -70,6 +76,8 @@ namespace Engine
 		bool is_child;
 		bool is_parent;
 		bool isActive;
+
+		Tagging tag{};
 	};
 
 

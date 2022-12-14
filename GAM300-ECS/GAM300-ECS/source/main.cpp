@@ -22,16 +22,20 @@ int main()
 	Coordinator gCoordinator;
 	gCoordinator.Init();
 
-	gCoordinator.CreateEntity(); // 0
-	gCoordinator.CreateEntity(); // 1
-	gCoordinator.AddComponent<Transform>(0);
-	gCoordinator.AddComponent<Script>(1);
+	gCoordinator.RegisterTag("Default");
+	gCoordinator.RegisterTag("Ignore Raycast");
+	gCoordinator.RegisterTag("UI");
+	gCoordinator.RegisterTag("Ground");
+
+	std::cout << "Default" << ": " << gCoordinator.GetTag("Default") << std::endl;
+	std::cout << "Ignore Raycast" << ": " << gCoordinator.GetTag("Ignore Raycast") << std::endl;
+	std::cout << "UI" << ": " << gCoordinator.GetTag("UI") << std::endl;
+	std::cout << "Ground" << ": " << gCoordinator.GetTag("Ground") << std::endl;
 
 
-	auto ptr = gCoordinator.GetSystem<TransformSystem>();
-	ptr->Update();
 
-	
+
+	/*
 	std::cout << "\n==========================\n       All Entities\n==========================\n";
 	for (auto& entity : gCoordinator.GetEntities())
 	{
@@ -113,7 +117,8 @@ int main()
 		}
 	}
 	std::cout << "\n\n\n";
-	
+	*/
+
 	return 0;
 }
 

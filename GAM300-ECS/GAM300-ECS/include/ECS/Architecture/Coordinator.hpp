@@ -130,6 +130,10 @@ namespace Engine
 
 		bool IsNameRepeated(std::string name);
 		bool EntityExists(EntityID id);
+
+		void RegisterTag(std::string name);
+		Tag GetTag(std::string name);
+
 	private:
 		/* Member Functions */
 
@@ -161,6 +165,7 @@ namespace Engine
 		template <typename T>
 		void SetSystemSignature(Signature signature);
 
+
 		/* Data Members */
 		Allocator* mFreeListAllocator = nullptr;
 
@@ -171,6 +176,9 @@ namespace Engine
 		std::vector<Entity> mEntities{};
 		std::map<EntityID, std::vector<EntityID>> mParentChild{};
 		std::unordered_map<std::string, std::vector<EntityID>> mPrefabReloading{};
+
+		Tag NextTag{};
+		std::unordered_map<std::string, Tag> mTags{};
 
 		// Timed Destroy (Scripts)
 		std::vector<std::pair<unsigned int, float>> v_timed_destroys;
