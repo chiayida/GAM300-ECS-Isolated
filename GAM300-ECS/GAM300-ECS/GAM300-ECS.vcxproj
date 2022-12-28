@@ -160,6 +160,7 @@
     <ClCompile Include="source\Memory\MemoryUnitTest.cpp" />
     <ClCompile Include="source\Memory\PoolAllocator.cpp" />
     <ClCompile Include="source\Serialization\Serializer.cpp" />
+    <ClCompile Include="source\Tag\TagManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ECS\Architecture\ComponentArray.hpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="include\Memory\SinglyLinkedList.hpp" />
     <ClInclude Include="include\Memory\StackLinkedList.hpp" />
     <ClInclude Include="include\Serialization\Serializer.hpp" />
+    <ClInclude Include="include\Tag\TagManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -69,6 +69,7 @@
 #include "include/Logging.hpp"
 
 #include "include/ECS/Architecture/Coordinator.hpp"
+#include "include/Tag/TagManager.hpp"
 
 #include "lib/rttr/registration.h"
 #include "lib/nlohmann/json.hpp"
@@ -95,6 +96,11 @@ namespace Engine
 		static void DeserializeJson(Coordinator* coordinator, std::string filename);
 		static EntityID CreateEntityPrefab(Coordinator* coordinator, std::string filename);
 		static void ApplyUpdatedPrefab(Coordinator* coordinator, std::string filename);
+
+		static void SerializeTags(TagManager* manager, std::string tagfile);
+		static void SerializeLayers(TagManager* manager, std::string layerfile);
+		static void DeserializeTags(TagManager* manager, std::string filename);
+		static void DeserializeLayers(TagManager* manager, std::string filename);
 			
 	private:
 		static json InstanceToJson(json writer, instance obj, std::string name);

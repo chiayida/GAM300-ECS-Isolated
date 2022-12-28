@@ -60,11 +60,8 @@ namespace Engine
 		void SetPrefab(std::string __prefab__);
 		std::string GetPrefab() const;
 
-
-		void SetTag(std::string name)
-		{
-			tag = GetTag(name);
-		}
+		void SetKeyTag(std::string __tag__);
+		std::string GetKeyTag() const;
 
 		RTTR_ENABLE()
 	private:
@@ -72,12 +69,12 @@ namespace Engine
 		std::string name;
 		std::string prefab{};
 
+		std::string tag{};
+
 		EntityID parent; // parent id given that is_child is true
 		bool is_child;
 		bool is_parent;
 		bool isActive;
-
-		Tagging tag{};
 	};
 
 
@@ -94,9 +91,11 @@ namespace Engine
 
 		void SetSignature(Entity& e, Signature s);
 		void SetSignature(EntityID& e, Signature s);
-
 		Signature GetSignature(Entity& e);
 		Signature GetSignature(EntityID& e);
+
+		void SetTag(EntityID e, Tag t);
+		Tag GetTag(EntityID e);
 
 	private:
 		// Container of unused entity IDs
@@ -104,6 +103,9 @@ namespace Engine
 
 		// Container of signatures where index corresponds to entity ID
 		std::array<Signature, MAX_ENTITIES> EntitiesSignatures{};
+
+		// Container of Entity's tag where index corresponds to entity ID
+		std::array<Tag, MAX_ENTITIES> EntitiesTags{};
 
 		// Total number of active entities - used to keep limits on how many exist
 		unsigned int EntityCount;

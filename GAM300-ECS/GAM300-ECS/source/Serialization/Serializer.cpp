@@ -1175,6 +1175,132 @@ namespace Engine
 		}
 	}
 
+
+	void Serializer::SerializeLayers(TagManager* manager, std::string layerfile)
+	{
+		std::vector<std::string> vJsonStrings{};
+
+		for (auto layer : manager->GetLayers())
+		{
+			json writer;
+			writer = layer.first;
+
+			vJsonStrings.emplace_back(writer.dump(4));
+		}
+
+		// Formatting json objects string
+		std::string js{};
+		for (int i = 0; i < vJsonStrings.size(); ++i)
+		{
+			if (i != vJsonStrings.size() - 1)
+			{
+				js += vJsonStrings[i] + ",\n";
+			}
+			else
+			{
+				js += vJsonStrings[i];
+			}
+		}
+		Serializer::StringToJson(layerfile, js);
+	}
+
+
+	void Serializer::SerializeTags(TagManager* manager, std::string tagfile)
+	{
+		std::vector<std::string> vJsonStrings{};
+
+		for (auto [tag, layer] : manager->GetTagsLayers())
+		{
+			json writer;
+			writer[tag] = json::array();
+			int i = 0;
+
+			for (auto value : layer)
+			{
+				writer[tag][i] = value;
+				i++;
+			}
+
+			vJsonStrings.emplace_back(writer.dump(4));
+		}
+
+		// Formatting json objects string
+		std::string js{};
+		for (int i = 0; i < vJsonStrings.size(); ++i)
+		{
+			if (i != vJsonStrings.size() - 1)
+			{
+				js += vJsonStrings[i] + ",\n";
+			}
+			else
+			{
+				js += vJsonStrings[i];
+			}
+		}
+		Serializer::StringToJson(tagfile, js);
+	}
+
+
+	void Serializer::DeserializeLayers(TagManager* manager, std::string filename)
+	{
+		// Parse string to writer, check error
+		std::ifstream ifs{ "Assets/" + filename };
+		json writer;
+
+		// Check for parse error
+		try
+		{
+			writer = json::parse(ifs);
+		}
+		catch (json::parse_error& e)
+		{
+			LOG_WARNING("Parse Error: LAYER file either does not exist or has formatting issues", e.what());
+			UNUSED(e);
+			return;
+		}
+		
+		std::set<std::string> layers{};
+		for (auto s : writer)
+		{
+			manager->CreateLayer(s.get<std::string>());
+		}
+	}
+
+
+	void Serializer::DeserializeTags(TagManager* manager, std::string filename)
+	{
+		// Parse string to writer, check error
+		std::ifstream ifs{ "Assets/" + filename };
+		json writer;
+
+		// Check for parse error
+		try
+		{
+			writer = json::parse(ifs);
+		}
+		catch (json::parse_error& e)
+		{
+			LOG_WARNING("Parse Error: TAG file either does not exist or has formatting issues", e.what());
+			UNUSED(e);
+			return;
+		}
+
+		for (auto tag_layer : writer)
+		{
+			std::string tag = tag_layer.dump();
+			int itr = tag.find_first_of('"') + 1;
+			int length = tag.find_first_of('"', itr) - itr;
+			tag = tag.substr(itr, length);
+
+			manager->CreateTag(tag);
+
+			for (auto layer : tag_layer.front())
+			{
+				manager->AddTagLayer(nullptr, tag, layer);
+			}
+		}
+	}
+
 } // end of namespace
 
 #pragma warning (pop)

@@ -437,26 +437,35 @@ namespace Engine
 	}
 
 
-	void Coordinator::RegisterTag(std::string name)
+	void Coordinator::SetTag(Entity& e, Tag t)
 	{
-		if (mTags.find(name) != mTags.end())
-		{
-			LOG_WARNING("Registering tag more than once.");
-			return;
-		}
-
-		// Add tag to map
-		mTags.insert({ name, NextTag });
-
-		++NextTag;
+		SetTag(e.GetEntityID(), t);
 	}
 
 
-	Tag Coordinator::GetTag(std::string name)
+	void Coordinator::SetTag(EntityID e, Tag t)
 	{
-		LOG_ASSERT(mTags.find(name) != mTags.end() && "Tag not registered.");
-
-		return mTags[name];
+		mEntityManager->SetTag(e, t);
 	}
+
+
+	Tag Coordinator::GetTag(Entity& e)
+	{
+		return GetTag(e.GetEntityID());
+	}
+
+
+	Tag Coordinator::GetTag(EntityID e)
+	{
+		return mEntityManager->GetTag(e);
+	}
+
+
+	/*
+	void Coordinator::UpdateEntityTag(Entity& e, std::string key)
+	{
+		UpdateEntityTag(e.GetEntityID(), key);
+	}
+	*/
 
 } // end of namespace

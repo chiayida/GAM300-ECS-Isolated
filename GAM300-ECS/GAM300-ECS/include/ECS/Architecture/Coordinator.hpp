@@ -131,8 +131,10 @@ namespace Engine
 		bool IsNameRepeated(std::string name);
 		bool EntityExists(EntityID id);
 
-		void RegisterTag(std::string name);
-		Tag GetTag(std::string name);
+		void SetTag(Entity& e, Tag t);
+		void SetTag(EntityID e, Tag t);
+		Tag GetTag(Entity& e);
+		Tag GetTag(EntityID e);
 
 	private:
 		/* Member Functions */
@@ -177,15 +179,11 @@ namespace Engine
 		std::map<EntityID, std::vector<EntityID>> mParentChild{};
 		std::unordered_map<std::string, std::vector<EntityID>> mPrefabReloading{};
 
-		Tag NextTag{};
-		std::unordered_map<std::string, Tag> mTags{};
-
 		// Timed Destroy (Scripts)
 		std::vector<std::pair<unsigned int, float>> v_timed_destroys;
 	};
 
 	// Templated class functions implementations
-
 
 	template <typename T, unsigned N, typename... argv>
 	void Coordinator::AddComponent(Entity& e, argv... args)

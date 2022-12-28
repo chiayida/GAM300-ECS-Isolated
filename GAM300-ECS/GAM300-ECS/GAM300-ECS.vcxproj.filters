@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Serialization">
       <UniqueIdentifier>{faba2148-96fc-4626-8be1-7ee0704afc04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Tag">
+      <UniqueIdentifier>{3a767f51-013c-4c83-98ca-981f9831e788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tag">
+      <UniqueIdentifier>{38799e90-f2a2-46f8-92fd-f636cbf993ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -86,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="source\Serialization\Serializer.cpp">
       <Filter>Source Files\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Tag\TagManager.cpp">
+      <Filter>Source Files\Tag</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="include\Logging.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tag\TagManager.hpp">
+      <Filter>Header Files\Tag</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

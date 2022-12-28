@@ -104,6 +104,18 @@ namespace Engine
 	{
 		return prefab;
 	}
+
+
+	void Entity::SetKeyTag(std::string __tag__)
+	{
+		tag = __tag__;
+	}
+
+
+	std::string Entity::GetKeyTag() const
+	{
+		return tag;
+	}
 		
 
 	void Entity::SetIs_Active(bool val)
@@ -163,8 +175,9 @@ namespace Engine
 	{
 		LOG_ASSERT(e.GetEntityID() < MAX_ENTITIES && "Entity is out of range.");
 
-		// Resets the entity's signature bits (reset to zero)
+		// Resets the signature bits (reset to zero)
 		EntitiesSignatures[e.GetEntityID()].reset();
+		EntitiesTags[e.GetEntityID()].reset();
 
 		// Move ID to the back of queue (to be reused)
 		AvailableEntities.push(e.GetEntityID());
@@ -177,8 +190,9 @@ namespace Engine
 	{
 		LOG_ASSERT(e < MAX_ENTITIES && "Entity is out of range.");
 
-		// Resets the entity's signature bits (reset to zero)
+		// Resets the signature bits (reset to zero)
 		EntitiesSignatures[e].reset();
+		EntitiesTags[e].reset();
 
 		// Move ID to the back of queue (to be reused)
 		AvailableEntities.push(e);
@@ -203,6 +217,14 @@ namespace Engine
 	}
 
 
+	void EntityManager::SetTag(EntityID e, Tag t)
+	{
+		LOG_ASSERT(e < MAX_ENTITIES && "Entity is out of range.");
+
+		EntitiesTags[e] = t;
+	}
+
+
 	Signature EntityManager::GetSignature(Entity& e)
 	{
 		LOG_ASSERT(e.GetEntityID() < MAX_ENTITIES && "Entity is out of range.");
@@ -218,6 +240,14 @@ namespace Engine
 		return EntitiesSignatures[e];
 	}
 
+
+	Tag EntityManager::GetTag(EntityID e)
+	{
+		LOG_ASSERT(e < MAX_ENTITIES && "Entity is out of range.");
+
+		return EntitiesTags[e];
+	}
+
 } // end of namespace
 
 RTTR_REGISTRATION
@@ -228,6 +258,7 @@ RTTR_REGISTRATION
 		.constructor<>()
 		.property("name", &Entity::GetEntityName, &Entity::SetEntityName)
 		.property("prefab", &Entity::GetPrefab, &Entity::SetPrefab)
+		.property("tag", &Entity::GetKeyTag, &Entity::SetKeyTag)
 		.property("parent", &Entity::GetParent, &Entity::SetParentID)
 		.property("isActive", &Entity::GetIsActive, &Entity::SetIs_Active)
 		;
