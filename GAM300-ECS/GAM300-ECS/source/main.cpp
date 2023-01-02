@@ -21,104 +21,16 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	TagManager gTagManager;
-	Serializer::DeserializeLayers(&gTagManager, "appLayers.layer");
-	Serializer::DeserializeTags(&gTagManager, "appTags.tag");
+	Serializer::DeserializeLayers(&gTagManager, "layers.layer");
+	Serializer::DeserializeTags(&gTagManager, "tags.tag");
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
-
-	EntityID entity_0 = gCoordinator.CreateEntity(); // 0
-	EntityID entity_1 = gCoordinator.CreateEntity(); // 1
-	EntityID entity_2 = gCoordinator.CreateEntity(); // 2
-	EntityID entity_3 = gCoordinator.CreateEntity(); // 3
-	EntityID entity_4 = gCoordinator.CreateEntity(); // 4
-	EntityID entity_5 = gCoordinator.CreateEntity(); // 5
-	EntityID entity_6 = gCoordinator.CreateEntity(); // 6
+	Serializer::DeserializeJson(&gCoordinator, &gTagManager, "test.scene");
 	
-	// In Init first, inspector when prompt
 	//////////////////////////////////////////
-
-	/*
-	gTagManager.CreateTag("Default");
-	gTagManager.CreateTag("Ignore Raycast");
-	gTagManager.CreateTag("UI");
-	gTagManager.CreateTag("Ground");
-	gTagManager.CreateTag("Interactables");
-	gTagManager.CreateTag("Player");
-	gTagManager.CreateTag("Spells");
-			   
-	gTagManager.CreateLayer("Spells");
-	gTagManager.CreateLayer("Player");
-	gTagManager.CreateLayer("Interactables");
-	gTagManager.CreateLayer("Ground");
-	gTagManager.CreateLayer("UI");
-	gTagManager.CreateLayer("Ignore Raycast");
-	gTagManager.CreateLayer("Default");
-	*/
-
-	//////////////////////////////////////////
-	//////////////////////////////////////////
-
-	/*
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "Spells");
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "Player");
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "Interactables");
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "Ground");
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "UI");
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "Ignore Raycast");
-	gTagManager.AddTagLayer(&gCoordinator, "Default", "Default");
-
-	gTagManager.AddTagLayer(&gCoordinator, "Ignore Raycast", "Spells");
-	gTagManager.AddTagLayer(&gCoordinator, "Ignore Raycast", "Player");
-	gTagManager.AddTagLayer(&gCoordinator, "Ignore Raycast", "Interactables");
-	gTagManager.AddTagLayer(&gCoordinator, "Ignore Raycast", "Ground");
-	gTagManager.AddTagLayer(&gCoordinator, "Ignore Raycast", "UI");
-	gTagManager.AddTagLayer(&gCoordinator, "Ignore Raycast", "Ignore Raycast");
-
-	gTagManager.AddTagLayer(&gCoordinator, "UI", "Spells");
-	gTagManager.AddTagLayer(&gCoordinator, "UI", "Player");
-	gTagManager.AddTagLayer(&gCoordinator, "UI", "Interactables");
-	gTagManager.AddTagLayer(&gCoordinator, "UI", "Ground");
-	gTagManager.AddTagLayer(&gCoordinator, "UI", "UI");
-
-	gTagManager.AddTagLayer(&gCoordinator, "Ground", "Spells");
-	gTagManager.AddTagLayer(&gCoordinator, "Ground", "Player");
-	gTagManager.AddTagLayer(&gCoordinator, "Ground", "Interactables");
-	gTagManager.AddTagLayer(&gCoordinator, "Ground", "Ground");
-
-	gTagManager.AddTagLayer(&gCoordinator, "Interactables", "Player");
-	gTagManager.AddTagLayer(&gCoordinator, "Interactables", "Interactables");
-
-	gTagManager.AddTagLayer(&gCoordinator, "Player", "Player");
-
-	gTagManager.AddTagLayer(&gCoordinator, "Spells", "Spells");
-	*/
-
-	//////////////////////////////////////////
-	//////////////////////////////////////////
-
-	/*
-	gTagManager.SetEntityTag(&gCoordinator, entity_0, "Default");
-	gTagManager.SetEntityTag(&gCoordinator, entity_1, "Ignore Raycast");
-	gTagManager.SetEntityTag(&gCoordinator, entity_2, "UI");
-	gTagManager.SetEntityTag(&gCoordinator, entity_3, "Ground");
-	gTagManager.SetEntityTag(&gCoordinator, entity_4, "Interactables");
-	gTagManager.SetEntityTag(&gCoordinator, entity_5, "Player");
-	gTagManager.SetEntityTag(&gCoordinator, entity_6, "Spells");
-	*/
-
-	gTagManager.SetEntityTag(&gCoordinator, entity_0, "Default");
-	gTagManager.SetEntityTag(&gCoordinator, entity_1, "Default");
-	gTagManager.SetEntityTag(&gCoordinator, entity_2, "Default");
-	gTagManager.SetEntityTag(&gCoordinator, entity_3, "Ground");
-	gTagManager.SetEntityTag(&gCoordinator, entity_4, "Ground");
-	gTagManager.SetEntityTag(&gCoordinator, entity_5, "Ground");
-	gTagManager.SetEntityTag(&gCoordinator, entity_6, "Ground");
 
 	std::cout << "\n";
-	//////////////////////////////////////////
-	//////////////////////////////////////////
-
 	for (auto layer : gTagManager.GetLayers())
 	{
 		std::cout << layer.first << ": " << layer.second << "\n";

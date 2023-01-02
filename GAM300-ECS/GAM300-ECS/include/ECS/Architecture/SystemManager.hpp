@@ -69,7 +69,6 @@ namespace Engine
 	{
 		const char* name = typeid(T).name();
 
-		//assert(mSystems.find(name) == mSystems.end() && "Registering system more than once.");
 		if (mSystems.find(name) != mSystems.end())
 		{
 			LOG_WARNING("Registering system more than once.");

@@ -1,4 +1,4 @@
-/******************************************************************************/
+       /******************************************************************************/
 /*!
 \file       Serializer.hpp
 \author     Chia Yi Da
@@ -93,7 +93,7 @@ namespace Engine
 	public:	
 		static void SerializeEntities(Coordinator* coordinator, std::string scenefile);
 		static void SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename);
-		static void DeserializeJson(Coordinator* coordinator, std::string filename);
+		static void DeserializeJson(Coordinator* coordinator, TagManager* tagmanager, std::string filename);
 		static EntityID CreateEntityPrefab(Coordinator* coordinator, std::string filename);
 		static void ApplyUpdatedPrefab(Coordinator* coordinator, std::string filename);
 
@@ -104,7 +104,7 @@ namespace Engine
 			
 	private:
 		static json InstanceToJson(json writer, instance obj, std::string name);
-		static void DeserializeJsonInternal(Coordinator* coordinator, std::string filename);
+		static void DeserializeJsonInternal(Coordinator* coordinator, TagManager* tagmanager, std::string filename);
 		static void DeserializePrefab(Coordinator* coordinator, EntityID id, std::string filename);
 
 		static std::string CombineTwoJsonWriters(json j1, json j2);

@@ -167,7 +167,6 @@ namespace Engine
 		template <typename T>
 		void SetSystemSignature(Signature signature);
 
-
 		/* Data Members */
 		Allocator* mFreeListAllocator = nullptr;
 
@@ -189,7 +188,6 @@ namespace Engine
 	void Coordinator::AddComponent(Entity& e, argv... args)
 	{
 		bool flag = mComponentManager->AddComponent<T, N>(e, args...);
-		
 		if (flag == false)
 		{
 			return;
@@ -209,7 +207,6 @@ namespace Engine
 	void Coordinator::AddComponent(EntityID e, argv... args)
 	{
 		bool flag = mComponentManager->AddComponent<T, N>(e, args...);
-
 		if (flag == false)
 		{
 			return;

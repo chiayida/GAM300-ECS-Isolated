@@ -120,6 +120,9 @@ namespace Engine
 		{
 			AddToPrefabMap(prefabName, duplicated_id);
 		}
+		duplicated_entity.SetKeyTag(entity.GetKeyTag());
+		Tag tag = GetTag(entity);
+		SetTag(duplicated_entity, tag);
 
 		// Getting a unique name based on prefab's entity name
 		std::string entity_name = entity.GetEntityName();
@@ -459,13 +462,5 @@ namespace Engine
 	{
 		return mEntityManager->GetTag(e);
 	}
-
-
-	/*
-	void Coordinator::UpdateEntityTag(Entity& e, std::string key)
-	{
-		UpdateEntityTag(e.GetEntityID(), key);
-	}
-	*/
 
 } // end of namespace

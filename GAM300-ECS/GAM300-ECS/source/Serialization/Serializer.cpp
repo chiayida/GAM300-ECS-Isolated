@@ -317,9 +317,9 @@ namespace Engine
 	}
 
 
-	void Serializer::DeserializeJson(Coordinator* coordinator, std::string filename)
+	void Serializer::DeserializeJson(Coordinator* coordinator, TagManager* tagmanager, std::string filename)
 	{
-		DeserializeJsonInternal(coordinator, filename);
+		DeserializeJsonInternal(coordinator, tagmanager, filename);
 	}
 
 
@@ -435,7 +435,7 @@ namespace Engine
 	}
 
 
-	void Serializer::DeserializeJsonInternal(Coordinator* coordinator, std::string filename)
+	void Serializer::DeserializeJsonInternal(Coordinator* coordinator, TagManager* tagmanager, std::string filename)
 	{
 		// Parse string to writer, check error
 		std::ifstream ifs{ "Assets/" + filename };
@@ -461,6 +461,15 @@ namespace Engine
 			Entity* entity = coordinator->GetEntity(entity_id);
 			entity->SetParentID(object["0Entity"]["parent"]);
 			entity->SetIs_Active(object["0Entity"]["isActive"]);
+
+			if (std::string tag = object["0Entity"]["tag"]; tag != "")
+			{
+				tagmanager->SetEntityTag(coordinator, entity_id, tag);
+			}
+			else
+			{
+				std::cout << "tag is empty\n";
+			}
 			
 			// Dont need to deserialise prefab as full properties should serialised already
 			if (std::string prefabName = object["0Entity"]["prefab"]; prefabName != "")
