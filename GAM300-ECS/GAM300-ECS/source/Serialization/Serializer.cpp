@@ -466,10 +466,6 @@ namespace Engine
 			{
 				tagmanager->SetEntityTag(coordinator, entity_id, tag);
 			}
-			else
-			{
-				std::cout << "tag is empty\n";
-			}
 			
 			// Dont need to deserialise prefab as full properties should serialised already
 			if (std::string prefabName = object["0Entity"]["prefab"]; prefabName != "")
