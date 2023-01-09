@@ -78,9 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(SolutionDir)\GAM300-ECS\lib\GLFW\lib-vc2022\;$(SolutionDir)\GAM300-ECS\lib\GLEW\lib\x64\</LibraryPath>
+    <IncludePath>$(SolutionDir)\GAM300-ECS\lib\GLFW\include\;$(SolutionDir)\GAM300-ECS\lib\GLEW\include\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)\GAM300-ECS\lib\GLFW\include\;$(SolutionDir)\GAM300-ECS\lib\GLEW\include\</IncludePath>
+    <LibraryPath>$(SolutionDir)\GAM300-ECS\lib\GLFW\lib-vc2022\;$(SolutionDir)\GAM300-ECS\lib\GLEW\lib\x64\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,12 +125,13 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)GAM300-ECS;$(SolutionDir)GAM300-ECS/lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GAM300-ECS;$(SolutionDir)GAM300-ECS/lib;$(SolutionDir)\GAM300-ECS\lib\GLFW\include\;$(SolutionDir)\GAM300-ECS\lib\GLEW\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)/GAM300-ECS/lib/rttr/lib/Debug/rttr_core_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)/GAM300-ECS/lib/rttr/lib/Debug/rttr_core_d.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\GAM300-ECS\lib\GLFW\lib-vc2022\;$(SolutionDir)\GAM300-ECS\lib\GLEW\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,13 +143,14 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GAM300-ECS;$(SolutionDir)GAM300-ECS/lib;$(SolutionDir)\GAM300-ECS\lib\GLFW\include\;$(SolutionDir)\GAM300-ECS\lib\GLEW\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\GAM300-ECS\lib\GLFW\lib-vc2022\;$(SolutionDir)\GAM300-ECS\lib\GLEW\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
