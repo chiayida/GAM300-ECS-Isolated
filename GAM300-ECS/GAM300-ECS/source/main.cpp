@@ -11,10 +11,6 @@
 #include "include/ECS/Component/Transform.hpp"
 #include "include/ECS/System/TransformSystem.hpp"
 
-#define GLFW_INCLUDE_NONE
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 // #define MEMORY_SIZE 1e8 // 1 * 10^8 bytes	
 
 using namespace Engine;
@@ -30,42 +26,35 @@ int main()
 
 	Coordinator gCoordinator;
 	gCoordinator.Init();
+	Serializer::DeserializeJson(&gCoordinator, &gTagManager, "test.scene");
 	
-	
-	GLFWwindow* window;
+	//////////////////////////////////////////
 
-	if (!glfwInit())
+	std::cout << "\n";
+	for (auto layer : gTagManager.GetLayers())
 	{
-		LOG_WARNING("Initialization failed");
-		return -1;
+		std::cout << layer.first << ": " << layer.second << "\n";
 	}
-
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-	if (!window)
+	std::cout << "=====\n";
+	for (auto tag : gTagManager.GetTags())
 	{
-		glfwTerminate();
-		return 1;
+		std::cout << tag.first << ": " << tag.second << "\n";
 	}
+	std::cout << "=====\n";
 
-	glfwMakeContextCurrent(window);
-
-	while (!glfwWindowShouldClose(window))
+	for (auto entity : gCoordinator.GetEntities())
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glBegin(GL_TRIANGLES);
-		glVertex2f(-0.5f, -0.5f);
-		glVertex2f(0.5f, 0.5f);
-		glVertex2f(0.5f, -0.5f);
-
-		glfwSwapBuffers(window);
-
-		glfwPollEvents();
+		EntityID id = entity.GetEntityID();
+		std::cout << id << ": " << gCoordinator.GetTag(entity) << " | " << entity.GetKeyTag() << "\n";
 	}
-
-	glfwTerminate();
 
 	std::cout << "\nEND\n\n";
+
+
+	//Serializer::SerializeLayers(&gTagManager, "appLayers.layer");
+	//Serializer::SerializeTags(&gTagManager, "appTags.tag");
+
+
 
 	/*
 	std::cout << "\n==========================\n       All Entities\n==========================\n";

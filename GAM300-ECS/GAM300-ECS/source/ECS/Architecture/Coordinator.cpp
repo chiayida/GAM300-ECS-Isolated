@@ -440,35 +440,6 @@ namespace Engine
 	}
 
 
-	bool Coordinator::CheckParentIsActive(Entity& e)
-	{
-		if (e.GetIsActive())
-		{
-			EntityID parent_id = e.GetParent();
-			if (parent_id < MAX_ENTITIES)
-			{
-				Entity& parent = *GetEntity(parent_id);
-				return CheckParentIsActive(parent);
-			}
-			else
-			{
-				return e.GetIsActive();
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-
-	bool Coordinator::CheckParentIsActive(EntityID id)
-	{
-		Entity& e = *GetEntity(id);
-		return CheckParentIsActive(e);
-	}
-
-
 	void Coordinator::SetTag(Entity& e, Tag t)
 	{
 		SetTag(e.GetEntityID(), t);
