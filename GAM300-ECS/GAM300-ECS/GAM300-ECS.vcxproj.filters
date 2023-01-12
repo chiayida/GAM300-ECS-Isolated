@@ -96,6 +96,9 @@
     <ClCompile Include="source\Tag\TagManager.cpp">
       <Filter>Source Files\Tag</Filter>
     </ClCompile>
+    <ClCompile Include="source\ECS\Component\Camera.cpp">
+      <Filter>Source Files\ECS\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ECS\Architecture\ComponentArray.hpp">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="include\Tag\TagManager.hpp">
       <Filter>Header Files\Tag</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Component\Camera.hpp">
+      <Filter>Header Files\ECS\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
