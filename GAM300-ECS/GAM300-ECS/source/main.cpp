@@ -12,8 +12,8 @@
 #include "include/ECS/System/TransformSystem.hpp"
 
 #define GLFW_INCLUDE_NONE
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 
 // #define MEMORY_SIZE 1e8 // 1 * 10^8 bytes	
 
