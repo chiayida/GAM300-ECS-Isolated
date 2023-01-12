@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)GAM300-ECS\lib\glew\include;$(SolutionDir)GAM300-ECS\lib\glfw\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)GAM300-ECS\lib\glfw\lib;$(SolutionDir)GAM300-ECS\lib\glew\lib\Debug\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -121,13 +123,17 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)GAM300-ECS;$(SolutionDir)GAM300-ECS/lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GAM300-ECS;$(SolutionDir)GAM300-ECS/lib;$(SolutionDir)GAM300-ECS\lib\glew\include;$(SolutionDir)GAM300-ECS\lib\glfw\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)/GAM300-ECS/lib/rttr/lib/Debug/rttr_core_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)/GAM300-ECS/lib/rttr/lib/Debug/rttr_core_d.lib;$(SolutionDir)\GAM300-ECS\lib\glew\lib\Debug\x64\glew32d.lib;$(SolutionDir)\GAM300-ECS\lib\glfw\lib\glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SolutionDir)\GAM300-ECS\lib\glfw\lib" "$(TargetDir)"
+xcopy /y "$(SolutionDir)\GAM300-ECS\lib\glew\bin\Debug\x64" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

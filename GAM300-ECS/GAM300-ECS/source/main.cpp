@@ -10,6 +10,9 @@
 
 #include "include/ECS/Component/Transform.hpp"
 #include "include/ECS/System/TransformSystem.hpp"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 
 // #define MEMORY_SIZE 1e8 // 1 * 10^8 bytes	
 
@@ -17,6 +20,7 @@ using namespace Engine;
 
 int main()
 {
+#if 0
 	// Memory leak check
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
@@ -140,6 +144,40 @@ int main()
 	std::cout << "\n\n\n";
 	*/
 
+	return 0;
+#endif
+
+	GLFWwindow *window;
+
+	/* Initialize the library */
+	if ( !glfwInit() )
+		return -1;
+
+	/* Create a windowed mode window and its OpenGL context */
+	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	if ( !window )
+	{
+		glfwTerminate();
+		return -1;
+	}
+
+	/* Make the window's context current */
+	glfwMakeContextCurrent(window);
+
+	/* Loop until the user closes the window */
+	while ( !glfwWindowShouldClose(window) )
+	{
+		/* Render here */
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
+
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
 	return 0;
 }
 
