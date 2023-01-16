@@ -29,7 +29,6 @@
 
 
 #define DUPLICATE_COMPONENTS(d, o)	DUPLICATE_COMPONENT(Transform, d, o)\
-									DUPLICATE_COMPONENT(Script, d, o)\
 									DUPLICATE_COMPONENT(std::vector<Transform>, d, o)
 
 
@@ -85,8 +84,7 @@ namespace Engine
 	{
 		// Register ALL components here
 		RegisterComponent<Transform, MAX_ENTITIES>();
-		RegisterComponent<Script, MAX_ENTITIES>();
-		RegisterComponent<std::vector<Transform>, MAX_ENTITIES>();
+		//RegisterComponent<std::vector<Transform>, MAX_ENTITIES>();
 	}
 
 
@@ -95,7 +93,6 @@ namespace Engine
 		// Register ALL systems and their respective signature here
 		RegisterSystem<TransformSystem>();
 		AssignSystemSignature<TransformSystem, Transform>(Transform{});
-		AssignSystemSignature<TransformSystem, Script>(Script{});
 	}
 
 

@@ -33,12 +33,10 @@
 
 
 #define SERIALIZE_COMPONENTS(entity) SERIALIZE_OBJECT(entity, Transform, "1Transform")\
-									 SERIALIZE_OBJECT(entity, Script, "Script")\
 									 SERIALIZE_OBJECT_VECTOR(entity, std::vector<Transform>, "vTransform")
 
 
-#define DESERIALIZE_COMPONENTS	DESERIALIZE_OBJECT_BASIC(Script, "Script")\
-								DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
+#define DESERIALIZE_COMPONENTS	DESERIALIZE_OBJECT_VECTOR(std::vector<Transform>, Transform, "vTransform")
 
 
 #define SERIALIZE_OBJECT(entity, type, oName)	if (coordinator->HasComponent<type>(entity))\
@@ -174,7 +172,6 @@
 
 
 #define REMOVE_COMPONENTS	REMOVE_COMPONENT(Transform, "1Transform")\
-							REMOVE_COMPONENT(Script, "Script")\
 							REMOVE_COMPONENT(std::vector<Transform>, "vTransform")
 
 
@@ -377,7 +374,6 @@ namespace Engine
 			{
 				tagmanager->SetEntityTag(coordinator, entity_id, tag);
 			}
-
 
 			// Push back to container to update to the correct parent id for coordinator's container
 			ids.emplace_back(entity_id);

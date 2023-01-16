@@ -14,33 +14,17 @@
   Technology is prohibited.
 */
 /******************************************************************************/
-#include "include/Graphics/Camera.hpp"
 
-#define NEAR 0.1f
-#define FAR 100.f
+#include "include/ECS/Component/Camera.hpp"
 
 namespace Engine
 {
-    Camera::Camera() : position{ 0.f, 0.f, 0.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, movementSpeed{ 2.5f }, mouseSensitivity{ 0.1f }, zoom{ 45.f } {}
-
-
-    void Camera::setAspectRatio(int width, int height)
-    {
-        aspectRatio = (float)width / (float) height;
-    }
-
+    Camera::Camera() : position{ 0.f, 0.f, 0.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, movementSpeed{ 2.5f }, mouseSensitivity{ 0.1f } {}
 
     glm::mat4 Camera::getViewMatrix() 
     { 
         return glm::lookAt(position, position + front, up); 
     }
-
-
-    glm::mat4 Camera::getProjectionMatrix()
-    {
-        return glm::perspective(glm::radians(zoom), aspectRatio, NEAR, FAR);
-    }
-
 
     void Camera::processKeyboard(CameraMovement direction, float deltaTime)
     {
@@ -71,7 +55,6 @@ namespace Engine
             position -= glm::normalize(glm::cross(front, up)) * velocity;
         }
     }
-
 
     void Camera::processMouseMovement(float xoffset, float yoffset)
     {

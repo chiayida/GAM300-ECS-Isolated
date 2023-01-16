@@ -40,20 +40,25 @@ namespace Engine
         Camera();
         ~Camera() = default;
 
+        void setAspectRatio(int width, int height);
         glm::mat4 getViewMatrix();
-        //glm::mat4 getProjectionMatrix();
+        glm::mat4 getProjectionMatrix();
 
         void processKeyboard(CameraMovement direction, float deltaTime);
         void processMouseMovement(float xoffset, float yoffset);
 
-    private:
-        glm::vec3 position;
-        glm::vec3 front;
-        glm::vec3 up;
 
-        float yaw;
-        float pitch;
-        float movementSpeed;
-        float mouseSensitivity;
+
+        private:
+            glm::vec3 position;
+            glm::vec3 front;
+            glm::vec3 up;
+
+            float yaw;
+            float pitch;
+            float movementSpeed;
+            float mouseSensitivity;
+            float zoom;
+            float aspectRatio{};
     };
 }

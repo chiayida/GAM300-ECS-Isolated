@@ -45,14 +45,8 @@ namespace Engine
 		bool isOverridePosition = false;
 		bool isOverrideScale = false;
 		bool isOverrideRotation = false;
-	};
-
-	class Script : public IComponent
-	{
-	public:
-		Script(std::string s = "blahblah.c") : mono_string{s} {}
-
-		std::string mono_string;
+		
+		RTTR_ENABLE(IComponent);
 	};
 
 	RTTR_REGISTRATION
@@ -72,11 +66,6 @@ namespace Engine
 			.property("isOverridePosition", &Transform::isOverridePosition)
 			.property("isOverrideScale", &Transform::isOverrideScale)
 			.property("isOverrideRotation", &Transform::isOverrideRotation)
-			;
-
-		registration::class_<Script>("Script")
-			.constructor<>()
-			.property("mono_string", &Script::mono_string)
 			;
 	}
 }

@@ -55,6 +55,12 @@
     <Filter Include="Header Files\Tag">
       <UniqueIdentifier>{38799e90-f2a2-46f8-92fd-f636cbf993ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{a5498c12-1a44-46c7-82b7-79d4c3a97491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{a2ac3dc8-6677-41d5-bf71-2ca216a3d4fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -97,7 +103,7 @@
       <Filter>Source Files\Tag</Filter>
     </ClCompile>
     <ClCompile Include="source\ECS\Component\Camera.cpp">
-      <Filter>Source Files\ECS\Component</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +168,7 @@
       <Filter>Header Files\Tag</Filter>
     </ClInclude>
     <ClInclude Include="include\ECS\Component\Camera.hpp">
-      <Filter>Header Files\ECS\Component</Filter>
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
