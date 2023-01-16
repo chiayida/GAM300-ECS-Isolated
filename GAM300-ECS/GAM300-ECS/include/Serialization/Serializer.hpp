@@ -71,7 +71,8 @@
 #include "include/ECS/Architecture/Coordinator.hpp"
 #include "include/Tag/TagManager.hpp"
 
-#include "lib/rttr/registration.h"
+#include "rttr/registration.h"
+
 #include "lib/nlohmann/json.hpp"
 
 #include <iostream>

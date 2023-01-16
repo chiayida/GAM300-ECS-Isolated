@@ -26,8 +26,8 @@
 #include "ECS.hpp"
 #include <queue>
 #include <array>
-#include <lib/rttr/type>
-#include <lib/rttr/registration.h>
+#include "rttr/type.h"
+#include "rttr/registration.h"
 
 namespace Engine
 {

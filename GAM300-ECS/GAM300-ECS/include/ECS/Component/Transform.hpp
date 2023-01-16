@@ -18,9 +18,8 @@ Technology is prohibited.
 #include "include/ECS/Architecture/IComponent.hpp"
 #include "include/ECS/Architecture/EntityManager.hpp"
 
-#include <lib/rttr/type>
-#include <lib/rttr/registration.h>
-
+#include "rttr/type.h"
+#include "rttr/registration.h"
 
 namespace Engine
 {

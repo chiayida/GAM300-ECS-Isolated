@@ -18,8 +18,8 @@
 /******************************************************************************/
 #pragma once
 
-#include <lib/rttr/type>
-#include <lib/rttr/registration.h>
+#include "rttr/type.h"
+#include "rttr/registration.h"
 
 namespace Engine 
 {
