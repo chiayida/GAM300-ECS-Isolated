@@ -1,33 +1,11 @@
 [
 {
     "0Entity": {
-        "name": "single",
+        "isActive": true,
+        "name": "Entity 0",
         "parent": 5001,
-        "prefab": "single.prefab"
-    },
-    "1Transform": {
-        "isOverridePosition": false,
-        "isOverrideRotation": false,
-        "isOverrideScale": false,
-        "position": [
-            1.0,
-            2.0,
-            3.0
-        ],
-        "rot_q": [
-            1.0,
-            1.0,
-            1.0,
-            1.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
-        ]
-    },
-    "Script": {
-        "mono_string": "Movement.cs"
+        "prefab": "single.prefab",
+        "tag": "Default"
     }
 }
 ]

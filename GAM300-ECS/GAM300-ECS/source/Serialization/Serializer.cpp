@@ -232,7 +232,7 @@ namespace Engine
 	}
 
 
-	void Serializer::SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename)
+	void Serializer::SerializePrefab(Coordinator* coordinator, TagManager* tagmanager, EntityID id, std::string filename)
 	{
 		std::vector<std::string> vJsonStrings{};
 		json writer;
@@ -301,7 +301,7 @@ namespace Engine
 		entity_h.SetParentID(parent_id);
 		coordinator->DestroyEntity(id);
 
-		EntityID entity_id_new = CreateEntityPrefab(coordinator, filename);
+		EntityID entity_id_new = CreateEntityPrefab(coordinator, tagmanager, filename);
 		coordinator->AddToPrefabMap(filename, entity_id_new);
 		if (parent_id <= MAX_ENTITIES)
 		{
@@ -323,7 +323,7 @@ namespace Engine
 	}
 
 
-	EntityID Serializer::CreateEntityPrefab(Coordinator* coordinator, std::string filename)
+	EntityID Serializer::CreateEntityPrefab(Coordinator* coordinator, TagManager* tagmanager, std::string filename)
 	{
 		// Parse string to writer, check error
 		std::ifstream ifs{ "Assets/" + filename };
@@ -372,6 +372,12 @@ namespace Engine
 			Entity* entity = coordinator->GetEntity(entity_id);
 			entity->SetParentID(object["0Entity"]["parent"]);
 			entity->SetPrefab(object["0Entity"]["prefab"]);
+
+			if (std::string tag = object["0Entity"]["tag"]; tag != "")
+			{
+				tagmanager->SetEntityTag(coordinator, entity_id, tag);
+			}
+
 
 			// Push back to container to update to the correct parent id for coordinator's container
 			ids.emplace_back(entity_id);

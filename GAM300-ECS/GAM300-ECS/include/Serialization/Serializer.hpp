@@ -92,9 +92,9 @@ namespace Engine
 	{
 	public:	
 		static void SerializeEntities(Coordinator* coordinator, std::string scenefile);
-		static void SerializePrefab(Coordinator* coordinator, EntityID id, std::string filename);
+		static void SerializePrefab(Coordinator* coordinator, TagManager* tagmanager, EntityID id, std::string filename);
 		static void DeserializeJson(Coordinator* coordinator, TagManager* tagmanager, std::string filename);
-		static EntityID CreateEntityPrefab(Coordinator* coordinator, std::string filename);
+		static EntityID CreateEntityPrefab(Coordinator* coordinator, TagManager* tagmanager, std::string filename);
 		static void ApplyUpdatedPrefab(Coordinator* coordinator, std::string filename);
 
 		static void SerializeTags(TagManager* manager, std::string tagfile);
