@@ -8,7 +8,7 @@
 \brief
   This file contains the implementation of Camera class.
 
-  Copyright (C) 2022 DigiPen Institure of Technology.
+  Copyright (C) 2023 DigiPen Institure of Technology.
   Reproduction or disclosure of this file or its contents
   without the prior written consent of DigiPen Institute of
   Technology is prohibited.
@@ -21,12 +21,13 @@
 
 namespace Engine
 {
-    Camera::Camera() : position{ 0.f, 0.f, 0.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, movementSpeed{ 2.5f }, mouseSensitivity{ 0.1f }, zoom{ 45.f } {}
+    Camera::Camera() : position{ 0.f, 0.f, 0.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, 
+        movementSpeed{ 2.5f }, mouseSensitivity{ 0.1f }, zoom{ 45.f }, aspectRatio{ 0.f } {}
 
 
     void Camera::setAspectRatio(int width, int height)
     {
-        aspectRatio = (float)width / (float) height;
+        aspectRatio = (float)width / (float)height;
     }
 
 

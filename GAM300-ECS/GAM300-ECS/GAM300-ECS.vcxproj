@@ -161,7 +161,9 @@ xcopy /y "$(SolutionDir)GAM300-ECS\lib\rttr\lib\Debug\rttr_core_d.lib" "$(Target
     <ClCompile Include="source\ECS\Architecture\SystemManager.cpp" />
     <ClCompile Include="source\ECS\Component\Camera.cpp" />
     <ClCompile Include="source\ECS\Component\Transform.cpp" />
+    <ClCompile Include="source\ECS\System\ParticlesSystem.cpp" />
     <ClCompile Include="source\ECS\System\TransformSystem.cpp" />
+    <ClCompile Include="source\Graphics\shader.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Memory\Allocator.cpp" />
     <ClCompile Include="source\Memory\FreeListAllocator.cpp" />
@@ -181,7 +183,9 @@ xcopy /y "$(SolutionDir)GAM300-ECS\lib\rttr\lib\Debug\rttr_core_d.lib" "$(Target
     <ClInclude Include="include\ECS\Architecture\SystemManager.hpp" />
     <ClInclude Include="include\ECS\Component\Camera.hpp" />
     <ClInclude Include="include\ECS\Component\Transform.hpp" />
+    <ClInclude Include="include\ECS\System\ParticlesSystem.hpp" />
     <ClInclude Include="include\ECS\System\TransformSystem.hpp" />
+    <ClInclude Include="include\Graphics\shader.hpp" />
     <ClInclude Include="include\Logging.hpp" />
     <ClInclude Include="include\Memory\Allocator.hpp" />
     <ClInclude Include="include\Memory\CustomAllocator.hpp" />

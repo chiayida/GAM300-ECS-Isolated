@@ -8,9 +8,8 @@
 #include "include/Serialization/Serializer.hpp"
 #include "include/Tag/TagManager.hpp"
 
-#include "include/ECS/Component/Transform.hpp"
 #include "include/Graphics/Camera.hpp"
-#include "include/ECS/System/TransformSystem.hpp"
+#include "include/Graphics/shader.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -87,6 +86,7 @@ int main()
 		processInput(window);
 
 		// Render here
+
 
 		// Clear every frame
 		{

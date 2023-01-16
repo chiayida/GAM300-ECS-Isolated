@@ -31,7 +31,7 @@ namespace Engine
 	public:
 		virtual void Init() = 0;
 		virtual void Update() = 0;
-		virtual void Update(float dt) { UNUSED(dt); }
+		virtual void Update(float deltaTime) { UNUSED(deltaTime); }
 		virtual void Destroy() = 0;
 
 		std::set<EntityID> mEntities{};

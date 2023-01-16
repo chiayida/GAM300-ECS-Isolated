@@ -8,7 +8,7 @@
 \brief
   This file contains the declaration of Camera class.
 
-  Copyright (C) 2022 DigiPen Institure of Technology.
+  Copyright (C) 2023 DigiPen Institure of Technology.
   Reproduction or disclosure of this file or its contents
   without the prior written consent of DigiPen Institute of
   Technology is prohibited.
@@ -41,7 +41,7 @@ namespace Engine
         ~Camera() = default;
 
         glm::mat4 getViewMatrix();
-        //glm::mat4 getProjectionMatrix();
+        glm::mat4 getProjectionMatrix();
 
         void processKeyboard(CameraMovement direction, float deltaTime);
         void processMouseMovement(float xoffset, float yoffset);
@@ -52,8 +52,9 @@ namespace Engine
         glm::vec3 up;
 
         float yaw;
-        float pitch;
+        float pitch{};
         float movementSpeed;
         float mouseSensitivity;
+        float aspectRatio{};
     };
 }
