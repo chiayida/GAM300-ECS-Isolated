@@ -25,6 +25,9 @@
 #include "include/ECS/Component/Transform.hpp"
 #include "include/ECS/System/TransformSystem.hpp"
 
+//#include "include/ECS/Component/Particle.hpp"
+#include "include/ECS/System/ParticleSystem.hpp"
+
 #include <memory>
 
 
@@ -93,6 +96,9 @@ namespace Engine
 		// Register ALL systems and their respective signature here
 		RegisterSystem<TransformSystem>();
 		AssignSystemSignature<TransformSystem, Transform>(Transform{});
+
+		RegisterSystem<ParticleSystem>();
+		//AssignSystemSignature<TransformSystem, Particle>(Particle{});
 	}
 
 

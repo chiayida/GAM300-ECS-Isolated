@@ -162,9 +162,11 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClCompile Include="source\ECS\Architecture\SystemManager.cpp" />
     <ClCompile Include="source\ECS\Component\Camera.cpp" />
     <ClCompile Include="source\ECS\Component\Transform.cpp" />
-    <ClCompile Include="source\ECS\System\ParticlesSystem.cpp" />
+    <ClCompile Include="source\ECS\System\ParticleSystem.cpp" />
     <ClCompile Include="source\ECS\System\TransformSystem.cpp" />
-    <ClCompile Include="source\Graphics\shader.cpp" />
+    <ClCompile Include="source\Graphics\GLSLShader.cpp" />
+    <ClCompile Include="source\Graphics\ModelManager.cpp" />
+    <ClCompile Include="source\Graphics\Shader.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Memory\Allocator.cpp" />
     <ClCompile Include="source\Memory\FreeListAllocator.cpp" />
@@ -184,9 +186,11 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\ECS\Architecture\SystemManager.hpp" />
     <ClInclude Include="include\ECS\Component\Camera.hpp" />
     <ClInclude Include="include\ECS\Component\Transform.hpp" />
-    <ClInclude Include="include\ECS\System\ParticlesSystem.hpp" />
+    <ClInclude Include="include\ECS\System\ParticleSystem.hpp" />
     <ClInclude Include="include\ECS\System\TransformSystem.hpp" />
-    <ClInclude Include="include\Graphics\shader.hpp" />
+    <ClInclude Include="include\Graphics\GLSLShader.hpp" />
+    <ClInclude Include="include\Graphics\ModelManager.hpp" />
+    <ClInclude Include="include\Graphics\Shader.hpp" />
     <ClInclude Include="include\Logging.hpp" />
     <ClInclude Include="include\Memory\Allocator.hpp" />
     <ClInclude Include="include\Memory\CustomAllocator.hpp" />
@@ -197,6 +201,10 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\Memory\StackLinkedList.hpp" />
     <ClInclude Include="include\Serialization\Serializer.hpp" />
     <ClInclude Include="include\Tag\TagManager.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Default.frag" />
+    <None Include="Assets\Default.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,25 +1,35 @@
-#ifndef SHADER_HPP
-#define SHADER_HPP
+/* Start Header**********************************************************************************/
+/*
+@file    Shader.hpp
+@author  Chia Yi Da		c.yida@digipen.edu
+@date    23/06/2021
+\brief
+This file contains definitions of member functions of class GLSLShader.
 
-#include <GL/glew.h>
 
-enum Primitive_Enum
+Copyright (C) 2021 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents
+without the prior written consent of DigiPen Institute of
+Technology is prohibited.
+*/
+/* End Header **********************************************************************************/
+#pragma once
+
+#include "GLSLShader.hpp"
+#include <map>
+
+namespace Engine
 {
-    TriangleStrip = 0,
-    Points,
-    LineStrip
-};
+	enum class GraphicShader
+	{
+		Default = 0, // Game objects
+		Collision,
+		Font_Draw,
+		Simple_Depth,
+		Light
+	};
 
-///////////////////
-GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
-
-///////////////////
-GLuint LoadPipeline(const char * vertex_file_path,const char * fragment_file_path, GLuint * programIDs );
-
-// Load shaders where multiple shader files == one complete shader
-// Show how code can be reused across shaders
-GLuint LoadMultiShaders(const char *vertex_file_path, const char *fragment_file_path,
-                        const char *geom_file_path, Primitive_Enum  out_primitive_type );
-
-
-#endif
+    void ShaderSetup();
+	
+	static std::map<GraphicShader, GLSLShader> shdrpgms;
+}

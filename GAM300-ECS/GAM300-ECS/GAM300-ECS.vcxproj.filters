@@ -105,10 +105,16 @@
     <ClCompile Include="source\ECS\Component\Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\ECS\System\ParticlesSystem.cpp">
+    <ClCompile Include="source\ECS\System\ParticleSystem.cpp">
       <Filter>Source Files\ECS\System</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\shader.cpp">
+    <ClCompile Include="source\Graphics\GLSLShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Shader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\ModelManager.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -176,11 +182,25 @@
     <ClInclude Include="include\ECS\Component\Camera.hpp">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\System\ParticlesSystem.hpp">
+    <ClInclude Include="include\ECS\System\ParticleSystem.hpp">
       <Filter>Header Files\ECS\System</Filter>
     </ClInclude>
-    <ClInclude Include="include\Graphics\shader.hpp">
+    <ClInclude Include="include\Graphics\GLSLShader.hpp">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\Shader.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\ModelManager.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Default.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\Default.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

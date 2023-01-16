@@ -8,11 +8,19 @@
 #include "include/Serialization/Serializer.hpp"
 #include "include/Tag/TagManager.hpp"
 
+#include "include/Graphics/Shader.hpp"
 #include "include/Graphics/Camera.hpp"
-#include "include/Graphics/shader.hpp"
+#include "include/ECS/System/ParticleSystem.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+// glm
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/vec3.hpp>
 
 using namespace Engine;
 
@@ -26,15 +34,13 @@ double currentFrame{}, lastFrame{}, deltaTime{};
 double lastX = windowWidth / 2.0, lastY = windowHeight / 2.0;
 
 Camera camera;
-GLuint shaderHandle = LoadShaders("GAM300-ECS/Assets/Default.vert", 
-							   "GAM300-ECS/Assets/Default.frag");
-
 
 int main()
 {
-	//////////////////////////////////////////
 	// Memory leak check
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); 
+
+	// Initialise Application
 
 	// Initialise GLFW
 	if (!glfwInit())
@@ -42,20 +48,16 @@ int main()
 		LOG_WARNING("Failed to initialize GLFW");
 		return -1;
 	}
-	
-	// Initialise Application
-	TagManager gTagManager;
-	Serializer::DeserializeLayers(&gTagManager, "layers.layer");
-	Serializer::DeserializeTags(&gTagManager, "tags.tag");
 
-	Coordinator gCoordinator;
-	gCoordinator.Init();
-	Serializer::DeserializeJson(&gCoordinator, &gTagManager, "test.scene");
-	//////////////////////////////////////////
+	// Setting up OpenGL properties
+	glfwWindowHint(GLFW_SAMPLES, 1); // change for anti-aliasing
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a windowed mode window and its OpenGL context
-	GLFWwindow* window;
-	window = glfwCreateWindow(windowWidth, windowHeight, "Particles", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Particles", nullptr, nullptr);
 	if (!window)
 	{
 		LOG_WARNING("Failed to open GLFW window.");
@@ -70,6 +72,30 @@ int main()
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
 	glfwSetCursorPosCallback(window, mouse_callback);
 
+	// Initialize GLEW
+	glewExperimental = static_cast<GLboolean>(true); // Needed for core profile
+	if (glewInit() != GLEW_OK)
+	{
+		LOG_WARNING("Failed to initialize GLEW");
+		glfwTerminate();
+		return -1;
+	}
+
+	///////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	TagManager gTagManager;
+	Serializer::DeserializeLayers(&gTagManager, "layers.layer");
+	Serializer::DeserializeTags(&gTagManager, "tags.tag");
+
+	Coordinator gCoordinator;
+	gCoordinator.Init();
+	Serializer::DeserializeJson(&gCoordinator, &gTagManager, "test.scene");
+
+	auto particleSystem = gCoordinator.GetSystem<ParticleSystem>();
+	particleSystem->Init();
+
+	///////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -87,27 +113,56 @@ int main()
 
 		processInput(window);
 
-		// Render here
-
-
 		// Clear every frame
 		{
-			glClearColor(0.41f, 0.41f, 0.41f, 1.f);
+			glClearColor(0.f, 0.f, 0.f, 1.0f);
 			glEnable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 		}
+		
+		// Setting uniforms for shaders
+		{
+			const auto& shd_ref_handle = shdrpgms[GraphicShader::Default].GetHandle();
+			glUseProgram(shd_ref_handle);
+
+			glm::vec3 translateVector = { 1.f, 1.f, 1.f };
+			glm::vec3 scaleVector = { 1.f, 1.f, 1.f };
+			glm::mat4 transformMatrix = glm::translate(translateVector) * glm::scale(scaleVector);
+			glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+			//GLSLShader::SetUniform("uTransformMatrix", transformMatrix, shd_ref_handle);
+
+			//GLSLShader::SetUniform("uViewMatrix", camera.getViewMatrix(), shd_ref_handle);
+			//GLSLShader::SetUniform("uProjectionMatrix", camera.getProjectionMatrix(), shd_ref_handle);
+
+			GLint loc = glGetUniformLocation(shd_ref_handle, "uTransformMatrix");
+			glUniformMatrix4fv(loc, 1, GL_FALSE, &transformMatrix[0][0]);
+
+			loc = glGetUniformLocation(shd_ref_handle, "uViewMatrix");
+			glUniformMatrix4fv(loc, 1, GL_FALSE, &camera.getViewMatrix()[0][0]);
+
+			loc = glGetUniformLocation(shd_ref_handle, "uProjectionMatrix");
+			glUniformMatrix4fv(loc, 1, GL_FALSE, &camera.getProjectionMatrix()[0][0]);
+
+			loc = glGetUniformLocation(shd_ref_handle, "uColor");
+			glUniform4fv(loc, 1, &color[0]);
+
+			//glUseProgram(0);
+		}
 
 
+		particleSystem->Update(deltaTime);
 
 
 		// Resets mouse position every frame
-		glfwSetCursorPos(window, lastX, lastY);
+		//glfwSetCursorPos(window, lastX, lastY);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+
 	glfwTerminate();
 
 	return 1;

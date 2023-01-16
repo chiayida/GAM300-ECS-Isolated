@@ -21,7 +21,7 @@
 
 namespace Engine
 {
-    Camera::Camera() : position{ 0.f, 0.f, 0.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, 
+    Camera::Camera() : position{ 0.f, 0.f, -1.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, 
         movementSpeed{ 2.5f }, mouseSensitivity{ 0.1f }, zoom{ 45.f }, aspectRatio{ 0.f } {}
 
 
