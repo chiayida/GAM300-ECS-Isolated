@@ -26,6 +26,8 @@ double currentFrame{}, lastFrame{}, deltaTime{};
 double lastX = windowWidth / 2.0, lastY = windowHeight / 2.0;
 
 Camera camera;
+GLuint shaderHandle = LoadShaders("GAM300-ECS/Assets/Default.vert", 
+							   "GAM300-ECS/Assets/Default.frag");
 
 
 int main()
