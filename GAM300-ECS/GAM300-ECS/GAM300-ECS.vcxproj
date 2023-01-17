@@ -184,10 +184,10 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\ECS\Architecture\IComponent.hpp" />
     <ClInclude Include="include\ECS\Architecture\System.hpp" />
     <ClInclude Include="include\ECS\Architecture\SystemManager.hpp" />
-    <ClInclude Include="include\ECS\Component\Camera.hpp" />
     <ClInclude Include="include\ECS\Component\Transform.hpp" />
     <ClInclude Include="include\ECS\System\ParticleSystem.hpp" />
     <ClInclude Include="include\ECS\System\TransformSystem.hpp" />
+    <ClInclude Include="include\Graphics\Camera.hpp" />
     <ClInclude Include="include\Graphics\GLSLShader.hpp" />
     <ClInclude Include="include\Graphics\ModelManager.hpp" />
     <ClInclude Include="include\Graphics\Shader.hpp" />

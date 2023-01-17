@@ -17,6 +17,8 @@ Technology is prohibited.
 
 namespace Engine
 {
+    std::map<GraphicShader, GLSLShader> shdrpgms;
+
     // Function that sets up all shader files
     void ShaderSetup()
     {

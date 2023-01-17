@@ -16,30 +16,31 @@
 /******************************************************************************/
 #include "include/Graphics/Camera.hpp"
 
-#define NEAR 0.1f
-#define FAR 100.f
+// Only objects between the near and far planes will be rendered
+const float NEAR = 0.1f;
+const float FAR = 100.0f;
 
 namespace Engine
 {
-    Camera::Camera() : position{ 0.f, 0.f, -1.f }, front{ 0.f, 0.f, -1.f }, up{ 0.f, 1.f, 0.f }, yaw{ -90.f }, pitch{ 0.f }, 
-        movementSpeed{ 2.5f }, mouseSensitivity{ 0.1f }, zoom{ 45.f }, aspectRatio{ 0.f } {}
-
-
-    void Camera::setAspectRatio(int width, int height)
+    Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(2.5f), mouseSensitivity(0.1f), fov{ 45.f }
     {
-        aspectRatio = (float)width / (float)height;
+        this->position = position;
+        this->worldUp = up;
+        this->yaw = yaw;
+        this->pitch = pitch;
+        updateCameraVectors();
     }
 
 
-    glm::mat4 Camera::getViewMatrix() 
-    { 
-        return glm::lookAt(position, position + front, up); 
+    glm::mat4 Camera::getViewMatrix()
+    {
+        return glm::lookAt(position, position + front, up);
     }
 
 
-    glm::mat4 Camera::getProjectionMatrix()
+    glm::mat4 Camera::getProjectionMatrix() 
     {
-        return glm::perspective(glm::radians(zoom), aspectRatio, NEAR, FAR);
+        return glm::perspective(glm::radians(fov), aspectRatio, NEAR, FAR);
     }
 
 
@@ -69,12 +70,12 @@ namespace Engine
         }
         if (direction == CameraMovement::DOWN)
         {
-            position -= glm::normalize(glm::cross(front, up)) * velocity;
+            position -= up * velocity;
         }
     }
 
 
-    void Camera::processMouseMovement(float xoffset, float yoffset)
+    void Camera::processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
     {
         xoffset *= mouseSensitivity;
         yoffset *= mouseSensitivity;
@@ -83,20 +84,49 @@ namespace Engine
         pitch += yoffset;
 
         // When pitch is out of bounds, screen does not flip
-        if (pitch > 89.0f)
+        if (constrainPitch)
         {
-            pitch = 89.0f;
-        }
-        if (pitch < -89.0f)
-        {
-            pitch = -89.0f;
+            if (pitch > 89.0f)
+            {
+                pitch = 89.0f;
+            }
+            if (pitch < -89.0f)
+            {
+                pitch = -89.0f;
+            }
         }
 
-        // Update Camera vectors
+        updateCameraVectors();
+    }
+
+
+    void Camera::processMouseScroll(float yoffset) 
+    {
+        // Change the field of view (FOV) based on scroll input
+        if (fov >= 1.0f && fov <= 45.0f)
+        {
+            fov -= yoffset;
+        }
+        if (fov <= 1.0f)
+        {
+            fov = 1.0f;
+        }
+        if (fov >= 45.0f)
+        {
+            fov = 45.0f;
+        }
+    }
+
+
+    void Camera::updateCameraVectors()
+    {
         glm::vec3 front;
         front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
         front.y = sin(glm::radians(pitch));
         front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         this->front = glm::normalize(front);
+
+        right = glm::normalize(glm::cross(this->front, worldUp));
+        up = glm::normalize(glm::cross(right, this->front));
     }
 }

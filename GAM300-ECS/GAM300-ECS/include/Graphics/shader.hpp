@@ -31,5 +31,5 @@ namespace Engine
 
     void ShaderSetup();
 	
-	static std::map<GraphicShader, GLSLShader> shdrpgms;
+	extern std::map<GraphicShader, GLSLShader> shdrpgms;
 }

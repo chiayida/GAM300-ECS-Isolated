@@ -179,12 +179,6 @@
     <ClInclude Include="include\Tag\TagManager.hpp">
       <Filter>Header Files\Tag</Filter>
     </ClInclude>
-    <ClInclude Include="include\ECS\Component\Camera.hpp">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ECS\System\ParticleSystem.hpp">
-      <Filter>Header Files\ECS\System</Filter>
-    </ClInclude>
     <ClInclude Include="include\Graphics\GLSLShader.hpp">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -193,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="include\Graphics\ModelManager.hpp">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Camera.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\System\ParticleSystem.hpp">
+      <Filter>Header Files\ECS\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
