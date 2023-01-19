@@ -106,49 +106,49 @@ namespace Engine
             indices[i + 0] = 0 + offset;
             indices[i + 1] = 1 + offset;
             indices[i + 2] = 2 + offset;
-            indices[i + 3] = 2 + offset;
-            indices[i + 4] = 3 + offset;
-            indices[i + 5] = 0 + offset;
-
-            // Back face
-            indices[i + 6] = 4 + offset;
-            indices[i + 7] = 5 + offset;
-            indices[i + 8] = 6 + offset;
-            indices[i + 9] = 6 + offset;
-            indices[i + 10] = 7 + offset;
-            indices[i + 11] = 4 + offset;
-
-            // Top face
-            indices[i + 12] = 0 + offset;
-            indices[i + 13] = 4 + offset;
-            indices[i + 14] = 5 + offset;
-            indices[i + 15] = 5 + offset;
-            indices[i + 16] = 1 + offset;
-            indices[i + 17] = 0 + offset;
-
-            // Bottom face
-            indices[i + 18] = 3 + offset;
-            indices[i + 19] = 2 + offset;
-            indices[i + 20] = 6 + offset;
-            indices[i + 21] = 6 + offset;
-            indices[i + 22] = 7 + offset;
-            indices[i + 23] = 3 + offset;
-
-            // Left face
-            indices[i + 24] = 0 + offset;
-            indices[i + 25] = 3 + offset;
-            indices[i + 26] = 7 + offset;
-            indices[i + 27] = 7 + offset;
-            indices[i + 28] = 4 + offset;
-            indices[i + 29] = 0 + offset;
+            indices[i + 3] = 0 + offset;
+            indices[i + 4] = 2 + offset;
+            indices[i + 5] = 3 + offset;
 
             // Right face
-            indices[i + 30] = 1 + offset;
-            indices[i + 31] = 5 + offset;
+            indices[i + 6] = 1 + offset;
+            indices[i + 7] = 5 + offset;
+            indices[i + 8] = 6 + offset;
+            indices[i + 9] = 1 + offset;
+            indices[i + 10] = 6 + offset;
+            indices[i + 11] = 2 + offset;
+
+            // Back face
+            indices[i + 12] = 7 + offset;
+            indices[i + 13] = 6 + offset;
+            indices[i + 14] = 5 + offset;
+            indices[i + 15] = 7 + offset;
+            indices[i + 16] = 5 + offset;
+            indices[i + 17] = 4 + offset;
+
+            // Left face
+            indices[i + 18] = 4 + offset;
+            indices[i + 19] = 0 + offset;
+            indices[i + 20] = 3 + offset;
+            indices[i + 21] = 4 + offset;
+            indices[i + 22] = 3 + offset;
+            indices[i + 23] = 7 + offset;
+
+            // Top face
+            indices[i + 24] = 4 + offset;
+            indices[i + 25] = 5 + offset;
+            indices[i + 26] = 1 + offset;
+            indices[i + 27] = 4 + offset;
+            indices[i + 28] = 1 + offset;
+            indices[i + 29] = 0 + offset;
+
+            // Bottom face
+            indices[i + 30] = 3 + offset;
+            indices[i + 31] = 2 + offset;
             indices[i + 32] = 6 + offset;
-            indices[i + 33] = 6 + offset;
-            indices[i + 34] = 2 + offset;
-            indices[i + 35] = 1 + offset;
+            indices[i + 33] = 3 + offset;
+            indices[i + 34] = 6 + offset;
+            indices[i + 35] = 7 + offset;
 
             offset += oneCubeVertex;
         }
@@ -231,7 +231,7 @@ namespace Engine
 
 
         // front-top-right
-        cubeData.vertexbufferptr->position = { -0.5f, 0.5f, 0.5f };
+        cubeData.vertexbufferptr->position = { 0.5f, 0.5f, 0.5f };
         cubeData.vertexbufferptr->color = color;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
