@@ -7,12 +7,11 @@
 /* End Header **********************************************************************************/
 #version 460 core
 
-uniform vec4 uColor;
+layout (location=0) in vec4 vColor;
 
-// Output data
-out vec4 fColor;
+layout (location=0) out vec4 fColor;
 
 void main()
 {
-	fColor = uColor;
+	fColor = vColor;
 }

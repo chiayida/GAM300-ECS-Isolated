@@ -27,27 +27,10 @@
 
 using namespace Engine;
 
-
-// Contains variables of individual models that is required for rendering
-struct RendererData
-{
-	GLuint va = 0; // Vertex array
-	GLuint vb = 0; // Vertex buffer
-
-	std::vector<float> vertices;
-	std::vector<unsigned int> indices;
-};
-
-// Container that contains models's data (vao, vbo, ibo)
-std::unordered_map<std::string, RendererData> m_ModelDataList;
-
 // Function prototypes
 void processInput(GLFWwindow* window_);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-
-void SetupBuffers();
-void BindBuffer(GLuint& vao_, GLuint& vbo_, std::vector<float>& vertices_);
 
 int windowWidth = 1280, windowHeight = 720;
 double currentFrame{}, lastFrame{}, deltaTime{};
@@ -113,92 +96,10 @@ int main()
 	gCoordinator.Init();
 	Serializer::DeserializeJson(&gCoordinator, &gTagManager, "test.scene");
 
-	SetupBuffers();
 	ShaderSetup();
 
 	auto particleSystem = gCoordinator.GetSystem<ParticleSystem>();
 	particleSystem->Init();
-
-
-	// Define cube vertices and indices
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	};
-
-	unsigned int indices[] = {
-		0, 1, 2, 3, 4, 5,
-		6, 7, 8, 9, 10, 11,
-		12, 13, 14, 15, 16, 17,
-		18, 19, 20, 21, 22, 23,
-		24, 25, 26, 27, 28, 29,
-		30, 31, 32, 33, 34, 35
-	};
-
-	// Create a vertex array object and a vertex buffer object
-	unsigned int VAO, VBO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	// Bind the vertex array object
-	glBindVertexArray(VAO);
-
-	// Bind the vertex buffer object and upload the vertex data
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Bind the element buffer object and upload the index data
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Define the vertex attribute pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	// Unbind the vertex array object
-	glBindVertexArray(0);
 
 	///////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
@@ -234,7 +135,6 @@ int main()
 			glm::vec3 translateVector = { 0.f, 0.f, -3.f };
 			glm::vec3 scaleVector = { 0.5f, 0.5f, 0.5f };
 			glm::mat4 transformMatrix = glm::translate(translateVector) * glm::scale(scaleVector);
-			glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
 
 			GLint loc = glGetUniformLocation(shd_ref_handle, "uTransformMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(transformMatrix));
@@ -244,32 +144,9 @@ int main()
 
 			loc = glGetUniformLocation(shd_ref_handle, "uProjectionMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(camera.getProjectionMatrix()));
-
-			loc = glGetUniformLocation(shd_ref_handle, "uColor");
-			glUniform4fv(loc, 1, glm::value_ptr(color));
 		}
+		
 
-		// Bind the vertex array object
-		glBindVertexArray(VAO);
-
-		// Draw the cube
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		/*
-		const auto& shd_ref_handle = shdrpgms[GraphicShader::Default].GetHandle();
-		glUseProgram(shd_ref_handle);
-
-		// Bind VAO and VBO
-		glEnableVertexArrayAttrib(m_ModelDataList["cube"].va, 0);
-		glBindVertexArray(m_ModelDataList["cube"].va);
-		glBindBuffer(GL_ARRAY_BUFFER, m_ModelDataList["cube"].vb);
-
-		// Pass VAO as position attribute to slot 0
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (const void*)0);
-
-		glDrawElements(GL_LINES, m_ModelDataList["cube"].indices.size(), GL_UNSIGNED_INT, m_ModelDataList["cube"].indices.data());
-
-		glBindVertexArray(0);
-		*/
 		particleSystem->Update(deltaTime);
 
 		// Resets mouse position every frame
@@ -338,35 +215,4 @@ void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) 
 {
 	camera.processMouseScroll(yoffset);
-}
-
-void SetupBuffers()
-{
-	// AABB model (cube)
-	{
-		Model model = LoadModelFile("cube");
-		RendererData& cubeData = m_ModelDataList["cube"];
-		cubeData.vertices = model.vertices;
-		cubeData.indices = model.indices;
-
-		BindBuffer(cubeData.va, cubeData.vb, cubeData.vertices);
-
-		m_ModelDataList["cube"] = cubeData;
-	}
-
-}
-
-void BindBuffer(GLuint& vao_, GLuint& vbo_, std::vector<float>& vertices_)
-{
-	// VAO
-	glGenVertexArrays(1, &vao_);
-	glBindVertexArray(vao_);
-
-	// VBO
-	glGenBuffers(1, &vbo_);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(GLfloat), vertices_.data(), GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

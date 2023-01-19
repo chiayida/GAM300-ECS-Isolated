@@ -165,6 +165,7 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClCompile Include="source\ECS\System\ParticleSystem.cpp" />
     <ClCompile Include="source\ECS\System\TransformSystem.cpp" />
     <ClCompile Include="source\Graphics\GLSLShader.cpp" />
+    <ClCompile Include="source\Graphics\Mesh.cpp" />
     <ClCompile Include="source\Graphics\ModelManager.cpp" />
     <ClCompile Include="source\Graphics\Shader.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -189,6 +190,7 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\ECS\System\TransformSystem.hpp" />
     <ClInclude Include="include\Graphics\Camera.hpp" />
     <ClInclude Include="include\Graphics\GLSLShader.hpp" />
+    <ClInclude Include="include\Graphics\Mesh.hpp" />
     <ClInclude Include="include\Graphics\ModelManager.hpp" />
     <ClInclude Include="include\Graphics\Shader.hpp" />
     <ClInclude Include="include\Logging.hpp" />

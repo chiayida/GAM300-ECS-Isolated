@@ -15,14 +15,17 @@
 */
 /******************************************************************************/
 #include "include/ECS/System/ParticleSystem.hpp"
-#include "include/Graphics/Shader.hpp"
+#include "include/Graphics/Mesh.hpp"
+#include "include/Graphics/shader.hpp"
 #include "include/Logging.hpp"
 
 namespace Engine
 {
 	void ParticleSystem::Init()
 	{
-		LOG_INSTANCE("Graphic System created");
+		LOG_INSTANCE("Particle System created");
+
+		Renderer::Init();
 	}
 
 
@@ -34,12 +37,23 @@ namespace Engine
 
 	void ParticleSystem::Update(float deltaTime)
 	{
-		//LOG_INSTANCE("Graphic System Updating");
+		Renderer::BeginCubeBatch();
+
+		// Load Default shader program
+		const auto& shd_ref_handle = shdrpgms[GraphicShader::Default].GetHandle();
+		glUseProgram(shd_ref_handle);
+
+		Renderer::DrawCube({ 0.f, 0.f, -3.f }, { 1.f, 1.f, 1.f }, 0.f, { 0.f, 1.f, 0.f, 1.f });
+
+		Renderer::EndCubeBatch();
+		Renderer::FlushCube();
 	}
 
 
 	void ParticleSystem::Destroy()
 	{
-		// Do nothing
+		Renderer::Shutdown();
+
+		LOG_INSTANCE("Particle System destroyed");
 	}
 }

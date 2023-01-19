@@ -117,6 +117,9 @@
     <ClCompile Include="source\Graphics\ModelManager.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\Mesh.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ECS\Architecture\ComponentArray.hpp">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="include\ECS\System\ParticleSystem.hpp">
       <Filter>Header Files\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Mesh.hpp">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
