@@ -9,7 +9,6 @@
 
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
-uniform mat4 uTransformMatrix;
 
 layout (location=0) in vec3 aVertexPosition;
 layout (location=1) in vec4 aVertexColor;
@@ -43,6 +42,6 @@ void main()
 		);
 
 
-    gl_Position = vec4(vec3(uProjectionMatrix * uViewMatrix * uTransformMatrix * vec4(aVertexPosition, 1.0f)), 1.0);
+    gl_Position = uProjectionMatrix * uViewMatrix * uModel_to_NDC * vec4(aVertexPosition, 1.0f);
 	vColor = aVertexColor;
 }

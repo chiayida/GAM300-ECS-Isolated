@@ -13,6 +13,7 @@
 
 #include "include/Graphics/Camera.hpp"
 #include "include/ECS/System/ParticleSystem.hpp"
+#include "include/Graphics/Mesh.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -125,27 +126,18 @@ int main()
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
-		
 
 		// Setting uniforms for shaders
 		{
 			const auto& shd_ref_handle = shdrpgms[GraphicShader::Default].GetHandle();
 			glUseProgram(shd_ref_handle);
 
-			glm::vec3 translateVector = { 0.f, 0.f, -3.f };
-			glm::vec3 scaleVector = { 0.5f, 0.5f, 0.5f };
-			glm::mat4 transformMatrix = glm::translate(translateVector) * glm::scale(scaleVector);
-
-			GLint loc = glGetUniformLocation(shd_ref_handle, "uTransformMatrix");
-			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(transformMatrix));
-
-			loc = glGetUniformLocation(shd_ref_handle, "uViewMatrix");
+			GLint loc = glGetUniformLocation(shd_ref_handle, "uViewMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(camera.getViewMatrix()));
 
 			loc = glGetUniformLocation(shd_ref_handle, "uProjectionMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(camera.getProjectionMatrix()));
 		}
-		
 
 		particleSystem->Update(deltaTime);
 
@@ -156,6 +148,7 @@ int main()
 		glfwPollEvents();
 	}
 
+	particleSystem->Destroy();
 	glfwTerminate();
 
 	return 1;
