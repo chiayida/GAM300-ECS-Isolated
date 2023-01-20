@@ -18,6 +18,8 @@ Technology is prohibited.
 #include "include/ECS/Architecture/IComponent.hpp"
 #include "include/ECS/Architecture/EntityManager.hpp"
 
+#include "include/ECS/Component/Particle.hpp"
+
 #include "rttr/type.h"
 #include "rttr/registration.h"
 
@@ -65,6 +67,11 @@ namespace Engine
 			.property("isOverridePosition", &Transform::isOverridePosition)
 			.property("isOverrideScale", &Transform::isOverrideScale)
 			.property("isOverrideRotation", &Transform::isOverrideRotation)
+			;
+
+		registration::class_<Particle>("Particle")
+			.constructor<>()
+			.property("textureName", &Particle::textureName)
 			;
 	}
 }

@@ -29,6 +29,7 @@ namespace Engine
         static void Shutdown();
 
         static void DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const float trotation, const glm::vec4 color);
+        static void DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const float trotation, const uint32_t textureID, const glm::vec4 color = { 1.f, 1.f, 1.f, 1.f }, glm::vec2 min = { 0.f, 0.f }, glm::vec2 max = { 1.f, 1.f });
         static void BeginCubeBatch();
         static void EndCubeBatch();
         static void FlushCube();

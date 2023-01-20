@@ -87,6 +87,7 @@ namespace Engine
 	{
 		// Register ALL components here
 		RegisterComponent<Transform, MAX_ENTITIES>();
+		RegisterComponent<Particle, MAX_ENTITIES>();
 		//RegisterComponent<std::vector<Transform>, MAX_ENTITIES>();
 	}
 
@@ -98,7 +99,7 @@ namespace Engine
 		AssignSystemSignature<TransformSystem, Transform>(Transform{});
 
 		RegisterSystem<ParticleSystem>();
-		//AssignSystemSignature<TransformSystem, Particle>(Particle{});
+		AssignSystemSignature<ParticleSystem, Particle>(Particle{});
 	}
 
 

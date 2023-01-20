@@ -19,6 +19,9 @@
 #include "include/Graphics/shader.hpp"
 #include "include/Logging.hpp"
 
+#include "include/ECS/Component/Particle.hpp"
+#include "include/ECS/Architecture/Coordinator.hpp"
+
 namespace Engine
 {
 	void ParticleSystem::Init()
@@ -35,18 +38,25 @@ namespace Engine
 	}
 
 
-	void ParticleSystem::Update(float deltaTime)
+	void ParticleSystem::Update(Coordinator* coordinator, float deltaTime)
 	{
-		Renderer::BeginCubeBatch();
-
 		// Load Default shader program
 		const auto& shd_ref_handle = shdrpgms[GraphicShader::Default].GetHandle();
 		glUseProgram(shd_ref_handle);
 
-		Renderer::DrawCube({ 0.f, 0.f, -3.f }, { 1.f, 1.f, 1.f }, 0.f, { 0.f, 1.f, 0.f, 1.f });
+		Renderer::BeginCubeBatch();
+
+		for (auto entity : mEntities)
+		{
+			Particle& particle = *coordinator->GetComponent<Particle>(entity);
+
+			Renderer::DrawCube({ 0.f, 0.f, -3.f }, { 1.f, 1.f, 1.f }, 0.f, particle.texobj_hdl);
+		}
 
 		Renderer::EndCubeBatch();
 		Renderer::FlushCube();
+
+		glUseProgram(0);
 	}
 
 

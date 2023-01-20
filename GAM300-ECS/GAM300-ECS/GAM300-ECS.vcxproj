@@ -156,17 +156,20 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lib\stb_image\stb_image.cpp" />
     <ClCompile Include="source\ECS\Architecture\ComponentManager.cpp" />
     <ClCompile Include="source\ECS\Architecture\Coordinator.cpp" />
     <ClCompile Include="source\ECS\Architecture\EntityManager.cpp" />
     <ClCompile Include="source\ECS\Architecture\SystemManager.cpp" />
     <ClCompile Include="source\ECS\Component\Camera.cpp" />
+    <ClCompile Include="source\ECS\Component\Particle.cpp" />
     <ClCompile Include="source\ECS\Component\Transform.cpp" />
     <ClCompile Include="source\ECS\System\ParticleSystem.cpp" />
     <ClCompile Include="source\ECS\System\TransformSystem.cpp" />
     <ClCompile Include="source\Graphics\GLSLShader.cpp" />
     <ClCompile Include="source\Graphics\Mesh.cpp" />
     <ClCompile Include="source\Graphics\ModelManager.cpp" />
+    <ClCompile Include="source\Graphics\ResourceManager.cpp" />
     <ClCompile Include="source\Graphics\Shader.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Memory\Allocator.cpp" />
@@ -185,6 +188,7 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\ECS\Architecture\IComponent.hpp" />
     <ClInclude Include="include\ECS\Architecture\System.hpp" />
     <ClInclude Include="include\ECS\Architecture\SystemManager.hpp" />
+    <ClInclude Include="include\ECS\Component\Particle.hpp" />
     <ClInclude Include="include\ECS\Component\Transform.hpp" />
     <ClInclude Include="include\ECS\System\ParticleSystem.hpp" />
     <ClInclude Include="include\ECS\System\TransformSystem.hpp" />
@@ -192,6 +196,7 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\Graphics\GLSLShader.hpp" />
     <ClInclude Include="include\Graphics\Mesh.hpp" />
     <ClInclude Include="include\Graphics\ModelManager.hpp" />
+    <ClInclude Include="include\Graphics\ResourceManager.hpp" />
     <ClInclude Include="include\Graphics\Shader.hpp" />
     <ClInclude Include="include\Logging.hpp" />
     <ClInclude Include="include\Memory\Allocator.hpp" />
@@ -203,6 +208,7 @@ copy "$(SolutionDir)GAM300-ECS\lib\rttr\bin\rttr_core_d.dll" "$(TargetDir)\rttr_
     <ClInclude Include="include\Memory\StackLinkedList.hpp" />
     <ClInclude Include="include\Serialization\Serializer.hpp" />
     <ClInclude Include="include\Tag\TagManager.hpp" />
+    <ClInclude Include="lib\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Default.frag" />

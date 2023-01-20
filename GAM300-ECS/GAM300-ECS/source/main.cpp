@@ -8,10 +8,12 @@
 #include "include/Serialization/Serializer.hpp"
 #include "include/Tag/TagManager.hpp"
 
+#include "include/Graphics/ResourceManager.hpp"
 #include "include/Graphics/ModelManager.hpp"
 #include "include/Graphics/Shader.hpp"
 
 #include "include/Graphics/Camera.hpp"
+#include "include/ECS/Component/Particle.hpp"
 #include "include/ECS/System/ParticleSystem.hpp"
 #include "include/Graphics/Mesh.hpp"
 
@@ -97,13 +99,41 @@ int main()
 	gCoordinator.Init();
 	Serializer::DeserializeJson(&gCoordinator, &gTagManager, "test.scene");
 
+
 	ShaderSetup();
+	// Load Default shader program
+	const auto& shd_ref_handle = shdrpgms[GraphicShader::Default].GetHandle();
+	glUseProgram(shd_ref_handle);
+
+	// Uniform for game object texture shader
+	auto loc = glGetUniformLocation(shd_ref_handle, "uTextures");
+	int samplers[32]{};
+	for (int i = 0; i < 32; i++)
+	{
+		samplers[i] = i;
+	}
+	glUniform1iv(loc, 32, samplers);
+
+	// Unload shader program
+	glUseProgram(0);
 
 	auto particleSystem = gCoordinator.GetSystem<ParticleSystem>();
 	particleSystem->Init();
 
+
+	ResourceManager gResourceManager{};
+	gResourceManager.Create();
+	gResourceManager.LoadTexture("Map.png");
+
 	///////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
+
+	EntityID entity0 = gCoordinator.CreateEntity();
+	EntityID entity1 = gCoordinator.CreateEntity();
+	EntityID entity2 = gCoordinator.CreateEntity();
+
+	gCoordinator.AddComponent<Particle>(entity0);
+
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -124,7 +154,10 @@ int main()
 		// Clear screen
 		{
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 		}
 
 		// Setting uniforms for shaders
@@ -139,7 +172,7 @@ int main()
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(camera.getProjectionMatrix()));
 		}
 
-		particleSystem->Update(deltaTime);
+		particleSystem->Update(&gCoordinator, deltaTime);
 
 		// Resets mouse position every frame
 		glfwSetCursorPos(window, lastX, lastY);
@@ -149,6 +182,8 @@ int main()
 	}
 
 	particleSystem->Destroy();
+	gResourceManager.Destroy();
+
 	glfwTerminate();
 
 	return 1;

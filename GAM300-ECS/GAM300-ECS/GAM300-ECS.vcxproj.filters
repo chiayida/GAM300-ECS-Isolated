@@ -120,6 +120,15 @@
     <ClCompile Include="source\Graphics\Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="lib\stb_image\stb_image.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\ResourceManager.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ECS\Component\Particle.cpp">
+      <Filter>Source Files\ECS\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ECS\Architecture\ComponentArray.hpp">
@@ -199,6 +208,15 @@
     </ClInclude>
     <ClInclude Include="include\Graphics\Mesh.hpp">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\stb_image\stb_image.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\ResourceManager.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Component\Particle.hpp">
+      <Filter>Header Files\ECS\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

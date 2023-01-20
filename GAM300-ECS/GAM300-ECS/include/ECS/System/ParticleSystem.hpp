@@ -25,13 +25,14 @@
 
 namespace Engine
 {
+	class Coordinator;
 	class ParticleSystem : public System
 	{
 	public:
 		ParticleSystem() = default;
 		void Init() override;
 		void Update() override;
-		void Update(float deltaTime) override;
+		void Update(Coordinator* coordinator, float deltaTime) override;
 		void Destroy() override;
 	};
 }

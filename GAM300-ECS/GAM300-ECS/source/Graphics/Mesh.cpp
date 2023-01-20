@@ -15,13 +15,9 @@ Technology is prohibited.
 */
 /* End Header **********************************************************************************/
 #include "include/Graphics/Mesh.hpp"
+#include <array>
+#include <iostream>
 
-#define nextCubeDataBufferPtr(x, y, z) cubeData.vertexbufferptr->position = { x, y, z };\
-                                       cubeData.vertexbufferptr->color = color;\
-                                       cubeData.vertexbufferptr->tposition = tposition;\
-                                       cubeData.vertexbufferptr->tscale = tscale;\
-                                       cubeData.vertexbufferptr->trotation = glm::radians(trotation);\
-                                       cubeData.vertexbufferptr++;
 
 namespace Engine
 {
@@ -37,11 +33,16 @@ namespace Engine
     static const size_t maxCubeVertexCount = maxCubeCount * oneCubeVertex;
     static const size_t maxCubeIndexCount = maxCubeCount * oneCubeIndex;
 
+    // For texture slots
+    static const size_t stMaxTextures = 32;
+
     // Struct declaration
     struct GLMesh
     {
         glm::vec3 position{};
         glm::vec4 color{};
+        glm::vec2 textureCoords{};
+        float textureID{};
             
         glm::vec3 tposition{};
         glm::vec3 tscale{};
@@ -54,16 +55,22 @@ namespace Engine
         GLuint vb = 0; // Vertex buffer
         GLuint ib = 0; // Index buffer
 
+        // First slot is for object without colors
+        GLuint whitetexture = 0;
+        uint32_t whitetextureslot = 0;
+
         uint32_t indexcount = 0;
 
         GLMesh* vertexbuffer = nullptr;
         GLMesh* vertexbufferptr = nullptr;
 
+        std::array<uint32_t, stMaxTextures> arrTextureSlots{};
+        uint32_t uiTextureSlotIndex = 1; // 0 = white texture (aka no texture)
+
         Renderer::Stats renderStats;
     };
 
     static RendererData cubeData;
-
 
     // Init function for Quad fill mesh
     void Renderer::InitCube()
@@ -88,13 +95,19 @@ namespace Engine
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, color));
 
         glEnableVertexArrayAttrib(cubeData.va, 2);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, tposition));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, textureCoords));
 
         glEnableVertexArrayAttrib(cubeData.va, 3);
-        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, tscale));
+        glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, textureID));
 
         glEnableVertexArrayAttrib(cubeData.va, 4);
-        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, trotation));
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, tposition));
+
+        glEnableVertexArrayAttrib(cubeData.va, 5);
+        glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, tscale));
+
+        glEnableVertexArrayAttrib(cubeData.va, 6);
+        glVertexAttribPointer(6, 1, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, trotation));
 
         
         uint32_t indices[maxCubeIndexCount]{};
@@ -156,6 +169,26 @@ namespace Engine
         glCreateBuffers(1, &cubeData.ib);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeData.ib);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+        // 1x1 white texture
+        //glCreateTextures(GL_TEXTURE_2D, 1, &cubeData.whitetexture);
+        glGenTextures(1, &cubeData.whitetexture);
+        glBindTexture(GL_TEXTURE_2D, cubeData.whitetexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        unsigned char whitePixel[4] = { 255, 255, 255, 255 };
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        // Set all texture slots to 0
+        cubeData.arrTextureSlots[0] = cubeData.whitetexture;
+
+        std::cout << "texture: " << cubeData.whitetexture << "\n";
+
+        for (size_t i = 1; i < stMaxTextures; ++i)
+        {
+            cubeData.arrTextureSlots[i] = 0;
+        }
     }
 
 
@@ -171,6 +204,8 @@ namespace Engine
         glDeleteVertexArrays(1, &cubeData.va);
         glDeleteBuffers(1, &cubeData.vb);
         glDeleteBuffers(1, &cubeData.ib);
+
+        glDeleteTextures(1, &cubeData.whitetexture);
 
         delete[] cubeData.vertexbuffer;
     }
@@ -202,12 +237,18 @@ namespace Engine
     // Function that binds texture slots followed by batch rendering the VA
     void Renderer::FlushCube()
     {
+        for (uint32_t i = 0; i < cubeData.uiTextureSlotIndex; i++)
+        {
+            glBindTextureUnit(i, cubeData.arrTextureSlots[i]);
+        }
         glBindVertexArray(cubeData.va);
 
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, cubeData.indexcount, GL_UNSIGNED_INT, nullptr);
         cubeData.renderStats.drawCount++;
 
         cubeData.indexcount = 0;
+        cubeData.uiTextureSlotIndex = 1;
     }
 
 
@@ -224,6 +265,8 @@ namespace Engine
         // front-top-left
         cubeData.vertexbufferptr->position = { -0.5f, 0.5f, 0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -233,6 +276,8 @@ namespace Engine
         // front-top-right
         cubeData.vertexbufferptr->position = { 0.5f, 0.5f, 0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -241,6 +286,8 @@ namespace Engine
         // front-bottom-right
         cubeData.vertexbufferptr->position = { 0.5f, -0.5f, 0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -249,6 +296,8 @@ namespace Engine
         // front-bottom-left
         cubeData.vertexbufferptr->position = { -0.5f, -0.5f, 0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -257,6 +306,8 @@ namespace Engine
         // back-top-left
         cubeData.vertexbufferptr->position = { -0.5f, 0.5f, -0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -265,6 +316,8 @@ namespace Engine
         // back-top-right
         cubeData.vertexbufferptr->position = { 0.5f, 0.5f, -0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -273,6 +326,8 @@ namespace Engine
         // back-bottom-right
         cubeData.vertexbufferptr->position = { 0.5f, -0.5f, -0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -281,6 +336,8 @@ namespace Engine
         // back-bottom-left
         cubeData.vertexbufferptr->position = { -0.5f, -0.5f, -0.5f };
         cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { 0.f, 0.f };
+        cubeData.vertexbufferptr->textureID = 0.f;
         cubeData.vertexbufferptr->tposition = tposition;
         cubeData.vertexbufferptr->tscale = tscale;
         cubeData.vertexbufferptr->trotation = glm::radians(trotation);
@@ -290,6 +347,119 @@ namespace Engine
         cubeData.renderStats.cubeCount++;
     }
 
+
+    // Function that adds to the vertex buffer pointer for the quad fill (with texture) mesh
+    void Renderer::DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const float trotation, const uint32_t textureID, 
+        const glm::vec4 color, glm::vec2 min, glm::vec2 max)
+    {
+        if (cubeData.indexcount >= maxCubeIndexCount)
+        {
+            EndCubeBatch();
+            FlushCube();
+            BeginCubeBatch();
+        }
+
+        float textureIndex = 0.f;
+        for (uint32_t i = 1; i < cubeData.uiTextureSlotIndex; ++i)
+        {
+            if (cubeData.arrTextureSlots[i] == textureID)
+            {
+                textureIndex = (float)i;
+                break;
+            }
+        }
+
+        if (textureIndex == 0.f)
+        {
+            textureIndex = (float)cubeData.uiTextureSlotIndex;
+            cubeData.arrTextureSlots[(size_t)textureIndex] = textureID;
+            cubeData.uiTextureSlotIndex++;
+        }
+
+        // front-top-left
+        cubeData.vertexbufferptr->position = { -0.5f, 0.5f, 0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { min.x, max.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+
+        // front-top-right
+        cubeData.vertexbufferptr->position = { 0.5f, 0.5f, 0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { max.x, max.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        // front-bottom-right
+        cubeData.vertexbufferptr->position = { 0.5f, -0.5f, 0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { max.x, min.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        // front-bottom-left
+        cubeData.vertexbufferptr->position = { -0.5f, -0.5f, 0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { min.x, min.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        // back-top-left
+        cubeData.vertexbufferptr->position = { -0.5f, 0.5f, -0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { min.x, max.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        // back-top-right
+        cubeData.vertexbufferptr->position = { 0.5f, 0.5f, -0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { max.x, max.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        // back-bottom-right
+        cubeData.vertexbufferptr->position = { 0.5f, -0.5f, -0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { max.x, min.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        // back-bottom-left
+        cubeData.vertexbufferptr->position = { -0.5f, -0.5f, -0.5f };
+        cubeData.vertexbufferptr->color = color;
+        cubeData.vertexbufferptr->textureCoords = { min.x, min.y };
+        cubeData.vertexbufferptr->textureID = textureIndex;
+        cubeData.vertexbufferptr->tposition = tposition;
+        cubeData.vertexbufferptr->tscale = tscale;
+        cubeData.vertexbufferptr->trotation = glm::radians(trotation);
+        cubeData.vertexbufferptr++;
+
+        cubeData.indexcount += oneCubeIndex;
+        cubeData.renderStats.cubeCount++;
+    }
 
     // Functions that get the render stats
     const Renderer::Stats& Renderer::GetCubeStats()

@@ -12,11 +12,15 @@ uniform mat4 uProjectionMatrix;
 
 layout (location=0) in vec3 aVertexPosition;
 layout (location=1) in vec4 aVertexColor;
-layout (location=2) in vec3 aTPosition;
-layout (location=3) in vec3 aTScale;
-layout (location=4) in float aTRotation;
+layout (location=2) in vec2 aVertexTexture;
+layout (location=3) in float aTextureIndex;
+layout (location=4) in vec3 aTPosition;
+layout (location=5) in vec3 aTScale;
+layout (location=6) in float aTRotation;
 
 layout (location=0) out vec4 vColor;
+layout (location=1) out vec2 vTexture;
+layout (location=2) out float vTextureIndex;
 
 void main()
 {
@@ -41,7 +45,9 @@ void main()
 			 vec4(0.f, 0.f, 0.f, 1.f))
 		);
 
-
     gl_Position = uProjectionMatrix * uViewMatrix * uModel_to_NDC * vec4(aVertexPosition, 1.0f);
+
 	vColor = aVertexColor;
+	vTexture = aVertexTexture;
+	vTextureIndex = aTextureIndex;
 }
