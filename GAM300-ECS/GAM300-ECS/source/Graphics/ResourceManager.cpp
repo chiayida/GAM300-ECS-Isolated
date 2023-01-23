@@ -45,16 +45,18 @@ namespace Engine
 
 	void ResourceManager::RefreshTexture(Particle* pc)
 	{
+		/*
 		Particle& texture = *pc;
-		stbi_uc* temBuff = stbi_load(texture.filepath.c_str(), &(texture.width), &(texture.height), &(texture.BPP), 4);
+		stbi_uc* temBuff = stbi_load(texture.textureName.c_str(), &(texture.width), &(texture.height), &(texture.BPP), 4);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		glTextureSubImage2D(textureList[texture.filepath].texture_handle, 0, 0, 0, (texture.width), (texture.height), GL_RGBA, GL_UNSIGNED_BYTE, temBuff);
+		glTextureSubImage2D(textureList[texture.textureName].texture_handle, 0, 0, 0, (texture.width), (texture.height), GL_RGBA, GL_UNSIGNED_BYTE, temBuff);
 		stbi_image_free(temBuff);
+		*/
 	}
 
 	// Function loads texture into container without checking if it exist

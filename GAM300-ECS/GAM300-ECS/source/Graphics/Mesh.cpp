@@ -182,9 +182,6 @@ namespace Engine
 
         // Set all texture slots to 0
         cubeData.arrTextureSlots[0] = cubeData.whitetexture;
-
-        std::cout << "texture: " << cubeData.whitetexture << "\n";
-
         for (size_t i = 1; i < stMaxTextures; ++i)
         {
             cubeData.arrTextureSlots[i] = 0;

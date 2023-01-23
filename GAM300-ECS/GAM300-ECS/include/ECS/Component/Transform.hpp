@@ -29,7 +29,7 @@ namespace Engine
 	{
 	public:
 		Transform(glm::vec3 const& pos = { 0.f, 0.f, 0.f }, glm::vec3 const& scale = { 1.f, 1.f, 1.f }, 
-			glm::quat const& rot = { 1.f, 0.f, 0.f, 0.f }) : position{ pos }, scale{ scale }, rot_q{ rot },
+			glm::quat const& rot = { 0.f, 0.f, 0.f, 0.f }) : position{ pos }, scale{ scale }, rot_q{ rot },
 			isOverridePosition{ false }, isOverrideScale{ false }, isOverrideRotation { false } {}
 
 		void operator+=(Transform const& rhs) 

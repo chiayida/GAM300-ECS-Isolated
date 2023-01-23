@@ -13,6 +13,7 @@
 #include "include/Graphics/Shader.hpp"
 
 #include "include/Graphics/Camera.hpp"
+#include "include/ECS/Component/Transform.hpp"
 #include "include/ECS/Component/Particle.hpp"
 #include "include/ECS/System/ParticleSystem.hpp"
 #include "include/Graphics/Mesh.hpp"
@@ -129,10 +130,28 @@ int main()
 	///////////////////////////////////////////////////////////////////////
 
 	EntityID entity0 = gCoordinator.CreateEntity();
-	EntityID entity1 = gCoordinator.CreateEntity();
-	EntityID entity2 = gCoordinator.CreateEntity();
+	//EntityID entity1 = gCoordinator.CreateEntity();
+	//EntityID entity2 = gCoordinator.CreateEntity();
 
-	gCoordinator.AddComponent<Particle>(entity0);
+	gCoordinator.AddComponent<Particle>(entity0, Particle(true, 0.4f, 0.4f, 0.1f, 0.1f, 5.f, 5.f, false, 0, 0, false, 0, false));
+	Particle& particle = *gCoordinator.GetComponent<Particle>(entity0);
+
+	particle.addParticle({0.f, 0.f, -3.f}, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
+	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
 
 
 	// Loop until the user closes the window

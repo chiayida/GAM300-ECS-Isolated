@@ -49,8 +49,17 @@ namespace Engine
 		for (auto entity : mEntities)
 		{
 			Particle& particle = *coordinator->GetComponent<Particle>(entity);
+			particle.Update(deltaTime, { 0.f, 0.f, -3.f });
 
-			Renderer::DrawCube({ 0.f, 0.f, -3.f }, { 1.f, 1.f, 1.f }, 0.f, particle.texobj_hdl);
+			for (int i = 0; i < particle.particles.size(); ++i)
+			{
+				if (particle.particles[i].lifespan > 0)
+				{
+					Renderer::DrawCube(particle.particles[i].position, particle.particles[i].size, 0.f, {0.f, 1.f, 0.f, 1.f});
+				}
+			}
+
+			Renderer::DrawCube({ 0.f, 0.f, -3.f }, {1.f, 1.f, 1.f}, 0.f, particle.texobj_hdl);
 		}
 
 		Renderer::EndCubeBatch();
