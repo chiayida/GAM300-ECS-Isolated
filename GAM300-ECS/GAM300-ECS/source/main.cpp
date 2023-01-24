@@ -36,7 +36,7 @@ void processInput(GLFWwindow* window_);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
-int windowWidth = 1280, windowHeight = 720;
+int windowWidth = 1920, windowHeight = 1080;
 double currentFrame{}, lastFrame{}, deltaTime{};
 
 Camera camera;
@@ -133,26 +133,10 @@ int main()
 	//EntityID entity1 = gCoordinator.CreateEntity();
 	//EntityID entity2 = gCoordinator.CreateEntity();
 
-	gCoordinator.AddComponent<Particle>(entity0, Particle(true, 0.4f, 0.4f, 0.1f, 0.1f, 5.f, 5.f, false, 0, 0, false, 0, false));
+	gCoordinator.AddComponent<Particle>(entity0, Particle(true, 100,
+										0.2f, 0.5f, 0.05f, 0.05f, 1.f, 2.f, 
+										false, 1.f, 2.f, 30.f, true, 2.f, false));
 	Particle& particle = *gCoordinator.GetComponent<Particle>(entity0);
-
-	particle.addParticle({0.f, 0.f, -3.f}, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-	particle.addParticle({ 0.f, 0.f, -3.f }, false, false, false);
-
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))

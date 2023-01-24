@@ -41,12 +41,12 @@ namespace Engine
 	{
 	public:
 		Particle() = default;
-		~Particle();
-		Particle(bool isLooping, float minSpeed, float maxSpeed, float minSize, float maxSize, float minLifespan, float maxLifespan,
-			bool isCone, float coneRadius, float coneAngle, bool isSphere, float sphereRadius, bool isBox);
+		Particle(bool isLooping, int particlesPerEmission,
+			float minSpeed, float maxSpeed, float minSize, float maxSize, float minLifespan, float maxLifespan,
+			bool isCone, float coneRadius, float coneRadiusRange, float coneAngle, bool isSphere, float sphereRadius, bool isBox);
 
-		void addParticle(glm::vec3 position, bool isCone, bool isSphere, bool isBox);
-		void Update(float deltaTime, glm::vec3 position);
+		void addParticle(glm::vec3 positionEntity);
+		void Update(float deltaTime, glm::vec3 positionEntity);
 
 		// Texture properties
 		std::string textureName;
@@ -57,14 +57,14 @@ namespace Engine
 		float minSize, maxSize;
 		float minLifespan, maxLifespan;
 
-		float coneRadius, coneAngle;
+		float coneRadius, coneRadiusRange, coneAngle;
 		float sphereRadius;
 
 		bool isLooping;
 		bool isCone, isBox, isSphere;
 
+		int particlesPerEmission;
 		std::array<ParticleProps, 200> particles;
-
 		std::queue<int> availableParticles; // Pooling
 
 		RTTR_ENABLE(IComponent);

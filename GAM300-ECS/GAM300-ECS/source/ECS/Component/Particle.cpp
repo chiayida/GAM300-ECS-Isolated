@@ -1,12 +1,18 @@
 #include "include/ECS/Component/Particle.hpp"
+#include <random>
+
+#define PI 3.14159265358979323846
+
 
 namespace Engine
 {
-	Particle::Particle(bool isLooping, float minSpeed, float maxSpeed, float minSize, float maxSize, float minLifespan, float maxLifespan,
-		bool isCone, float coneRadius, float coneAngle, bool isSphere, float sphereRadius, bool isBox)
+	Particle::Particle(bool isLooping, int particlesPerEmission,
+		float minSpeed, float maxSpeed, float minSize, float maxSize, float minLifespan, float maxLifespan,
+		bool isCone, float coneRadius, float coneRadiusRange, float coneAngle, bool isSphere, float sphereRadius, bool isBox)
 		: minUV{ 0.f, 0.f }, maxUV{ 1.f, 1.f }
 	{
 		this->isLooping = isLooping;
+		this->particlesPerEmission = particlesPerEmission;
 
 		this->minSpeed = minSpeed;
 		this->maxSpeed = maxSpeed;
@@ -17,6 +23,7 @@ namespace Engine
 
 		this->isCone = isCone;
 		this->coneRadius = coneRadius;
+		this->coneRadiusRange = coneRadiusRange;
 		this->coneAngle = coneAngle;
 
 		this->isSphere = isSphere;
@@ -32,61 +39,63 @@ namespace Engine
 		}
 	}
 
-
-	Particle::~Particle()
-	{
-	}
-
-
-	void Particle::addParticle(glm::vec3 position, bool isCone, bool isSphere, bool isBox)
+	
+	void Particle::addParticle(glm::vec3 positionEntity)
 	{
 		if (!availableParticles.empty())
 		{
 			int index = availableParticles.front();
 			availableParticles.pop();
-			particles[index].position = position;
+			particles[index].position = positionEntity;
 
 			// Velocity/
 			if (isCone) 
 			{
 				// randomize angle between coneAngle and 2*coneAngle
-				float angle = glm::radians(coneAngle + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2 * coneAngle - coneAngle))));
-				particles[index].velocity.x = coneRadius * cosf(angle);
-				particles[index].velocity.y = coneRadius * sinf(angle);
-				particles[index].velocity.z = coneRadius * sinf(angle);
+				float angle = glm::radians(coneAngle + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2 * coneAngle))));
+				float radius = coneRadius + static_cast<float>(rand()) / (static_cast <float>(RAND_MAX / coneRadiusRange));
+
+				particles[index].velocity.x = radius * cosf(angle);
+				particles[index].velocity.y = radius * sinf(angle);
+				particles[index].velocity.z = radius * tanf(angle);
 			}
 			else if (isSphere)
 			{
-				/*
 				// Set velocity based on constant radius and randomized angle
-				float angle = 2.f * PI * static_cast<float>(rand()) / (static_cast <float>(RAND_MAX));
-				float azimuth = PI * static_cast<float>(rand()) / (static_cast <float>(RAND_MAX));
+				float angle = 2.f * PI * rand() / (RAND_MAX);
+				float azimuth = PI * rand() / (RAND_MAX);
 				// set velocity based on a constant sphere radius and angle
 				particles[index].velocity.x = sphereRadius * sinf(azimuth) * cosf(angle);
 				particles[index].velocity.y = sphereRadius * sinf(azimuth) * sinf(angle);
 				particles[index].velocity.z = sphereRadius * cosf(azimuth);
-				*/
 			}
 			else {
 				// Randomized velocity
-				particles[index].velocity.x = minSpeed + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
-				particles[index].velocity.y = minSpeed + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
-				particles[index].velocity.z = minSpeed + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
+				particles[index].velocity.x = minSpeed + rand() / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
+				particles[index].velocity.y = minSpeed + rand() / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
+				particles[index].velocity.z = minSpeed + rand() / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
 			}
 
 			// Randomized size
-			particles[index].size.x = minSize + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
-			particles[index].size.y = minSize + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
-			particles[index].size.z = minSize + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
+			particles[index].size.x = minSize + rand() / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
+			particles[index].size.y = minSize + rand() / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
+			particles[index].size.z = minSize + rand() / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
 			
 			// Randomized lifespan
-			particles[index].lifespan = minLifespan + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxLifespan - minLifespan)));
+			particles[index].lifespan = minLifespan + rand() / (static_cast<float>(RAND_MAX / (maxLifespan - minLifespan)));
 		}
 	}
 
 
-	void Particle::Update(float deltaTime, glm::vec3 position)
+	void Particle::Update(float deltaTime, glm::vec3 positionEntity)
 	{
+		int particlesToEmit = particlesPerEmission;
+		while (particlesToEmit > 0 && !availableParticles.empty())
+		{
+			addParticle(positionEntity);
+			--particlesToEmit;
+		}
+
 		for (int i = 0; i < particles.size(); ++i)
 		{
 			if (particles[i].lifespan > 0)
@@ -101,28 +110,40 @@ namespace Engine
 					// Velocity
 					if (isCone)
 					{
-						// Randomize angle between coneAngle and 2 * coneAngle
-						float angle = glm::radians(coneAngle + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2 * coneAngle - coneAngle))));
-						particles[i].velocity.x = coneRadius * cosf(angle);
-						particles[i].velocity.y = coneRadius * sinf(angle);
-						particles[i].velocity.z = coneRadius * sinf(angle);
+						// randomize angle between coneAngle and 2*coneAngle
+						float angle = glm::radians(coneAngle + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (2 * coneAngle))));
+						float radius = coneRadius + static_cast<float>(rand()) / (static_cast <float>(RAND_MAX / coneRadiusRange));
+
+						particles[i].velocity.x = radius * cosf(angle);
+						particles[i].velocity.y = radius * sinf(angle);
+						particles[i].velocity.z = radius * tanf(angle);
+					}
+					else if (isSphere)
+					{
+						// Set velocity based on constant radius and randomized angle
+						float angle = 2.f * PI * rand() / (RAND_MAX);
+						float azimuth = PI * rand() / (RAND_MAX);
+						// set velocity based on a constant sphere radius and angle
+						particles[i].velocity.x = sphereRadius * sinf(azimuth) * cosf(angle);
+						particles[i].velocity.y = sphereRadius * sinf(azimuth) * sinf(angle);
+						particles[i].velocity.z = sphereRadius * cosf(azimuth);
 					}
 					else {
 						// Randomized velocity
-						particles[i].velocity.x = minSpeed + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
-						particles[i].velocity.y = minSpeed + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
-						particles[i].velocity.z = minSpeed + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
+						particles[i].velocity.x = minSpeed + rand() / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
+						particles[i].velocity.y = minSpeed + rand() / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
+						particles[i].velocity.z = minSpeed + rand() / (static_cast<float>(RAND_MAX / (maxSpeed - minSpeed)));
 					}
 
 					// Randomized size
-					particles[i].size.x = minSize + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
-					particles[i].size.y = minSize + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
-					particles[i].size.z = minSize + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
+					particles[i].size.x = minSize + rand() / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
+					particles[i].size.y = minSize + rand() / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
+					particles[i].size.z = minSize + rand() / (static_cast<float>(RAND_MAX / (maxSize - minSize)));
 
 					// Randomized lifespan
-					particles[i].lifespan = minLifespan + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxLifespan - minLifespan)));
+					particles[i].lifespan = minLifespan + rand() / (static_cast<float>(RAND_MAX / (maxLifespan - minLifespan)));
 
-					particles[i].position = position;
+					particles[i].position = positionEntity;
 				}
 				else
 				{

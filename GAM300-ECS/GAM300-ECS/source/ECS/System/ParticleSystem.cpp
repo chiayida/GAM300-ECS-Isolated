@@ -49,7 +49,7 @@ namespace Engine
 		for (auto entity : mEntities)
 		{
 			Particle& particle = *coordinator->GetComponent<Particle>(entity);
-			particle.Update(deltaTime, { 0.f, 0.f, -3.f });
+			particle.Update(deltaTime, glm::vec3{ 0.f, 0.f, -3.f });
 
 			for (int i = 0; i < particle.particles.size(); ++i)
 			{
