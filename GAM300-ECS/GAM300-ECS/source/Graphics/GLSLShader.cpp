@@ -1,18 +1,21 @@
-/* Start Header**********************************************************************************/
-/*
-@file    GLSLShader.cpp
-@author  Chia Yi Da		c.yida@digipen.edu
-@date    23/06/2021
+/******************************************************************************/
+/*!
+\file       GLSLShader.cpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 350
+\date       16 January 2023
 \brief
-This file contains definitions of member functions of class GLSLShader.
+  This file contains the declaration of GLSLShader class.
 
+  It acts as an interface to set uniforms, load and link shaders, etc.
 
-Copyright (C) 2021 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents
-without the prior written consent of DigiPen Institute of
-Technology is prohibited.
+  Copyright (C) 2023 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
-/* End Header **********************************************************************************/
+/******************************************************************************/
 #include "include/Graphics/GLSLShader.hpp"
 
 namespace Engine

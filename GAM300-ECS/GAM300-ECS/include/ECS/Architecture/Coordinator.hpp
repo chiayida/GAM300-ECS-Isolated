@@ -13,7 +13,6 @@
 
   This enables us to have a single instance of the coordinator which we then can
   use it to interface with the other managers.
-
   
   Sequence of using the coordinator (Coordinator gCoordinator):
   1) Coordinator gCoordinator;	gCoordinator.Init();
@@ -39,6 +38,9 @@
 
   6) gCoordinator.Destroy();
   - Free Coordinator's allocated memory.
+
+  Many code such as Entity and EntityID can be tidied but I am too lazy to bother.
+  Coordinator steps might be outdated but generally this is how it should flow.
 
   Copyright (C) 2022 DigiPen Institure of Technology.
   Reproduction or disclosure of this file or its contents

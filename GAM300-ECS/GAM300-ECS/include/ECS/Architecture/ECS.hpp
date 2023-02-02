@@ -12,6 +12,9 @@
   - ComponentType
   - MAX_COMPONENTS (Maximum amount of component types)
   - Signature (Use for tracking in systems. Bitset.)
+  
+  - Layer, MAX_LAYERS, Tag 
+  (A mock of unity's physics tag and layer, catered to what is needed ONLY)
 
   Copyright (C) 2022 DigiPen Institure of Technology.
   Reproduction or disclosure of this file or its contents

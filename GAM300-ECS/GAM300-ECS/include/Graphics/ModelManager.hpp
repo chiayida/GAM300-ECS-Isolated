@@ -1,14 +1,21 @@
 /******************************************************************************/
 /*!
-\file   ModelManager.hpp
-\author Chia Yi Da
-\par    email: c.yida\@digipen.edu
-\par    DigiPen login: c.yida
-\par    Course: CSD3150
-\par    Assignment #1
-\date   6/01/2022
+\file       ModelManager.hpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 350
+\date       16 January 2023
 \brief
-  Function declaration for Model class.
+  This file contains the declaration of Model class.
+
+  It also has a function which loads .obj file given the model name.
+
+  Deprecated code for now. Not in use and there are probably minor issues with it.
+
+  Copyright (C) 2023 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
 /******************************************************************************/
 #pragma once

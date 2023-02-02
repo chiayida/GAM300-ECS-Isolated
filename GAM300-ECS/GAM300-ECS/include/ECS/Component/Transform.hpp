@@ -1,17 +1,22 @@
-/*!*****************************************************************************
-\file   Transform.hpp
-\author Cruz Rolly Matthew Capiral
-\par    DP email: cruzrolly.m\@digipen.edu
-\date   12/9/2022
-
+/******************************************************************************/
+/*!
+\file       Transform.hpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 300
+\date       18 August 2022
 \brief
-This file includes the definition of the transform component.
+  This file contains the declaration and implementation of Transform class.
+  
+  It is just for me to play around and test whatever I am implementing at the 
+  moment.
 
-Copyright (C) 2022 DigiPen Institure of Technology.
-Reproduction or disclosure of this file or its contents
-without the prior written consent of DigiPen Institute of
-Technology is prohibited.
-*******************************************************************************/
+  Copyright (C) 2022 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
+*/
+/******************************************************************************/
 #pragma once
 #include <lib/glm/glm.hpp>
 #include <lib/glm/gtc/quaternion.hpp>

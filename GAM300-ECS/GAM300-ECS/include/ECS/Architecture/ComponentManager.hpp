@@ -9,7 +9,7 @@
   This file contains the declaration and implementation of ComponentManager class.
 
   ComponentManager is in charge of handling the different ComponentArrays when 
-  a component has to be added or removed. 
+  a component is added or removed. 
 
   It contains a ComponentType variable that increments by one whenever a component
   is registered.

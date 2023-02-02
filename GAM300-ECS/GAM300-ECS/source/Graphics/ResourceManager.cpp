@@ -1,18 +1,20 @@
-/* Start Header**********************************************************************************/
-/*
-@file    ResourceManager.cpp
-@author  Chia Yi Da		c.yida@digipen.edu		100%
-@date    02/07/2021
+/******************************************************************************/
+/*!
+\file       ResourceManager.hpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 350
+\date       16 January 2023
 \brief
-This file has the function definition for ResourceManager
+	This file contains the implementation of ResourceManager class that
+	loads the necessary 2D textures.
 
-
-Copyright (C) 2021 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents
-without the prior written consent of DigiPen Institute of
-Technology is prohibited.
+  Copyright (C) 2023 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
-/* End Header **********************************************************************************/
+/******************************************************************************/
 #include "stb_image/stb_image.h"
 #include "include/Graphics/ResourceManager.hpp"
 #include "include/ECS/Component/Particle.hpp"

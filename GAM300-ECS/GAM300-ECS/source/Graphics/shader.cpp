@@ -1,18 +1,20 @@
-/* Start Header**********************************************************************************/
-/*
-@file    Shader.cpp
-@author  Chia Yi Da		c.yida@digipen.edu
-@date    23/06/2021
+/******************************************************************************/
+/*!
+\file       Shader.cpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 350
+\date       16 January 2023
 \brief
-This file contains definitions of member functions of class GLSLShader.
+  This file contains the container for different shaders and
+  a function which is to be called to set up the shaders.
 
-
-Copyright (C) 2021 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents
-without the prior written consent of DigiPen Institute of
-Technology is prohibited.
+  Copyright (C) 2023 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
-/* End Header **********************************************************************************/
+/******************************************************************************/
 #include "include/Graphics/Shader.hpp"
 
 namespace Engine

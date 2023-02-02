@@ -1,19 +1,22 @@
-/* Start Header**********************************************************************************/
-/*
-@file    Mesh.cpp
-@author  Chia Yi Da		c.yida@digipen.edu  	100%
-@date    16/06/2021
+/******************************************************************************/
+/*!
+\file       Mesh.cpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 350
+\date       16 January 2023
 \brief
-This file contains the definition of function that sets up the dynamic buffers of vertices and
-ebo for batch rendering.
+    This file contains the implementation of function that sets up the dynamic buffers of vertices and
+    ebo for batch rendering.
 
+    For now is just a cube, issues with cube 2D textures.
 
-Copyright (C) 2021 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents
-without the prior written consent of DigiPen Institute of
-Technology is prohibited.
+  Copyright (C) 2023 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
-/* End Header **********************************************************************************/
+/******************************************************************************/
 #include "include/Graphics/Mesh.hpp"
 #include <array>
 #include <iostream>

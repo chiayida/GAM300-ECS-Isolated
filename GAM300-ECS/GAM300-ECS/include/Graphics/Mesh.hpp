@@ -1,19 +1,22 @@
-/* Start Header**********************************************************************************/
-/*
-@file    Mesh.hpp
-@author  Chia Yi Da		c.yida@digipen.edu
-@date    16/06/2021
+/******************************************************************************/
+/*!
+\file       Mesh.hpp
+\author     Chia Yi Da
+\param      c.yida
+\param      GAM 350
+\date       16 January 2023
 \brief
-This file contains the declaration of function that sets up the dynamic buffers of vertices and
-ebo for batch rendering.
+    This file contains the declaration of function that sets up the dynamic buffers of vertices and
+    ebo for batch rendering.
 
+    For now is just a cube, issues with cube 2D textures.
 
-Copyright (C) 2021 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents
-without the prior written consent of DigiPen Institute of
-Technology is prohibited.
+  Copyright (C) 2023 DigiPen Institure of Technology.
+  Reproduction or disclosure of this file or its contents
+  without the prior written consent of DigiPen Institute of
+  Technology is prohibited.
 */
-/* End Header **********************************************************************************/
+/******************************************************************************/
 #pragma once
 
 #include <GL/glew.h>

@@ -11,10 +11,9 @@
 
   IComponentArray is used as an interface for ComponentManager class. It is to
   tell a generic ComponentArray that an entity has been destroyed and that it
-  needs to update its array mappings. (insert filename here)
+  needs to update its array mappings.
 
-
-  ComponentArray is a data structure that is always packed (no holes).
+  ComponentArray is a data structure that is always packed (no gaps).
   - Array should be packed so that we are able to iterate through the array 
   without any "If (valid)" checks.
 
