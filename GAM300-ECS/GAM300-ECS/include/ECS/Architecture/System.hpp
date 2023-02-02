@@ -24,6 +24,7 @@
 
 #define UNUSED(expr) (void)expr
 
+// Coordinator can be pass as an actual singleton global pointer. This is used instead as I did not create a singleton class.
 namespace Engine
 {
 	class Coordinator;

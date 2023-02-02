@@ -24,8 +24,6 @@
 
 #include "include/ECS/Component/Transform.hpp"
 #include "include/ECS/System/TransformSystem.hpp"
-
-//#include "include/ECS/Component/Particle.hpp"
 #include "include/ECS/System/ParticleSystem.hpp"
 
 #include <memory>
@@ -88,6 +86,7 @@ namespace Engine
 		// Register ALL components here
 		RegisterComponent<Transform, MAX_ENTITIES>();
 		RegisterComponent<Particle, MAX_ENTITIES>();
+
 		//RegisterComponent<std::vector<Transform>, MAX_ENTITIES>();
 	}
 
@@ -106,6 +105,14 @@ namespace Engine
 	EntityID Coordinator::CreateEntity(std::string __name__)
 	{
 		Entity e = mEntityManager->CreateEntity(__name__);
+
+		int i = 1;
+		std::string name = e.GetEntityName();
+		while (IsNameRepeated(e))
+		{
+			e.SetEntityName(name + " (" + std::to_string(i++) + ")");
+		}
+
 		mEntities.emplace_back(e);
 
 		return e.GetEntityID();
@@ -431,6 +438,20 @@ namespace Engine
 	}
 
 
+	bool Coordinator::IsNameRepeated(Entity e)
+	{
+		for (int i = 0; i < mEntities.size(); ++i)
+		{
+			if (e.GetEntityName() == mEntities[i].GetEntityName() &&
+				e.GetEntityID() != mEntities[i].GetEntityID())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 	bool Coordinator::EntityExists(EntityID id)
 	{
 		for (int i = 0; i < mEntities.size(); ++i)
@@ -441,6 +462,35 @@ namespace Engine
 			}
 		}
 		return false;
+	}
+
+
+	bool Coordinator::CheckParentIsActive(Entity& e)
+	{
+		if (e.GetIsActive())
+		{
+			EntityID parent_id = e.GetParent();
+			if (parent_id < MAX_ENTITIES)
+			{
+				Entity& parent = *GetEntity(parent_id);
+				return CheckParentIsActive(parent);
+			}
+			else
+			{
+				return e.GetIsActive();
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	bool Coordinator::CheckParentIsActive(EntityID id)
+	{
+		Entity& e = *GetEntity(id);
+		return CheckParentIsActive(e);
 	}
 
 

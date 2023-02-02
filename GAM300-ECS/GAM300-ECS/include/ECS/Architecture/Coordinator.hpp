@@ -131,7 +131,11 @@ namespace Engine
 		Entity* GetEntityByName(std::string name);
 
 		bool IsNameRepeated(std::string name);
+		bool IsNameRepeated(Entity e);
 		bool EntityExists(EntityID id);
+
+		bool CheckParentIsActive(Entity& e);
+		bool CheckParentIsActive(EntityID id);
 
 		void SetTag(Entity& e, Tag t);
 		void SetTag(EntityID e, Tag t);
