@@ -130,13 +130,35 @@ int main()
 	///////////////////////////////////////////////////////////////////////
 
 	EntityID entity0 = gCoordinator.CreateEntity();
-	//EntityID entity1 = gCoordinator.CreateEntity();
-	//EntityID entity2 = gCoordinator.CreateEntity();
 
-	gCoordinator.AddComponent<Particle>(entity0, Particle(true, 100,
-										0.2f, 0.5f, 0.05f, 0.05f, 1.f, 2.f, 
-										false, 1.f, 2.f, 30.f, true, 2.f, false));
-	Particle& particle = *gCoordinator.GetComponent<Particle>(entity0);
+	gCoordinator.AddComponent<Transform>(entity0);
+
+
+	bool isLooping = true;
+	bool isRotate = true;
+	int maxParticles = 10;
+	float gravityModifier = 0.f;
+	float radius = 1.f;
+	float rotationSpeed = 20.f;
+	glm::vec4 startColor = { 1.f, 0.682f, 0.259f, 1.f };
+	glm::vec4 endColor = { 1.f, 1.f, 1.f, 1.f };
+	glm::vec3 minSpeed = { -0.f, -0.f, -0.f };
+	glm::vec3 maxSpeed = { 0.f, 0.5f, 0.f };
+	glm::vec3 minSize = { 0.05f, 0.05f, 0.05f };
+	glm::vec3 maxSize = { 0.05f, 0.05f, 0.05f };
+	float minLifespan = 1.f;
+	float maxLifespan = 3.f;
+	bool isSphere = false;
+	bool isCone = true;
+
+	gCoordinator.AddComponent<Particle>(entity0, 
+		Particle(isLooping, isRotate, maxParticles, gravityModifier, radius, rotationSpeed,
+				 startColor, endColor, minSpeed, maxSpeed, minSize, maxSize,
+				 minLifespan, maxLifespan, isSphere, isCone));
+
+	glm::vec3 position = { 0.f, 0.f, -3.f };
+	Particle* particle = gCoordinator.GetComponent<Particle>(entity0);
+	particle->Init(position);
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -170,6 +192,32 @@ int main()
 
 			loc = glGetUniformLocation(shd_ref_handle, "uProjectionMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(camera.getProjectionMatrix()));
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+		{
+			particle->isSphere = false;
+			particle->isCone = false;
+		}
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		{
+			particle->isSphere = true;
+			particle->isCone = false;
+		}
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		{
+			particle->isSphere = false;
+			particle->isCone = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		{
+			particle->Init(position);
+			particle->isLooping = false;
+		}
+		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+		{
+			particle->Init(position);
+			particle->isLooping = true;
 		}
 
 		particleSystem->Update(&gCoordinator, deltaTime);

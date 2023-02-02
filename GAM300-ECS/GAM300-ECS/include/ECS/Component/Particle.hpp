@@ -33,7 +33,10 @@ namespace Engine
 		glm::vec3 position{};
 		glm::vec3 velocity{};
 		glm::vec3 size{};
-		float lifespan = -1.f;
+		glm::vec4 color{1.f, 1.f, 1.f, 1.f};
+		float angle{};
+		float lifeRemaining = -1.f, lifespan = -1.f;
+		bool isActive = false;
 	};
 
 
@@ -41,11 +44,13 @@ namespace Engine
 	{
 	public:
 		Particle() = default;
-		Particle(bool isLooping, int particlesPerEmission,
-			float minSpeed, float maxSpeed, float minSize, float maxSize, float minLifespan, float maxLifespan,
-			bool isCone, float coneRadius, float coneRadiusRange, float coneAngle, bool isSphere, float sphereRadius, bool isBox);
+		Particle(bool isLooping, bool isRotate, int maxParticles, float gravityModifier, float radius, float rotationSpeed,
+			glm::vec4 startColor, glm::vec4 endColor, glm::vec3 minSpeed, glm::vec3 maxSpeed, glm::vec3 minSize, glm::vec3 maxSize, 
+			float minLifespan, float maxLifespan, bool isSphere, bool isCone);
 
 		void addParticle(glm::vec3 positionEntity);
+		void resetParticle();
+		void Init(glm::vec3 positionEntity);
 		void Update(float deltaTime, glm::vec3 positionEntity);
 
 		// Texture properties
@@ -53,17 +58,16 @@ namespace Engine
 		GLuint texobj_hdl{};
 		glm::vec2 minUV, maxUV;
 
-		float minSpeed, maxSpeed;
-		float minSize, maxSize;
+		glm::vec4 startColor = { 1.f, 1.f, 1.f, 1.f }, endColor = { 1.f, 1.f, 1.f, 1.f };
+		glm::vec3 minSpeed, maxSpeed;
+		glm::vec3 minSize, maxSize;
+		int maxParticles;
+		float gravityModifier, radius, rotationSpeed;
 		float minLifespan, maxLifespan;
 
-		float coneRadius, coneRadiusRange, coneAngle;
-		float sphereRadius;
+		bool isLooping, isRotate;
+		bool isCone, isSphere;
 
-		bool isLooping;
-		bool isCone, isBox, isSphere;
-
-		int particlesPerEmission;
 		std::array<ParticleProps, 200> particles;
 		std::queue<int> availableParticles; // Pooling
 

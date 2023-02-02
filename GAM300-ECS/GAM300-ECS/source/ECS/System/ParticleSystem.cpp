@@ -53,13 +53,14 @@ namespace Engine
 
 			for (int i = 0; i < particle.particles.size(); ++i)
 			{
-				if (particle.particles[i].lifespan > 0)
+				if (particle.particles[i].isActive == true)
 				{
-					Renderer::DrawCube(particle.particles[i].position, particle.particles[i].size, 0.f, {0.f, 1.f, 0.f, 1.f});
+					Renderer::DrawCube(particle.particles[i].position, particle.particles[i].size, 
+						particle.particles[i].angle, particle.particles[i].color);
 				}
 			}
 
-			Renderer::DrawCube({ 0.f, 0.f, -3.f }, {1.f, 1.f, 1.f}, 0.f, particle.texobj_hdl);
+			Renderer::DrawCube({ 0.f, 0.f, -3.f }, {0.1f, 0.1f, 0.1f}, 0.f, particle.texobj_hdl);
 		}
 
 		Renderer::EndCubeBatch();

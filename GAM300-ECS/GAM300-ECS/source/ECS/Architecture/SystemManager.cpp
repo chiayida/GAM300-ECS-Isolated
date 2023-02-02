@@ -67,7 +67,6 @@ namespace Engine
 				if ((signature & sig) == sig)
 				{
 					system->mEntities.insert(e.GetEntityID());
-					break;
 				}
 				// Entity's signature does not match system signature
 				else
@@ -94,7 +93,6 @@ namespace Engine
 				if ((signature & sig) == sig)
 				{
 					system->mEntities.insert(e);
-					return;
 				}
 				// Entity's signature does not match system signature
 				else
