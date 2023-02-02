@@ -48,8 +48,8 @@ namespace Engine
 		glm::vec3 position{};
 		glm::vec3 velocity{};
 		glm::vec3 size{};
+		glm::vec3 angle{};
 		glm::vec4 color{1.f, 1.f, 1.f, 1.f};
-		float angle{};
 		float lifeRemaining = -1.f, lifespan = -1.f;
 		bool isActive = false;
 	};
@@ -59,14 +59,14 @@ namespace Engine
 	{
 	public:
 		Particle() = default;
-		Particle(bool isLooping, bool isRotate, int maxParticles, float gravityModifier, float radius, float rotationSpeed,
+		Particle(bool isLooping, bool isRotate, int maxParticles, float gravityModifier, float radius, glm::vec3 rotationSpeed,
 			glm::vec4 startColor, glm::vec4 endColor, glm::vec3 minSpeed, glm::vec3 maxSpeed, glm::vec3 minSize, glm::vec3 maxSize, 
 			float minLifespan, float maxLifespan, bool isSphere, bool isCone);
 
-		void addParticle(glm::vec3 positionEntity);
+		void addParticle(glm::vec3 positionEntity, glm::vec3 rotationEntity);
 		void resetParticle();
-		void Init(glm::vec3 positionEntity);
-		void Update(float deltaTime, glm::vec3 positionEntity);
+		void Init(glm::vec3 positionEntity, glm::vec3 rotationEntity);
+		void Update(float deltaTime, glm::vec3 positionEntity, glm::vec3 rotationEntity);
 
 		// Texture properties
 		std::string textureName;
@@ -76,8 +76,9 @@ namespace Engine
 		glm::vec4 startColor = { 1.f, 1.f, 1.f, 1.f }, endColor = { 1.f, 1.f, 1.f, 1.f };
 		glm::vec3 minSpeed, maxSpeed;
 		glm::vec3 minSize, maxSize;
+		glm::vec3 rotationSpeed;
 		int maxParticles;
-		float gravityModifier, radius, rotationSpeed;
+		float gravityModifier, radius;
 		float minLifespan, maxLifespan;
 
 		bool isLooping, isRotate;

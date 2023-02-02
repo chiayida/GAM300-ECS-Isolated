@@ -136,20 +136,20 @@ int main()
 
 	bool isLooping = true;
 	bool isRotate = true;
-	int maxParticles = 10;
+	int maxParticles = 30;
 	float gravityModifier = 0.f;
 	float radius = 1.f;
-	float rotationSpeed = 20.f;
+	glm::vec3 rotationSpeed = { 20.f, 20.f, 20.f };
 	glm::vec4 startColor = { 1.f, 0.682f, 0.259f, 1.f };
 	glm::vec4 endColor = { 1.f, 1.f, 1.f, 1.f };
-	glm::vec3 minSpeed = { -0.f, -0.f, -0.f };
-	glm::vec3 maxSpeed = { 0.f, 0.5f, 0.f };
+	glm::vec3 minSpeed = { -1.f, 1.f, 0.f };
+	glm::vec3 maxSpeed = { 1.f, 1.f, 0.f };
 	glm::vec3 minSize = { 0.05f, 0.05f, 0.05f };
 	glm::vec3 maxSize = { 0.05f, 0.05f, 0.05f };
 	float minLifespan = 1.f;
 	float maxLifespan = 3.f;
 	bool isSphere = false;
-	bool isCone = true;
+	bool isCone = false;
 
 	gCoordinator.AddComponent<Particle>(entity0, 
 		Particle(isLooping, isRotate, maxParticles, gravityModifier, radius, rotationSpeed,
@@ -157,8 +157,9 @@ int main()
 				 minLifespan, maxLifespan, isSphere, isCone));
 
 	glm::vec3 position = { 0.f, 0.f, -3.f };
+	glm::vec3 rotation = { 36.7f, 0.f, 0.f };
 	Particle* particle = gCoordinator.GetComponent<Particle>(entity0);
-	particle->Init(position);
+	particle->Init(position, rotation);
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -193,7 +194,7 @@ int main()
 			loc = glGetUniformLocation(shd_ref_handle, "uProjectionMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(camera.getProjectionMatrix()));
 		}
-
+		
 		if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
 		{
 			particle->isSphere = false;
@@ -211,12 +212,12 @@ int main()
 		}
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 		{
-			particle->Init(position);
+			particle->Init(position, rotation);
 			particle->isLooping = false;
 		}
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
 		{
-			particle->Init(position);
+			particle->Init(position, rotation);
 			particle->isLooping = true;
 		}
 

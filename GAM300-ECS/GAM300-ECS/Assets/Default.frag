@@ -1,7 +1,7 @@
 /* Start Header**********************************************************************************/
 /*
 @file    Default.frag
-@author  Chia Yi da		c.yida@digipen.edu
+@author  Chia Yi Da		c.yida@digipen.edu
 @date    16/01/2023
 */
 /* End Header **********************************************************************************/

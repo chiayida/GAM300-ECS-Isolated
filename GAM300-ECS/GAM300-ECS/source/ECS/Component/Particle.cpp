@@ -47,7 +47,7 @@ T lerp(T a, T b, float t)
 
 namespace Engine
 {
-	Particle::Particle(bool isLooping, bool isRotate, int maxParticles, float gravityModifier, float radius, float rotationSpeed,
+	Particle::Particle(bool isLooping, bool isRotate, int maxParticles, float gravityModifier, float radius, glm::vec3 rotationSpeed,
 		glm::vec4 startColor, glm::vec4 endColor, glm::vec3 minSpeed, glm::vec3 maxSpeed, glm::vec3 minSize, glm::vec3 maxSize, 
 		float minLifespan, float maxLifespan, bool isSphere, bool isCone) : minUV{ 0.f, 0.f }, maxUV{ 1.f, 1.f }
 	{
@@ -56,7 +56,7 @@ namespace Engine
 		this->maxParticles = maxParticles > particles.size() ? particles.size() : maxParticles;
 		this->gravityModifier = gravityModifier; 
 		this->radius = radius;
-		this->rotationSpeed = rotationSpeed / 500;
+		this->rotationSpeed = rotationSpeed / 500.f;
 
 		this->startColor = startColor; this->endColor = endColor;
 		this->minSpeed = minSpeed; this->maxSpeed = maxSpeed;
@@ -69,7 +69,7 @@ namespace Engine
 	}
 
 	
-	void Particle::addParticle(glm::vec3 positionEntity)
+	void Particle::addParticle(glm::vec3 positionEntity, glm::vec3 rotationEntity)
 	{
 		if (!availableParticles.empty())
 		{
@@ -156,18 +156,18 @@ namespace Engine
 	}
 
 
-	void Particle::Init(glm::vec3 positionEntity)
+	void Particle::Init(glm::vec3 positionEntity, glm::vec3 rotationEntity)
 	{
 		resetParticle();
 
 		for (int i = 0; i < maxParticles; ++i)
 		{
-			addParticle(positionEntity);
+			addParticle(positionEntity, rotationEntity);
 		}
 	}
 
 
-	void Particle::Update(float deltaTime, glm::vec3 positionEntity)
+	void Particle::Update(float deltaTime, glm::vec3 positionEntity, glm::vec3 rotationEntity)
 	{
 		for (int i = 0; i < particles.size(); ++i)
 		{
@@ -201,35 +201,31 @@ namespace Engine
 						particle.lifeRemaining = particle.lifespan;
 
 						particle.color = startColor;
-						particle.angle = 0.f;
+						particle.angle = {};
 					}
 
 					// Randomized position
 					{
 						if (!isSphere && !isCone)
 						{
-							particle.position.x = positionEntity.x;
-							particle.position.y = positionEntity.y;
-							particle.position.z = positionEntity.z;
+							particle.position = {};
 						}
 						else
 						{
 							float randomAngle = dis(gen) * 2 * PI;
 							float randomRadius = dis(gen) * radius;
-							particle.position.x = positionEntity.x + randomRadius * cos(randomAngle);
-							particle.position.z = positionEntity.z + randomRadius * sin(randomAngle);
-							//particle.position.y = positionEntity.y + randomRadius * sin(randomAngle);
+							particle.position.x = randomRadius * cos(randomAngle);
+							particle.position.z = randomRadius * sin(randomAngle);
 
 							if (isSphere)
 							{
 								float yMinPosition = positionEntity.y - radius;
 								float yMaxPosition = positionEntity.y + radius;
-								float yPosition = yMinPosition + rand() / (static_cast<float>(RAND_MAX / (yMaxPosition - yMinPosition)));
-								particle.position.y = yPosition;
+								particle.position.y = yMinPosition + rand() / (static_cast<float>(RAND_MAX / (yMaxPosition - yMinPosition)));
 							}
 							else if (isCone)
 							{
-								particle.position.y = positionEntity.y;
+								particle.position.y = 0.f;
 							}
 						}
 					}

@@ -49,7 +49,7 @@ namespace Engine
             
         glm::vec3 tposition{};
         glm::vec3 tscale{};
-        float trotation{};
+        glm::vec3 trotation{};
     };
 
     struct RendererData
@@ -110,7 +110,7 @@ namespace Engine
         glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, tscale));
 
         glEnableVertexArrayAttrib(cubeData.va, 6);
-        glVertexAttribPointer(6, 1, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, trotation));
+        glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(GLMesh), (const void*)offsetof(GLMesh, trotation));
 
         
         uint32_t indices[maxCubeIndexCount]{};
@@ -253,7 +253,7 @@ namespace Engine
 
 
     // Function that adds to the vertex buffer pointer for the quad fill (without texture) mesh
-    void Renderer::DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const float trotation, const glm::vec4 color)
+    void Renderer::DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const glm::vec3 trotation, const glm::vec4 color)
     {
         if (cubeData.indexcount >= maxCubeIndexCount)
         {
@@ -349,7 +349,7 @@ namespace Engine
 
 
     // Function that adds to the vertex buffer pointer for the quad fill (with texture) mesh
-    void Renderer::DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const float trotation, const uint32_t textureID, 
+    void Renderer::DrawCube(const glm::vec3& tposition, const glm::vec3 tscale, const glm::vec3 trotation, const uint32_t textureID, 
         const glm::vec4 color, glm::vec2 min, glm::vec2 max)
     {
         if (cubeData.indexcount >= maxCubeIndexCount)
