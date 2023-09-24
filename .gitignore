@@ -107,7 +107,7 @@ ipch/
 *.db-shm
 *.ilk
 
-#bin
+bin
 bin-int
 dependencies
 Aurora_Studio/.vs/
