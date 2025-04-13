@@ -1,13 +1,15 @@
 # **Custom Memory Management System** 
-Files can be found in folders: include/Memory/, source/Memory/
-
----
 
 A tailored memory management system, offering custom allocators to optimize memory usage and performance. 
 This system is built to handle dynamic memory allocation efficiently, minimizing fragmentation and provides 
 resuable memory blocks for custom objects and components.
 
 ---
+
+Files can be found in folders: include/Memory/, source/Memory/
+
+---
+
 
 ## Features
 ### 1. **Custom Allocators**:
