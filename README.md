@@ -9,11 +9,11 @@ resuable memory blocks for custom objects and components.
 ### 1. **Custom Allocators**:
 - `FreeListAllocator`: Allocates a large memory block using a free list; supports FIND_FIRST and FIND_BEST allocation strategies.
 - `PoolAllocator`: Divides memory into fixed-size chunks for efficient allocation.
-- `CustomAllocator`: Templated allocator combining both above; manages specific class types and handles object construction/destruction.
+- `CustomAllocator`: Templated allocator combining both above; manages specific class types and handles object construction and destruction.
 
 ### 2. **Data Structures**:
-- `SinglyLinkedList`: Used by FreeListAllocator; a simple linked list used for free block management.
-- `StackLinkedList`: Used by PoolAllocator; a stack-based linked list used to manage chunk stacks.
+- `SinglyLinkedList`: Used by `FreeListAllocator`; a simple linked list used for free block management.
+- `StackLinkedList`: Used by `PoolAllocator`; a stack-based linked list used to manage chunk stacks.
 
 ### 3. **Unit Testing**:
 - Includes test cases to validate the functionality of the allocators.
