@@ -52,7 +52,7 @@ Designed with modularity and extensibility, each allocator inherits from a base 
 # **Entity Component System (ECS)**
 The ECS is a modular and efficient architecture for managing entities, components, and systems in a game engine. It decouples data (components) from behavior (systems), enabling scalability, flexibility, and performance optimization across large number of game objects.
 
-**Source Folders**: `include/ECS/`, `source/ECS/`, `include/Tag`, 'source/Tag'
+**Source Folders**: `include/ECS/`, `source/ECS/`, `include/Tag/`, `source/Tag/`
 
 ---
 
@@ -108,42 +108,14 @@ The ECS is composed of three core managers; `EntityManager`, `ComponentManager`,
 
 ---
 
-## How It Works
-
-1. **Entity Creation**:
-   - Use the `Coordinator` to create entities.
-   - Example:
-     ```cpp
-     EntityID entity = gCoordinator.CreateEntity();
-     ```
-
-2. **Component Assignment**:
-   - Add components to entities using the `Coordinator`.
-   - Example:
-     ```cpp
-     gCoordinator.AddComponent<Transform>(entity, glm::vec3(0.f, 0.f, 0.f));
-     ```
-
-3. **System Registration**:
-   - Register systems and define their component signatures.
-   - Example:
-     ```cpp
-     gCoordinator.RegisterSystem<TransformSystem>();
-     gCoordinator.AssignSystemSignature<TransformSystem, Transform>();
-     ```
-
-4. **System Updates**:
-   - Systems automatically update their entity lists based on component signatures.
-   - Example:
-     ```cpp
-     auto transformSystem = gCoordinator.GetSystem<TransformSystem>();
-     transformSystem->Update();
-     ```
+## Conclusion
+The ECS architecture provides a robust and scalable foundation for game development. Its modular design ensures flexibility, while its efficient data management enables high performance. By decoupling data and behavior, the ECS simplifies the development of complex game systems.
 
 ---
 
-## Conclusion
+# **Serialization**
 
-The ECS architecture provides a robust and scalable foundation for game development. Its modular design ensures flexibility, while its efficient data management enables high performance. By decoupling data and behavior, the ECS simplifies the development of complex game systems.
+
+**Source Folders**: `include/Serialization/`, `source/Serialization/`
 
 ---
