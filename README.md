@@ -8,43 +8,43 @@ This system is built to handle dynamic memory allocation efficiently, minimizing
 
 ## Features
 ### 1. **Core Architecture**:
-- `FreeListAllocator`: Allocates a large memory block using a free list; supports `FIND_FIRST` and `FIND_BEST` allocation strategies.
-- `PoolAllocator`: Divides memory into fixed-size chunks for efficient allocation.
-- `CustomAllocator`: Templated allocator combining both above; manages specific object types and handles construction and destruction explicitly.
+   - `FreeListAllocator`: Allocates a large memory block using a free list; supports `FIND_FIRST` and `FIND_BEST` allocation strategies.
+   - `PoolAllocator`: Divides memory into fixed-size chunks for efficient allocation.
+   - `CustomAllocator`: Templated allocator combining both above; manages specific object types and handles construction and destruction explicitly.
 
 ### 2. **Data Structures**:
-- `SinglyLinkedList`: Used by `FreeListAllocator`; a simple linked list used for free block management.
-- `StackLinkedList`: Used by `PoolAllocator`; a stack-based linked list used to manage chunk stacks.
+   - `SinglyLinkedList`: Used by `FreeListAllocator`; a simple linked list used for free block management.
+   - `StackLinkedList`: Used by `PoolAllocator`; a stack-based linked list used to manage chunk stacks.
 
 ### 3. **Unit Testing**:
-- Comprehensive test cases to validate allocator behavior and ensure reliability.
+   - Comprehensive test cases to validate allocator behavior and ensure reliability.
 
 ---
 
 ## Architecture
 Designed with modularity and extensibility, each allocator inherits from a base `Allocator` class, ensuring a unified interface for:
    - Initialization
-    - Allocation
-    - Deallocation
-    - Memory Reset
+   - Allocation
+   - Deallocation
+   - Memory Reset
 
 ### Key Components:
 1. **FreeListAllocator**:
-    - Allocates memory from a pre-allocated chunk.
-    - Supports merging adjacent free blocks upon deallocation.
-    - Offers two allocation strategies: `FIND_FIRST` and `FIND_BEST`.
+   - Allocates memory from a pre-allocated chunk.
+   - Supports merging adjacent free blocks upon deallocation.
+   - Offers two allocation strategies: `FIND_FIRST` and `FIND_BEST`.
 
 2. **PoolAllocator**:
-    - Divides memory into fixed-size chunks for efficient allocation.
-    - Can use its own memory or memory provided by another allocator (`FreeListAllocator`).
+   - Divides memory into fixed-size chunks for efficient allocation.
+   - Can use its own memory or memory provided by another allocator (`FreeListAllocator`).
 
 3. **CustomAllocator**:
-    - A templated allocator that combines `FreeListAllocator` and `PoolAllocator`.
-    - Explicitly handles objects lifecycle (constructors, destructors).
+   - A templated allocator that combines `FreeListAllocator` and `PoolAllocator`.
+   - Explicitly handles objects lifecycle (constructors, destructors).
 
 4. **Data Structures**:
-    - `SinglyLinkedList`: Tracks free blocks in the free list allocator.
-    - `StackLinkedList`: Manages chunk stack in the pool allocator.
+   - `SinglyLinkedList`: Tracks free blocks in the free list allocator.
+   - `StackLinkedList`: Manages chunk stack in the pool allocator.
 
 ---
 
@@ -77,17 +77,17 @@ It decouples data (components) from behavior (systems), enabling scalability, fl
   - Managed by the `SystemManager`, which updates systems based on entity signatures.
 
 ### 2. **Parent-Child Relationships**:
-- Supports hierarchical relationships between entities.
-- Enables complex object compositions by allowing child entities to be attached to parent entities.
+   - Supports hierarchical relationships between entities.
+   - Enables complex object compositions by allowing child entities to be attached to parent entities.
 
 ### 3. **Tag and Layer Management**:
-- Tags and layers allow categorization of entities for filtering and organization.
-- Useful for grouping entities for specific behaviors (physics) or rendering.
-- Backed by a bitset representation, where each bit corresponds to a layer, this allows fast computation and filtering.
+   - Tags and layers allow categorization of entities for filtering and organization.
+   - Useful for grouping entities for specific behaviors (physics) or rendering.
+   - Backed by a bitset representation, where each bit corresponds to a layer, this allows fast computation and filtering.
 
 ### 4. **Extensibility**:
-- Easily add new components and systems by registering them with the `Coordinator`.
-- Systems automatically update their entity lists based on component signatures.
+   - Easily add new components and systems by registering them with the `Coordinator`.
+   - Systems automatically update their entity lists based on component signatures.
 
 ---
 
@@ -174,8 +174,79 @@ By leveraging reflection and JSON integration, it simplifies data management, su
 
 ---
 
-# **Graphics** 
+# **Graphics**
+The Graphics module provides a robust and efficient rendering pipeline for the game engine. 
+It includes functionality for managing shaders, textures, models, and rendering operations. 
+The module is designed to work seamlessly with the ECS architecture, enabling efficient rendering of dynamic entities and scalable scene composition.
 
 **Source Folders**: `include/Graphics/`, `source/Graphics/`
+
+---
+
+## Features
+### 1. **Rendering Pipeline**:
+   - OpenGL-based renderer supporting both 2D and 3D rendering.
+   - Batch rendering to minimize draw calls and maximize performance.
+   - Utility functions for drawing primitives like cubes, managing textures, and handling vertex and index buffers.
+
+### 2. **Shader Management**:
+   - Manages multiple shader programs for different rendering purposes (e.g., default, lighting, outline).
+   - `GLSLShader` class encapsulates shader creation, compilation, linking, and uniform handling.
+   - Centralized `ShaderSetup` function initializes all required shaders during engine startup.
+
+### 3. **Texture Management**:
+   - Loads and manages 2D textures using the `ResourceManager` class.
+   - Supports texture loading from files and dynamic texture updates.
+   - Handles OpenGL texture parameters for filtering and wrapping.
+
+### 4. **Model and Mesh Management**:
+   - `Mesh` and `ModelManager` classes provide abstraction for vertex data, index buffers, and model resource management.
+   - Supports generation and rendering of geometric primitives with transformation properties (translation, rotation, scale).
+   - Allows for custom meshes and models to be imported, stored, and rendered efficiently.
+
+### 5. **Camera System**:
+   - `Camera` class manages view and projection matrices for scene navigation.
+   - Supports first-person and third-person perspectives.
+   - Dynamic updates to camera position and orientation for responsive input and smooth visuals.
+
+---
+
+## Architecture
+The Graphics module is designed with modularity and performance in mind. 
+It separates responsibilities into distinct classes for shaders, textures, models, and rendering operations. 
+Each component is decoupled yet collaborates seamlessly to support real-time rendering.
+
+### Key Components:
+1. **Renderer**:
+   - Core class for rendering operations.
+   - Handles batch rendering of objects and maintains rendering statistics (e.g., draw calls, object counts).
+   - Offers utility methods for drawing primitives and managing GPU resources.
+
+2. **GLSLShader**:
+   - Wrapper for OpenGL shader programs.
+   - Manages vertex and fragment shaders, uniform updates, and program binding.
+   - Simplifies interaction with shader variables and maintains clean shader lifecycle handling.
+
+3. **ResourceManager**:
+   - Manages loading and caching of assets like textures.
+   - Prevents redundant loading by storing and reusing texture instances.
+   - Supports dynamic texture refreshing for in-game asset changes.
+
+4. **Camera**:
+   - Controls the view and projection matrix computation for rendering scenes.
+   - Supports configurable field of view, near/far planes, and camera movement modes.
+   - Ensures consistent perspective across all renderables in the scene.
+
+5. **Mesh and ModelManager**:
+   - `Mesh` encapsulates vertex array objects (VAO), vertex buffer objects (VBO), and element buffer objects (EBO).
+   - `ModelManager` handles complex models composed of multiple meshes and textures.
+   - Streamlines the process of loading, storing, and drawing 3D models.
+
+---
+
+## Conclusion
+The Graphics module offers a streamlined and scalable rendering solution tailored for game development. 
+With its clean abstraction over OpenGL, efficient asset management, and tight ECS integration, it empowers developers to build immersive and dynamic scenes. 
+Its modular structure encourages extensibility while maintaining optimal runtime performance.
 
 ---
