@@ -1,3 +1,16 @@
+# **Overview**
+This project is a custom-built 3D game engine developed for the GAM300 module, designed to serve as the foundation for building real-time interactive applications. 
+It abstracts and integrates core systems such as memory management, entity-component architecture, serialization, and rendering, providing a flexible and performance-oriented framework for game development.
+
+Each module is carefully designed to address specific challenges in engine architecture; offering modularity, extensibility, and efficiency. 
+The memory management system includes custom allocators to optimize performance and minimize fragmentation. 
+The entity-component system (ECS) enables scalable and data-driven game object management, while the serialization module ensures consistent saving and loading of runtime states and prefabs. 
+The graphics module delivers real-time rendering capabilities using OpenGL, complete with shader management, texture handling, and model rendering.
+
+Together, these systems form a comprehensive and cohesive engine architecture for ease of use in gameplay logic, and were utilized to successfully build a fully functional 3D game as part of the final project deliverable (GAM300 and GAM350).
+
+---
+
 # **Custom Memory Management System** 
 A tailored memory management system, offering custom allocators to optimize memory usage and performance. 
 This system is built to handle dynamic memory allocation efficiently, minimizing fragmentation and provides resuable memory blocks for custom objects and components.
