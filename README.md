@@ -10,6 +10,7 @@ The graphics module delivers real-time rendering capabilities using OpenGL, comp
 Together, these systems form a comprehensive and cohesive engine architecture for ease of use in gameplay logic, and were utilized to successfully build a fully functional 3D game as part of the final project deliverable (GAM300 and GAM350).
 
 A complete 3D gameplay experience was developed using a custom engine, powered by the systems detailed below.
+
 [![Basic Gameplay Video](https://img.youtube.com/vi/K1C-L7lIVGo/0.jpg)](https://www.youtube.com/watch?v=K1C-L7lIVGo)
 
 ---
